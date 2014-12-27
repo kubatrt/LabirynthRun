@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 539591b58f2b88f429fe4ad1b73550f3
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - startCountdown: {fileID: 11400000, guid: 7b2a429338f88a04fb6715091aeaa3cd, type: 2}
+  - dedText: {fileID: 11400000, guid: 39dba355f8905dd4eb95abb1596d0e03, type: 2}
+  - upArrow: {fileID: 2800000, guid: 410108479ff28994b8d95350e595ec4c, type: 3}
+  - leftArrow: {fileID: 2800000, guid: adb2e1bcc18d88f42b396dd97d655c1a, type: 3}
+  - rightArrow: {fileID: 2800000, guid: 1b480b7edaaef11479004fd59af9797e, type: 3}
+  - downArrow: {fileID: 2800000, guid: c8485e6cf440097419ca466a01cf13f6, type: 3}
+  - backButton: {fileID: 2800000, guid: 933777c96be49b3478f696dba3cbcad3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
