@@ -1,56 +1,81 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LabyrinthGenerate : MonoBehaviour {
-	
-	public int width, height;
+public class LabyrinthGenerate : MonoBehaviour 
+{
+
+	public GameObject	wallPrefab;
+
 	// int xPos, yPos;
 
-	public int corridorWidth = 3;
-	public int wallWidth = 1;
-	public int wallHeight = 4;
+	// TODO:
+	//public int width, height;
+	//public int corridorWidth = 3;
+	//public int wallWidth = 1;
+	//public int wallHeight = 4;
 
-	// Use this for initialization
-	void Start () {
-		createGrid ();
+	DFS maze;
+
+
+	void Start () 
+	{
+		maze = new DFS();
+		//CreateGrid ();
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
-			createAtRandomCellPos();
+			//createAtRandomCellPos();
 		}
 	}
 
-	void createGrid()
+	public int step = 1;
+	void CreateGrid()
 	{
-		int x = width * 2;
-		int y = height * 2;
-		// horizontal
-		for(int i = -y; i <= y; i++)
+		//int beginX = width * 2;
+		//int beginY = height * 2;
+
+		/*for(int y = 4; y < maze.height; y++)
 		{
-			for(int j = -x; j <= x; j+=4)
+			for(int x = 0; x < maze.width; x++)
 			{
-				GameObject pillar = (GameObject)Instantiate (Resources.Load ("Pillar"));
-				pillar.transform.position = new Vector3(i + 0.5f, 2 , j + 0.5f);
+				GameObject wall = (GameObject)Instantiate(wallPrefab);
+				wall.transform.position = new Vector3( maze.CellAt(x,y).x, maze.CellAt(x,y).y, 0.5f );
+				wall.transform.parent = this.transform;
 			}
-		}
-		// vertical
-		for(int i = -y; i <= y; i+=4)
+		}*/
+
+		// horizontal
+		/*for(int y = -beginY; y < beginY; y++)
 		{
-			for(int j = -x; j <= x; j++)
+			for(int x = -beginX; x < beginX ; x++)
 			{
-				if(y%2 == 0 && j%4 != 0 || y%2 != 0 && (j%2 != 0 && j%4 == 0))
+				GameObject wall = (GameObject)Instantiate(wallPrefab);
+				wall.transform.position = new Vector3(y + wall.transform.localScale.x / 2f, 
+				                                      wall.transform.localScale.y / 2f , 
+				                                      x + wall.transform.localScale.z / 2f);
+				wall.transform.parent = this.transform;
+			}
+		}*/
+
+		// vertical PO CO?
+		/*for(int y = -startY; y <= startY; y+=step)
+		{
+			for(int x = -startX; x <= startX; x++)
+			{
+				//if(y%2 == 0 && j%4 != 0 || y%2 != 0 && (j%2 != 0 && j%4 == 0))
+				//if(y == 0 && 
 				{ 
-					GameObject pillar = (GameObject)Instantiate (Resources.Load ("Pillar"));
-					pillar.transform.position = new Vector3(i+0.5f,2,j+0.5f);
+					GameObject wall = (GameObject)Instantiate(wallPrefab);
+					wall.transform.position = new Vector3(y+0.5f, wall.transform.localScale.y / 2f ,x+0.5f);
+					wall.transform.parent = this.transform;
 				}
 			}
-		}
+		}*/
 	}
-
+	/*
 	int getCellXPos(int x)
 	{
 		int n = width;
@@ -103,9 +128,10 @@ public class LabyrinthGenerate : MonoBehaviour {
 
 	void createAtRandomCellPos()
 	{
-		GameObject cos = (GameObject)Instantiate (Resources.Load ("Finish"));
+		GameObject obj = (GameObject)Instantiate (Resources.Load ("Finish"));
 		int x = randomCellYPoss ();
 		int z = randomCellXPoss ();
-		cos.transform.position = new Vector3(x+0.5f,2,z+0.5f);
+		obj.transform.position = new Vector3(x+0.5f,2,z+0.5f);
 	}
+	*/
 }
