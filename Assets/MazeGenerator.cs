@@ -17,12 +17,12 @@ public enum MazeCellExits
 
 
 //----------------------------------------------------------------------------------------------------------------------
-public struct GridLocation
+public struct GridPosition
 {
 	public int x;
 	public int y;
 
-	public GridLocation(int x, int y)
+	public GridPosition(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
@@ -32,12 +32,13 @@ public struct GridLocation
 //----------------------------------------------------------------------------------------------------------------------
 public interface IGridCell
 {
-	int Index { get; set;}
-	GridLocation Location { get; set; }
-	IGridCell North {get; set;}
-	IGridCell South {get; set;}
-	IGridCell East 	{get; set;}
-	IGridCell West {get; set;}
+	int 			Index { get; set;}
+	GridPosition 	Position { get; set; }
+
+	IGridCell 	North {get; set;}
+	IGridCell 	South {get; set;}
+	IGridCell 	East {get; set;}
+	IGridCell 	West {get; set;}
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -73,16 +74,16 @@ class Grid<T> where T : IGridCell, new()
 		return CellGrid[ GridToCellIndex(x, y)];
 	}
 	
-	public T GetCellAt(GridLocation loc)
+	public T GetCellAt(GridPosition loc)
 	{
 		return CellGrid[ GridToCellIndex(loc.x, loc.y) ];
 	}
 
-	public GridLocation WrapCoordinates(int x, int y)
+	public GridPosition WrapCoordinates(int x, int y)
 	{
 		x = x % Width;
 		y = y % Height;
-		return new GridLocation(x, y);
+		return new GridPosition(x, y);
 	}
 
 	void Initialize()
@@ -94,7 +95,7 @@ class Grid<T> where T : IGridCell, new()
 			{
 				int index = GridToCellIndex(x,y);
 				T cell = new T();
-				cell.Location = new GridLocation(x, y);
+				cell.Position = new GridPosition(x, y);
 				cell.Index = index;
 				CellGrid[index] = cell;
 				Debug.Log( cell.ToString() );
@@ -131,8 +132,8 @@ public class MazeCell : IGridCell
 		set { index = value; }
 	}
 
-	GridLocation location;
-	public GridLocation Location { 
+	GridPosition location;
+	public GridPosition Position { 
 		get { return location; } 
 		set { location = value; } 
 	}
@@ -222,8 +223,8 @@ public class MazeCell : IGridCell
 	//public float NormalizedDistance = 0f;
 	
 	public bool IsStartCell = false;
-	//public bool IsDeadEnd = false;
-	//public bool Flagged = false;
+	public bool IsDeadEnd = false;
+	public bool Flagged = false;
 
 	#endregion
 

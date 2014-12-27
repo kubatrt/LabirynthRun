@@ -21,7 +21,7 @@ public class DebugMazeCells : MonoBehaviour
 		
 		foreach (MazeCell cell in Cells)
 		{
-			Vector3 centroid = new Vector3(cell.Location.x, 0f, cell.Location.y);
+			Vector3 centroid = new Vector3(cell.Position.x, 0f, cell.Position.y);
 			Vector3 topLeft = new Vector3(centroid.x - 0.5f, 0f, centroid.z - 0.5f);
 			Vector3 topRight = new Vector3(centroid.x + 0.5f, 0f, centroid.z - 0.5f);
 			Vector3 bottomLeft = new Vector3(centroid.x - 0.5f, 0f, centroid.z + 0.5f);
@@ -38,9 +38,8 @@ public class DebugMazeCells : MonoBehaviour
 				Gizmos.color = Color.red;
 				Gizmos.DrawCube(centroid, scale);
 			}
-			
-			// Draw normalized crawl distance
-			Gizmos.color = new Color(0f, 0f, cell.NormalizedDistance, 1f);
+
+			Gizmos.color = new Color(0f, 0f, 0f, 1f);
 			Gizmos.DrawWireCube(centroid, frame);
 			
 			// Draw wall lines
