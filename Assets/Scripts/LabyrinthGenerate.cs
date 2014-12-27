@@ -37,7 +37,7 @@ public class LabyrinthGenerate : MonoBehaviour
 		//int beginX = width * 2;
 		//int beginY = height * 2;
 
-		/*for(int y = 4; y < maze.height; y++)
+		/*for(int y = 4; y < maze.width; y++)
 		{
 			for(int x = 0; x < maze.width; x++)
 			{
