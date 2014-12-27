@@ -16,8 +16,8 @@ public class DebugMazeCells : MonoBehaviour
 	// Draw the debug line.
 	private void OnDrawGizmos()
 	{
-		Vector3 frame1 = new Vector3(0.5f, 0.2f, 0.5f);
-		Vector3 idScale = new Vector3(0.45f, 0.15f, 0.45f);
+		Vector3 frame = new Vector3(0.5f, 0.2f, 0.5f);
+		Vector3 scale = new Vector3(0.45f, 0.15f, 0.45f);
 		
 		foreach (MazeCell cell in Cells)
 		{
@@ -31,17 +31,17 @@ public class DebugMazeCells : MonoBehaviour
 			if (cell.IsStartCell)
 			{
 				Gizmos.color = Color.green;
-				Gizmos.DrawCube(centroid, idScale);
+				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.IsDeadEnd)
 			{
 				Gizmos.color = Color.red;
-				Gizmos.DrawCube(centroid, idScale);
+				Gizmos.DrawCube(centroid, scale);
 			}
 			
 			// Draw normalized crawl distance
 			Gizmos.color = new Color(0f, 0f, cell.NormalizedDistance, 1f);
-			Gizmos.DrawWireCube(centroid, frame1);
+			Gizmos.DrawWireCube(centroid, frame);
 			
 			// Draw wall lines
 			Gizmos.color = Color.cyan;

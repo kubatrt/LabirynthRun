@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-// | zapalanie bitu
+// | zapalanie bitu bits = bits & BitToCheck
 // & sprawdzenie bitu isBit = bits | BitToCheck
 public enum MazeCellExits
 {
@@ -60,8 +60,7 @@ class Grid<T> where T : IGridCell, new()
 		CellGrid = new T[Width * Height];
 		Initialize();
 	}
-
-	// Convert an <x,y> coordinate to a cell index. ucina
+	
 	public int GridToCellIndex(float x, float y)
 	{
 		x = (x % Width + Width) % Width;
@@ -108,14 +107,13 @@ class Grid<T> where T : IGridCell, new()
 		{
 			for(int y = 0; y < Height; y++)
 			{
-				if(x + 1 == Width);
-				   bool stopHere = true;
+
 				T cell = CellGrid[GridToCellIndex(x,y)];			
 				cell.North = GetCellAt(x, y +1);
 				cell.South = GetCellAt(x, y -1);
 				cell.East = GetCellAt(x + 1, y);
 				cell.West = GetCellAt(x - 1, y);
-				// Code@. co jesli cell jest po za granicami, < 0 lub > Size
+				// co jesli cell jest po za granicami, < 0 lub > Size, GridToCellIndex zaokragla
 			}
 		}
 	}
@@ -217,20 +215,15 @@ public class MazeCell : IGridCell
 	#region Other fields
 
 	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
-	public int CrawlDistance = 0;
+	//public int CrawlDistance = 0;
 
 	// A normalized weighting value that indicates the cell's distance
 	// from the origin cell in relation to the rest of the maze.
-	public float NormalizedDistance = 0f;
-
-	// True if this cell is the start cell.
+	//public float NormalizedDistance = 0f;
+	
 	public bool IsStartCell = false;
-
-	// True if this cell is a dead end.
-	public bool IsDeadEnd = false;
-
-	// Generic boolean property useful for any specific flagging purposes.
-	public bool Flagged = false;
+	//public bool IsDeadEnd = false;
+	//public bool Flagged = false;
 
 	#endregion
 
@@ -245,8 +238,6 @@ public class MazeCell : IGridCell
 //[ExecuteInEditMode()]
 public class MazeGenerator : MonoBehaviour
 {
-
-
 	public int Width = 4;
 	public int Height = 4;
 	public int Seed = 3141592;
@@ -276,22 +267,15 @@ public class MazeGenerator : MonoBehaviour
 		Debug.Log ("Generating...");
 		int visitedCells = 1;
 
-
 		if(visitedCells < maze.Area)
 		{
 
-
-
 		}
 	}
-	
-	public bool isGenerated = false;
+
 	void Update() 
 	{
-		if(!isGenerated) {
-			Generate();
-			isGenerated = true;
-		}
+
 	}
 
 }
