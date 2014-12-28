@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class DebugMazeCells : MonoBehaviour
+public class DebugDrawMazeCells : MonoBehaviour
 {
 
 	private List<MazeCell> Cells = new List<MazeCell>();
@@ -28,6 +28,11 @@ public class DebugMazeCells : MonoBehaviour
 			Vector3 bottomRight = new Vector3(centroid.x + 0.5f, 0f, centroid.z + 0.5f);
 			
 			// Draw color coded cell properties
+			if (cell.IsFinishCell)
+			{
+				Gizmos.color = Color.blue;
+				Gizmos.DrawCube(centroid, scale);
+			}
 			if (cell.IsStartCell)
 			{
 				Gizmos.color = Color.green;
@@ -38,6 +43,7 @@ public class DebugMazeCells : MonoBehaviour
 				Gizmos.color = Color.red;
 				Gizmos.DrawCube(centroid, scale);
 			}
+
 
 			Gizmos.color = new Color(0f, 0f, 0f, 1f);
 			Gizmos.DrawWireCube(centroid, frame);
