@@ -27,25 +27,30 @@ public class DebugDrawMazeCells : MonoBehaviour
 			Vector3 bottomLeft = new Vector3(centroid.x - 0.5f, 0f, centroid.z + 0.5f);
 			Vector3 bottomRight = new Vector3(centroid.x + 0.5f, 0f, centroid.z + 0.5f);
 			
-			// Draw color coded cell properties
-			if (cell.IsFinishCell)
+
+			if (cell.IsFinishCell)	// Finish
 			{
 				Gizmos.color = Color.blue;
 				Gizmos.DrawCube(centroid, scale);
 			}
-			if (cell.IsStartCell)
+			else if (cell.IsStartCell)	// Start
 			{
 				Gizmos.color = Color.green;
 				Gizmos.DrawCube(centroid, scale);
 			}
-			else if (cell.IsDeadEnd)
+			else if (cell.IsDeadEnd)	// DeadEnd
 			{
 				Gizmos.color = Color.red;
 				Gizmos.DrawCube(centroid, scale);
 			}
+			else if (cell.TotalExits > 2)	// Crossroad, place trigger here
+			{
+				Gizmos.color = Color.yellow;
+				Gizmos.DrawCube (centroid, scale);
+			}
 
-
-			Gizmos.color = new Color(0f, 0f, 0f, 1f);
+			// Normalized distance
+			Gizmos.color = new Color(0f, 0f, cell.NormalizedDistance, 1f);
 			Gizmos.DrawWireCube(centroid, frame);
 			
 			// Draw wall lines
@@ -58,6 +63,8 @@ public class DebugDrawMazeCells : MonoBehaviour
 				Gizmos.DrawLine(topRight, bottomRight);
 			if (!cell.ExitWest)
 				Gizmos.DrawLine(topLeft, bottomLeft);
+
+
 		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 
 //----------------------------------------------------------------------------------------------------------------------
-public struct GridPosition
+public class GridPosition
 {
 	public int x;
 	public int y;
@@ -42,31 +42,34 @@ public class Grid<T> where T : IGridCell, new()
 		get { return Width * Height; }
 	}
 	
-	public T[] CellGrid;
-	
+	public T[] CellsGrid;
+
+
 	public Grid(int width, int height)
 	{
 		Width = width;
 		Height = height;
-		CellGrid = new T[Width * Height];
+		CellsGrid = new T[Width * Height];
 		Initialize();
 	}
 	
 	public int GridToCellIndex(float x, float y)
 	{
-		x = (x % Width + Width) % Width;
+		// Wrapping from 0 to Size
+		x = (x % Width + Width) % Width; 
 		y = (y % Height + Height) % Height;
+
 		return (int)(x + y * Width);
 	}
 	
 	public T GetCellAt(int x, int y)
 	{
-		return CellGrid[ GridToCellIndex(x, y)];
+		return CellsGrid[ GridToCellIndex(x, y)];
 	}
 	
 	public T GetCellAt(GridPosition loc)
 	{
-		return CellGrid[ GridToCellIndex(loc.x, loc.y) ];
+		return CellsGrid[ GridToCellIndex(loc.x, loc.y) ];
 	}
 	
 	public GridPosition WrapCoordinates(int x, int y)
@@ -87,17 +90,17 @@ public class Grid<T> where T : IGridCell, new()
 				T cell = new T();
 				cell.Position = new GridPosition(x, y);
 				cell.Index = index;
-				CellGrid[index] = cell;
-				Debug.Log( cell.ToString() );
+				CellsGrid[index] = cell;
+				// Debug.Log( cell.ToString() );
 			}
 		}
 		
-		Debug.Log ("Linking...");
+		// Link neighbor cells 
 		for(int x = 0; x < Width; x++)
 		{
 			for(int y = 0; y < Height; y++)
 			{
-				T cell = CellGrid[GridToCellIndex(x,y)];			
+				T cell = CellsGrid[GridToCellIndex(x,y)];			
 				cell.North = GetCellAt(x, y +1);
 				cell.South = GetCellAt(x, y -1);
 				cell.East = GetCellAt(x + 1, y);

@@ -4,8 +4,8 @@ using System.Collections;
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// | zapalanie bitu bits = bits & BitToCheck
-// & sprawdzenie bitu isBit = bits | BitToCheck
+// | turn ON bit  isBit = bits & BitToCheck
+// & check bit isBit = bits | BitToCheck
 public enum MazeCellExits
 {
 	None  = 0,	// 0000
@@ -19,11 +19,28 @@ public enum MazeCellExits
 //----------------------------------------------------------------------------------------------------------------------
 public class MazeCell : IGridCell
 {
-	#region Interface implementation
+	public bool IsStartCell = false;
+	public bool IsFinishCell = false;
+	public bool IsDeadEnd = false;
+	public bool Visitted = false;	
+
+	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
+	public int CrawlDistance = 0;
+	
+	// A normalized weighting, indicates the cell's distance from the origin cell in relation to the rest of the maze.
+	public float NormalizedDistance = 0f;
+
+
+	// Enum flags for mark available exits
+	public MazeCellExits Exits = MazeCellExits.None;
+
+
+	#region Interface 
+
 	int index;
 	public int Index { 
-		get { return index; }
-		set { index = value; }
+		 get { return index; }
+		 set { index = value; }
 	}
 	
 	GridPosition location;
@@ -31,7 +48,8 @@ public class MazeCell : IGridCell
 		get { return location; } 
 		set { location = value; } 
 	}
-	
+
+	// Links to neighbor cells
 	IGridCell north;
 	public IGridCell North {
 		get { return north; }
@@ -55,14 +73,11 @@ public class MazeCell : IGridCell
 		get { return west; }
 		set { west = value; }
 	}
-	
+
 	#endregion
 	
 	#region Exits form cell
-	
-	public MazeCellExits Exits = MazeCellExits.None;
-	
-	
+
 	public bool NoExits
 	{
 		get { return Exits == MazeCellExits.None; }
@@ -104,28 +119,13 @@ public class MazeCell : IGridCell
 			return result;
 		}
 	}
-	
-	#endregion
-	
-	#region Other fields
-	
-	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
-	public int CrawlDistance = 0;
-	
-	// A normalized weighting value that indicates the cell's distance
-	// from the origin cell in relation to the rest of the maze.
-	public float NormalizedDistance = 0f;
-	
-	public bool IsStartCell = false;
-	public bool IsFinishCell = false;
-	public bool IsDeadEnd = false;
-	public bool Flagged = false;
+
 	
 	#endregion
 	
 	public override string ToString ()
 	{
 		return String.Format ( "Cell({0} Location [{1},{2}] Exits [ N: {3} S: {4} E: {5} W: {6}]",
-		                      index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest);
+		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest);
 	}
 }
