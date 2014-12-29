@@ -15,35 +15,34 @@ public class MazeGenerator : MonoBehaviour
 	public bool Wrap = false;
 
 	public Vector2 startPosition;
-	public Vector2 finishPosition;
+	[SerializeField] Vector2 finishPosition;
 
 	Grid<MazeCell> maze;
 
 	void Awake()
 	{
-		maze = Generate();
-		AddDebugDraw();
+		Generate();
 	}
 
-	public Grid<MazeCell> Generate()
+	public void Generate()
 	{
-		Debug.Log ("Generating...");
-		Grid<MazeCell> mazeGrid = new Grid<MazeCell>(Width, Height);
+		Debug.Log ("GENERATING...");
+		maze = new Grid<MazeCell>(Width, Height);
 		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
 		UnityEngine.Random.seed = Seed;
 		int distance = 0;
 		int maxDistance = 0;
 
 		// starting position
-		GridPosition cellPos = mazeGrid.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
-		mazeGrid.GetCellAt(cellPos).IsStartCell = true;
+		GridPosition cellPos = maze.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
+		maze.GetCellAt(cellPos).IsStartCell = true;
 		visitedCells.Push(cellPos);
 
-
+		int cellIndex = 0;
 		// iterate trough all cells
 		while(visitedCells.Count > 0)
 		{
-			MazeCell cell = mazeGrid.GetCellAt(cellPos);
+			MazeCell cell = maze.GetCellAt(cellPos);
 			cell.Visitted = true;
 			cell.CrawlDistance = distance;
 
@@ -53,20 +52,18 @@ public class MazeGenerator : MonoBehaviour
 			// check valid exits
 			MazeCellExits validExits = MazeCellExits.None;
 			// pozycje != 0 i jest nieodwiedzona
-			if((Wrap ||cellPos.y != 0) && !mazeGrid.GetCellAt(cellPos.x, cellPos.y - 1).Visitted) {
+			if((Wrap ||cellPos.y != 0) && !maze.GetCellAt(cellPos.x, cellPos.y - 1).Visitted) {
 				validExits = validExits | MazeCellExits.North;
 			}
-			if((Wrap || cellPos.y != Height - 1) && !mazeGrid.GetCellAt(cellPos.x, cellPos.y + 1).Visitted) {
+			if((Wrap || cellPos.y != Height - 1) && !maze.GetCellAt(cellPos.x, cellPos.y + 1).Visitted) {
 				validExits = validExits | MazeCellExits.South;
 			}
-			if((Wrap || cellPos.x != 0) && !mazeGrid.GetCellAt(cellPos.x - 1, cellPos.y).Visitted) { 
+			if((Wrap || cellPos.x != 0) && !maze.GetCellAt(cellPos.x - 1, cellPos.y).Visitted) { 
 				validExits = validExits | MazeCellExits.West; 
 			}
-			if((Wrap || cellPos.x != Width - 1) && !mazeGrid.GetCellAt(cellPos.x + 1, cellPos.y).Visitted) {
+			if((Wrap || cellPos.x != Width - 1) && !maze.GetCellAt(cellPos.x + 1, cellPos.y).Visitted) {
 				validExits = validExits | MazeCellExits.East;
 			}
-
-
 
 
 			if(validExits != MazeCellExits.None)
@@ -83,27 +80,24 @@ public class MazeGenerator : MonoBehaviour
 					cellPos = new GridPosition(cellPos.x, cellPos.y - 1);
 					exit = MazeCellExits.South;
 				}
-				else if (exit == MazeCellExits.South)
-				{
+				else if (exit == MazeCellExits.South) {
 					cellPos = new GridPosition(cellPos.x, cellPos.y + 1);
 					exit = MazeCellExits.North;
 				}
-				else if (exit == MazeCellExits.West)
-				{
+				else if (exit == MazeCellExits.West) {
 					cellPos = new GridPosition(cellPos.x - 1, cellPos.y);
 					exit = MazeCellExits.East;
 				}
-				else if (exit == MazeCellExits.East)
-				{
+				else if (exit == MazeCellExits.East) {
 					cellPos = new GridPosition(cellPos.x + 1, cellPos.y);
 					exit = MazeCellExits.West;
 				}
 
 				// exit back
-				cell = mazeGrid.GetCellAt(cellPos);
+				cell = maze.GetCellAt(cellPos);
 				cell.Exits = cell.Exits | exit;
 			}
-			else
+			else 
 			{
 				if(maxDistance < distance)
 					maxDistance = distance;
@@ -112,18 +106,20 @@ public class MazeGenerator : MonoBehaviour
 
 				if(cell.TotalExits == 1)
 					cell.IsDeadEnd = true;
+				cell.Index = cellIndex++;
 
 				cellPos = visitedCells.Pop();
 			}
+			Debug.Log (String.Format("ITER. #{2} distance {0} visited: {1}", distance, visitedCells.Count, cellIndex));
 		}
 
 
 		// normalize distance
-		foreach(MazeCell cell in mazeGrid.CellsGrid)
+		foreach(MazeCell cell in maze.CellsGrid)
 			cell.NormalizedDistance = (float)cell.CrawlDistance / (float)maxDistance;
 
 		// find first cell find maximum distance, make it finish
-		foreach(MazeCell cell in mazeGrid.CellsGrid) {
+		foreach(MazeCell cell in maze.CellsGrid) {
 			if(cell.CrawlDistance == maxDistance) {
 				cell.IsFinishCell = true;
 				finishPosition = new Vector2(cell.Position.x, cell.Position.y);	// debug
@@ -131,7 +127,10 @@ public class MazeGenerator : MonoBehaviour
 			}
 		}
 
-		return mazeGrid;
+		Debug.Log( String.Format("COMPLETED. MaxDistance: {0} Finish: [{1},{2}]", 
+		                         maxDistance, finishPosition.x, finishPosition.y)); 
+		//maze = mazeGrid;
+		//return mazeGrid;
 	}
 
 	MazeCellExits GetRandomExit(MazeCellExits validExits)
@@ -147,29 +146,21 @@ public class MazeGenerator : MonoBehaviour
 			exits.Add(MazeCellExits.West);
 		
 		int rand = (int)(UnityEngine.Random.value * exits.Count);
-		if (rand == exits.Count) 
-			rand--;
+		if (rand == exits.Count) rand--;
 		
 		return exits[rand];
 	}
 
-	void ExampleDebug()
+	public List<MazeCell> GetCells()
 	{
-		maze = new Grid<MazeCell>(Width, Height);
-		maze.GetCellAt(0,0).IsStartCell = true;
-	}
-
-	void AddDebugDraw()
-	{
-		gameObject.AddComponent<DebugDrawMazeCells>();
-		DebugDrawMazeCells debugMaze = GetComponent<DebugDrawMazeCells>();
+		List<MazeCell> cells = new List<MazeCell>();
 		for(int x = 0; x < Width; x++)
 		{
 			for(int y = 0; y < Height; y++)
 			{
-				debugMaze.AddCell( maze.GetCellAt(x,y));
-				Debug.Log( maze.GetCellAt(x,y).ToString());
+				cells.Add(maze.GetCellAt(x,y));
 			}
 		}
+		return cells;
 	}
 }
