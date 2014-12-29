@@ -71,6 +71,11 @@ public class Grid<T> where T : IGridCell, new()
 	{
 		return CellsGrid[ GridToCellIndex(loc.x, loc.y) ];
 	}
+
+	public T GetCellAtIndex(int index)
+	{
+		return CellsGrid[index];
+	}
 	
 	public GridPosition WrapCoordinates(int x, int y)
 	{

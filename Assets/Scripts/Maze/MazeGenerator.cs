@@ -162,4 +162,14 @@ public class MazeGenerator : MonoBehaviour
 		}
 		return cells;
 	}
+
+	public MazeCell GetCellAt(int x, int y)
+	{
+		return maze.GetCellAt(x, y);
+	}
+
+	public MazeCell GetCellAtIndex(int index)
+	{
+		return maze.GetCellAtIndex(index);
+	}
 }
