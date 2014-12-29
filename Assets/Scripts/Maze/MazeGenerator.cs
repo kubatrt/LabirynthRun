@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 
 //----------------------------------------------------------------------------------------------------------------------
-//[ExecuteInEditMode()]
 public class MazeGenerator : MonoBehaviour
 {
 	public int Width = 4;

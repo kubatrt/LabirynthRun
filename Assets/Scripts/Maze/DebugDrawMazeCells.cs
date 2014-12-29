@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class DebugDrawMazeCells : MonoBehaviour
 {
+	[Range(0, 1)]
+	public float opacity = 1f;
 
 	List<MazeCell> cells = new List<MazeCell>();
 
@@ -31,27 +33,27 @@ public class DebugDrawMazeCells : MonoBehaviour
 
 			if (cell.IsFinishCell)
 			{
-				Gizmos.color = Color.blue;
+				Gizmos.color = new Color(0f,0f,1f, 1f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.IsStartCell)
 			{
-				Gizmos.color = Color.green;
+				Gizmos.color = new Color(0f,1f,0f, 1f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.IsDeadEnd)
 			{
-				Gizmos.color = Color.red;
+				Gizmos.color = new Color(1f,0f,0f, 0.5f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.TotalExits > 2)
 			{
-				Gizmos.color = Color.yellow;
+				Gizmos.color = Gizmos.color = new Color(1f,1f,0f, 0.25f);
 				Gizmos.DrawCube (centroid, scale);
 			}
 
 			// Normalized distance
-			Gizmos.color = new Color(cell.NormalizedDistance, cell.NormalizedDistance, cell.NormalizedDistance, 1f);
+			Gizmos.color = new Color(cell.NormalizedDistance, cell.NormalizedDistance, cell.NormalizedDistance, opacity);
 			Gizmos.DrawWireCube(centroid, frame);
 			
 			// Draw wall lines
