@@ -25,7 +25,6 @@ public class MazeGenerator : MonoBehaviour
 
 	public void Generate()
 	{
-		Debug.Log ("GENERATING...");
 		maze = new Grid<MazeCell>(Width, Height);
 		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
 		UnityEngine.Random.seed = Seed;
@@ -126,7 +125,7 @@ public class MazeGenerator : MonoBehaviour
 			}
 		}
 
-		Debug.Log( String.Format("COMPLETED. MaxDistance: {0} Finish: [{1},{2}]", 
+		Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}]", 
 		                         maxDistance, finishPosition.x, finishPosition.y)); 
 		//maze = mazeGrid;
 		//return mazeGrid;
@@ -171,5 +170,10 @@ public class MazeGenerator : MonoBehaviour
 	public MazeCell GetCellAtIndex(int index)
 	{
 		return maze.GetCellAtIndex(index);
+	}
+
+	public static Vector3 GridToWorld(GridPosition cellPos, float offset, float height)
+	{
+		return new Vector3((float)cellPos.x * offset, height, (float)cellPos.y * offset);
 	}
 }
