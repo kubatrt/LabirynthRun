@@ -86,7 +86,6 @@ public class Grid<T> where T : IGridCell, new()
 	
 	void Initialize()
 	{
-		Debug.Log ("Initializing...");
 		for(int x = 0; x < Width; x++)
 		{
 			for(int y = 0; y < Height; y++)

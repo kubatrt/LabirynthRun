@@ -8,8 +8,8 @@ using System.Collections.Generic;
 //----------------------------------------------------------------------------------------------------------------------
 public class MazeGenerator : MonoBehaviour
 {
-	public int Width = 4;
-	public int Height = 4;
+	public int Width = 8;
+	public int Height = 8;
 	public int Seed = 3141592;
 	public bool Wrap = false;
 
@@ -29,24 +29,22 @@ public class MazeGenerator : MonoBehaviour
 		maze = new Grid<MazeCell>(Width, Height);
 		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
 		UnityEngine.Random.seed = Seed;
+
 		int distance = 0;
 		int maxDistance = 0;
+		int cellIndex = 0;
 
 		// starting position
 		GridPosition cellPos = maze.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
 		maze.GetCellAt(cellPos).IsStartCell = true;
 		visitedCells.Push(cellPos);
 
-		int cellIndex = 0;
 		// iterate trough all cells
 		while(visitedCells.Count > 0)
 		{
 			MazeCell cell = maze.GetCellAt(cellPos);
 			cell.Visitted = true;
 			cell.CrawlDistance = distance;
-
-			if(cell.Position.x == 0)
-				Debug.DebugBreak();
 
 			// check valid exits
 			MazeCellExits validExits = MazeCellExits.None;
@@ -95,6 +93,8 @@ public class MazeGenerator : MonoBehaviour
 				// exit back
 				cell = maze.GetCellAt(cellPos);
 				cell.Exits = cell.Exits | exit;
+				// set index
+				cell.Index = cellIndex++;
 			}
 			else 
 			{
@@ -105,11 +105,11 @@ public class MazeGenerator : MonoBehaviour
 
 				if(cell.TotalExits == 1)
 					cell.IsDeadEnd = true;
-				cell.Index = cellIndex++;
+
 
 				cellPos = visitedCells.Pop();
 			}
-			Debug.Log (String.Format("ITER. #{2} distance {0} visited: {1}", distance, visitedCells.Count, cellIndex));
+			//Debug.Log (String.Format("ITER. #{2} distance {0} visited: {1}", distance, visitedCells.Count, cellIndex));
 		}
 
 

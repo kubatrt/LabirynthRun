@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
 		get { return speed; }
 		set { speed = value; }
 	}
+
 	public int angle;
 	public int Angle
 	{

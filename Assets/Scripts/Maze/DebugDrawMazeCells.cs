@@ -12,7 +12,6 @@ public class DebugDrawMazeCells : MonoBehaviour
 
 	void Start()
 	{
-		Debug.Log(name + " Start()");
 		cells = GetComponent<MazeGenerator>().GetCells();
 	}
 
