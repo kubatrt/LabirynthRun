@@ -12,7 +12,7 @@ public class TriggerScript : MonoBehaviour {
 	public Crossing crossingType;
 	
 	float distance;
-	float playerSpeed;
+	//float playerSpeed;
 	bool isLocked;
 
 	void Awake()

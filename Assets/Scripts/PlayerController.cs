@@ -16,8 +16,8 @@ public class PlayerController : MonoBehaviour {
 	public bool leftArrow, rightArrow, upArrow;
 
 	// player stats
-	float minSpeed;
-	float maxSpeed;
+	public float minSpeed;
+	public float maxSpeed;
 	public float speed;
 	public float Speed
 	{

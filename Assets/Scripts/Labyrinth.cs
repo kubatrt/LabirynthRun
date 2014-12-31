@@ -36,6 +36,7 @@ public class Labyrinth : MonoBehaviour
 	public GameObject triggerPrefab;
 	public GameObject finishPrefab;
 	public GameObject playerPrefab;
+	public GameObject mapCamera;
 
 	// default values for prefab settings ... do not touch!
 	public float size = 1f;	// prefab size
@@ -86,10 +87,25 @@ public class Labyrinth : MonoBehaviour
 	{
 		foreach(MazeCell cell in cells) 
 		{
+			// map camera
+			GameObject newObject2 = (GameObject)GameObject.Instantiate(
+				mapCamera, new Vector3(15,5,14),Quaternion.identity);
+			newObject2.transform.parent = objectsContainer.transform;
+			newObject2.transform.Rotate (new Vector3(90,0,0));
+
 			if(cell.IsStartCell) {
+				// create player and set rotation
 				GameObject newObject = (GameObject)GameObject.Instantiate(
-					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
-				newObject.transform.parent = objectsContainer.transform;	
+					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, playerPrefab.transform.localScale.y), Quaternion.identity);
+				newObject.transform.parent = objectsContainer.transform;
+				if(cell.ExitEast){
+					newObject.transform.Rotate(new Vector3(0,90,0));
+				}
+				else if(cell.ExitWest){
+					newObject.transform.Rotate(new Vector3(0,-90,0));
+				}
+				newObject.transform.Translate(new Vector3(0,0,1));
+				newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = newObject2.GetComponent<Camera>();
 			}
 			else if(cell.IsFinishCell) {
 				GameObject newObject = (GameObject)GameObject.Instantiate(
@@ -102,10 +118,17 @@ public class Labyrinth : MonoBehaviour
 				newObject.transform.parent = objectsContainer.transform;	
 			}
 			else if(cell.TotalExits > 2) {
+				triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.moreWays;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
-					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
+					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;	
-			}	
+			}
+			 else if ((cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) || (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) {
+				triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.oneWay;
+				GameObject newObject = (GameObject)GameObject.Instantiate(
+					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2), Quaternion.identity);
+				newObject.transform.parent = objectsContainer.transform;	
+			} 
 		}
 	}
 

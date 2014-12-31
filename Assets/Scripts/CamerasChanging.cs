@@ -10,6 +10,7 @@ public class CamerasChanging : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		camera.enabled = false;
 		mapTime = 3;
 	}
 	
