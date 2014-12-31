@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour {
 	public bool isMoving = false;
 	public bool chanceToChoice = false;
 	public bool isDead = false;
+	Vector3 startPosition;
+	Quaternion startRotation;
 
 	// possibility of movement
 	public bool leftArrow, rightArrow, upArrow;
@@ -44,6 +46,8 @@ public class PlayerController : MonoBehaviour {
 	}
 	void Start () 
 	{
+		startPosition = transform.position;
+		startRotation = transform.rotation;
 		minSpeed = 1;
 		maxSpeed = 5;
 		rotateTime = 0.25f;
@@ -62,6 +66,17 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		Move();
+	}
+
+	void OnCollisionEnter(Collision col)
+	{
+		if (col.transform.tag == "Wall")
+		{
+			changeMoving();
+			transform.position = startPosition;
+			transform.rotation = startRotation;
+			Invoke("changeMoving", 2);
+		}
 	}
 
 	void PlayerStart()

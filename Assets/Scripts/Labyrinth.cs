@@ -85,14 +85,14 @@ public class Labyrinth : MonoBehaviour
 
 	void CreateObjects()
 	{
+		// map camera
+		GameObject newObject2 = (GameObject)GameObject.Instantiate(
+			mapCamera, new Vector3(15,5,14),Quaternion.identity);
+		newObject2.transform.parent = objectsContainer.transform;
+		newObject2.transform.Rotate (new Vector3(90,0,0));
+
 		foreach(MazeCell cell in cells) 
 		{
-			// map camera
-			GameObject newObject2 = (GameObject)GameObject.Instantiate(
-				mapCamera, new Vector3(15,5,14),Quaternion.identity);
-			newObject2.transform.parent = objectsContainer.transform;
-			newObject2.transform.Rotate (new Vector3(90,0,0));
-
 			if(cell.IsStartCell) {
 				// create player and set rotation
 				GameObject newObject = (GameObject)GameObject.Instantiate(
