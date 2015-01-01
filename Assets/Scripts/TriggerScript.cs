@@ -3,8 +3,8 @@ using System.Collections;
 
 public enum Crossing
 {
-	oneWay,
-	moreWays
+	OneWay,
+	MoreWays
 };
 
 public class TriggerScript : MonoBehaviour {
@@ -32,13 +32,13 @@ public class TriggerScript : MonoBehaviour {
 
 		switch (crossingType) 
 		{
-			case Crossing.oneWay:
+			case Crossing.OneWay:
 			if(PlayerController.Instance.rightArrow)
 				PlayerController.Instance.angle = 90;
 			else if(PlayerController.Instance.leftArrow)
 				PlayerController.Instance.angle = -90;
 			break;
-			case Crossing.moreWays:
+			case Crossing.MoreWays:
 				// signal player is on crossing
 				PlayerController.Instance.chanceToChoice = true;
 				// slow the player
@@ -63,10 +63,10 @@ public class TriggerScript : MonoBehaviour {
 				isLocked = true;
 				switch(crossingType)
 				{
-				case Crossing.oneWay:
+				case Crossing.OneWay:
 					PlayerController.Instance.DoSomethingFun(transform.position);
 					break;
-				case Crossing.moreWays:
+				case Crossing.MoreWays:
 					// if player didnt choose clear chance to choice
 					PlayerController.Instance.chanceToChoice = false;
 					// go exacly on the middle and set way to move (rotate and push)
@@ -81,19 +81,21 @@ public class TriggerScript : MonoBehaviour {
 	void OnTriggerExit()
 	{
 		isLocked = false;
+		ResetPlayerDirections();
+	}
 
-		// reset player directions and angle before next crossing
+	private void ResetPlayerDirections()
+	{
 		PlayerController.Instance.resetDirections();
 		PlayerController.Instance.resetAngle ();
 	}
 
 	private void checkPlayerDirections()
 	{
-		Ray rayLeft, rayRight, rayUp, rayDown;
-		rayLeft = new Ray(transform.position,-transform.right);    // leftArrow 
-		rayRight = new Ray(transform.position,transform.right);    // rightArrow
-		rayUp = new Ray(transform.position,transform.forward);    // upArrow
-		rayDown = new Ray(transform.position,-transform.forward);    // downArrow
+		Ray rayLeft = new Ray(transform.position,-transform.right); 
+		Ray rayRight = new Ray(transform.position,transform.right);    
+		Ray rayUp = new Ray(transform.position,transform.forward);   
+		//Ray rayDown = new Ray(transform.position,-transform.forward); 
 		
 		if (!Physics.Raycast (rayLeft, 2)) 
 		{

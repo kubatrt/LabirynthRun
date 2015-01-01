@@ -16,7 +16,7 @@ public class CameraGUI : MonoBehaviour {
 
 	int buttonHeight, buttonWidth;
 	int screenCenterWidth, screenCenterHeight;
-	int upArrowX,upArrowY,leftArrowX,leftArrowY,rightArrowX,rightArrowY,downArrowX,downArrowY;
+	int upArrowX,upArrowY,leftArrowX,leftArrowY,rightArrowX,rightArrowY;//,downArrowX,downArrowY;
 
 	public GUISkin startCountdown, dedText;
 
@@ -42,8 +42,8 @@ public class CameraGUI : MonoBehaviour {
 		leftArrowY = screenCenterHeight - buttonHeight / 2;
 		rightArrowX = screenCenterWidth - buttonWidth / 2 + Screen.width / 3;
 		rightArrowY = screenCenterHeight - buttonHeight / 2;
-		downArrowX = screenCenterWidth - buttonWidth / 2;
-		downArrowY = screenCenterHeight - buttonHeight / 2 - Screen.height / 3;
+		//downArrowX = screenCenterWidth - buttonWidth / 2;
+		//downArrowY = screenCenterHeight - buttonHeight / 2 - Screen.height / 3;
 	}
 	
 	// Update is called once per frame
