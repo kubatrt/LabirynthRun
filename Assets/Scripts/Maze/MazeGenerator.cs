@@ -32,6 +32,7 @@ public class MazeGenerator : MonoBehaviour
 		// random maze
 		//Seed = UnityEngine.Random.seed;
 
+
 		int distance = 0;
 		int maxDistance = 0;
 		int cellIndex = 0;

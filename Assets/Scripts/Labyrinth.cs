@@ -32,7 +32,7 @@ public class Labyrinth : MonoBehaviour
 
 	public GameObject wallPrefab;
 	public GameObject wall2Prefab;
-	public GameObject worldPrefab;
+	public GameObject deadEndPrefab;
 	public GameObject triggerPrefab;
 	public GameObject finishPrefab;
 	public GameObject playerPrefab;
@@ -130,7 +130,7 @@ public class Labyrinth : MonoBehaviour
 			else if(cell.IsDeadEnd) 
 			{
 				GameObject newObject = (GameObject)GameObject.Instantiate(
-					worldPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
+					deadEndPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;	
 			}
 			else if(cell.TotalExits > 2) 
