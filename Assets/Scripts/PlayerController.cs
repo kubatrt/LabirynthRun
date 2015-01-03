@@ -38,11 +38,15 @@ public class PlayerController : MonoBehaviour {
 	public float corTimer;
 	public float gameTime;  
 	public float rotateTime;
+
+	// animations
+	Animator animator;
 	
 	// Use this for initialization
 	void Awake()
 	{
 		instance = this;
+		animator = GetComponent<Animator> ();
 	}
 	void Start () 
 	{
@@ -62,7 +66,7 @@ public class PlayerController : MonoBehaviour {
 
 		if (!isStarted && gameTime < -2) 
 		{
-			PlayerStart();
+			StartPlayer();
 		}
 
 		Move();
@@ -73,17 +77,25 @@ public class PlayerController : MonoBehaviour {
 		if (col.transform.tag == "Wall")
 		{
 			changeMoving();
-			transform.position = startPosition;
-			transform.rotation = startRotation;
-			Invoke("changeMoving", 2);
+			changeMovingAnim();
+			Invoke("ResetPlayer", 1);
+			Invoke("changeMoving", 3);
+			Invoke("changeMovingAnim", 3);
 		}
 	}
 
-	void PlayerStart()
+	void StartPlayer()
 	{
 		speed = maxSpeed;
-		isMoving = true;
+		changeMoving ();
+		changeMovingAnim ();
 		isStarted = true;
+	}
+
+	void ResetPlayer()
+	{
+		transform.position = startPosition;
+		transform.rotation = startRotation;
 	}
 
 	void Move()
@@ -93,6 +105,12 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void changeMoving() { isMoving = !isMoving; }
+
+	void changeMovingAnim() 
+	{ 
+		bool run = animator.GetBool("Run");
+		animator.SetBool("Run", !run);
+	}
 
 	public void DoSomethingFun(Vector3 triggerPos)
 	{
@@ -125,7 +143,6 @@ public class PlayerController : MonoBehaviour {
 	{
 		Vector3 currentRot = transform.eulerAngles;
 		StartCoroutine(LerpRotation(currentRot, new Vector3(currentRot.x, angle, currentRot.z), exTime));
-		//transform.Rotate (0, angle, 0);
 	}
 
 	IEnumerator LerpSpeed(float a, float b, float exTime)
