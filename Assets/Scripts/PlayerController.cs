@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour {
 		rotateTime = 0.25f;
 		gameTime = 3;
 		//Invoke ("PlayerStart", gameTime + 2);
+		animator.SetBool ("Run", false);
 	}
 	
 	// Update is called once per frame
