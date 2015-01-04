@@ -43,7 +43,6 @@ public class TriggerScript : MonoBehaviour {
 				PlayerController.Instance.chanceToChoice = true;
 				// slow the player
 				PlayerController.Instance.slowDownPlayer ();
-
 			break;
 		}
 	}

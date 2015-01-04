@@ -52,12 +52,13 @@ public class PlayerController : MonoBehaviour {
 	{
 		startPosition = transform.position;
 		startRotation = transform.rotation;
-		minSpeed = 1;
+		minSpeed = 0.5f;
 		maxSpeed = 5;
 		rotateTime = 0.25f;
 		gameTime = 3;
 		//Invoke ("PlayerStart", gameTime + 2);
 		animator.SetBool ("Run", false);
+		animator.SetBool ("Ded", false);
 	}
 	
 	// Update is called once per frame
@@ -78,10 +79,12 @@ public class PlayerController : MonoBehaviour {
 		if (col.transform.tag == "Wall")
 		{
 			changeMoving();
-			changeMovingAnim();
-			Invoke("ResetPlayer", 1);
-			Invoke("changeMoving", 3);
-			Invoke("changeMovingAnim", 3);
+			transform.Translate(new Vector3(0,0,-0.25f));
+			SetDedAnim();
+			Invoke("ResetPlayer",3);
+			Invoke("changeMoving",5);
+			Invoke("SetMovingAnim",5);
+
 		}
 	}
 
@@ -89,7 +92,7 @@ public class PlayerController : MonoBehaviour {
 	{
 		speed = maxSpeed;
 		changeMoving ();
-		changeMovingAnim ();
+		SetMovingAnim ();
 		isStarted = true;
 	}
 
@@ -97,6 +100,16 @@ public class PlayerController : MonoBehaviour {
 	{
 		transform.position = startPosition;
 		transform.rotation = startRotation;
+		ResetPlayerAnim ();
+		resetDirections ();
+	}
+
+	void ResetPlayerAnim()
+	{
+		// all animations set at false
+		animator.SetBool("Run", false);
+		animator.SetBool("Ded", false);
+		animator.SetBool ("SlowDown", false);
 	}
 
 	void Move()
@@ -107,10 +120,27 @@ public class PlayerController : MonoBehaviour {
 
 	public void changeMoving() { isMoving = !isMoving; }
 
-	void changeMovingAnim() 
+	void SetMovingAnim() 
 	{ 
-		bool run = animator.GetBool("Run");
-		animator.SetBool("Run", !run);
+		ResetPlayerAnim();
+		animator.SetBool("Run", true);
+	}
+
+	void SetSlowDownAnim(bool choice)
+	{
+		animator.SetBool ("SlowDown", choice);
+	}
+
+	void SetDedAnim()
+	{
+		ResetPlayerAnim();
+		animator.SetBool ("Ded", true);
+	}
+
+	public void SetCelebrateAnim()
+	{
+		ResetPlayerAnim();
+		animator.SetBool ("Celebrate", true);
 	}
 
 	public void DoSomethingFun(Vector3 triggerPos)
@@ -165,17 +195,23 @@ public class PlayerController : MonoBehaviour {
 	public void slowDownPlayer()
 	{
 		StartCoroutine (LerpSpeed (speed, minSpeed, 0.3f));
+		// slow down animation on
+		SetSlowDownAnim (true);
 	}
 
 	public void acceleratePlayer()
 	{
 		StartCoroutine (LerpSpeed (speed, maxSpeed, 0.3f));
+		// slow down animation off
+		SetSlowDownAnim (false);
 	}
 
 	public void breakSlowAndGo()
 	{
 		StopCoroutine("LerpSpeed");
 		StartCoroutine (LerpSpeed (speed, maxSpeed, corTimer));
+		// slow down animation off
+		SetSlowDownAnim (false);
 	}
 
 	public void resetAngle()
