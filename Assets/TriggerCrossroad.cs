@@ -8,48 +8,45 @@ public enum TriggerCrossing
 	MoreWays
 };
 
+public class MoveDirections
+{
+	public bool Left {get; set; }
+	public bool Right {get; set; }
+	public bool Forward { get; set; }
+	public bool Back { get; set; }
+	
+	public MoveDirections()
+	{
+		Left = Right = Forward = Back = false;
+	}
+};
+
 public class TriggerCrossroad : MonoBehaviour {
 	
 	public TriggerCrossing crossingType;
 	
 	float collisionTolerance = 0.1f;
 	bool isLocked;
-	//float playerSpeed;
+
+	PlayerMecanimController player;
 	
-	
-	void Awake()
+	void Start()
 	{
 		isLocked = false;
+		player = GameObject.FindObjectOfType<PlayerMecanimController>();
 	}
-	
+
+
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.tag != "Player")
 			return;
-		
-		// change trigger's rotation to player's rotation (same directions)
-		PlayerMecanimController player = other.gameObject.GetComponent<PlayerMecanimController>();
+
 		Quaternion playerRotation = player.gameObject.transform.rotation; 
-		transform.rotation = playerRotation;player.angle = 0f;
-		
-		CheckPlayerPossibleDirectionsForPlayer(player);
-		
-		switch (crossingType) 
-		{
-		case TriggerCrossing.OneWay:
-			if(player.rightArrow)
-				player.angle = 90;
-			else if(player.leftArrow)
-				player.angle = -90;
-			break;
-		case TriggerCrossing.MoreWays:
-			Debug.Log ("ENTER chanceToChoice");
-			// signal player is on crossing
-			player.chanceToChoice = true;
-			// slow the player
-			player.SlowDownPlayer ();
-			break;
-		}
+		transform.rotation = playerRotation;
+
+		MoveDirections directions = CheckPossibleDirections();
+		player.EnterCrossroad(directions, crossingType );
 	}
 	
 	
@@ -58,71 +55,63 @@ public class TriggerCrossroad : MonoBehaviour {
 		if(other.gameObject.tag != "Player")
 			return;
 		
-		// inside of crossing change direction and move 
-		PlayerMecanimController player = other.gameObject.GetComponent<PlayerMecanimController>();
+		// inside of crossing change direction and move
 		Vector3 playerPos = player.gameObject.transform.position; playerPos.y = 0;
 		Vector3 triggerPos = transform.position; triggerPos.y = 0;
-		
+
 		float distance = Vector3.Distance(triggerPos, playerPos);
 		distance = Mathf.Abs(distance);
 		
-		// when player is on middle of crossing
+		// when player is on middle of crossing, go out
 		if(!isLocked && distance >= 0 && distance < collisionTolerance)
 		{
 			isLocked = true;
-			Debug.Log ("#### trigger ### ");
-			switch(crossingType)
-			{
-			case TriggerCrossing.OneWay:
-				player.MoveOverCrossroad(triggerPos);
-				break;
-			case TriggerCrossing.MoreWays:
-				// if player didnt choose clear chance to choice
-				player.chanceToChoice = false;
-				// go exacly on the middle and set way to move (rotate and push)
-				player.MoveOverCrossroad(triggerPos);
-				player.AcceleratePlayer();
-				
-				Debug.Log ("# " + gameObject.name + " dist: " + distance);
-				Debug.Log ("# Trigger: " + triggerPos + " Player: " + playerPos);
-				
-				break;
-			}
+			player.MoveOverCrossroad(triggerPos, crossingType);
+
+			Debug.Log ("# Leaving trigger ### ");
+			Debug.Log ("# " + gameObject.name + " dist: " + distance);
+			Debug.Log ("# Trigger: " + triggerPos + " Player: " + playerPos);
 		}
 		
 		
 	}
-	
+
 	void OnTriggerExit(Collider other)
 	{
 		if(other.gameObject.tag != "Player")
 			return;
-		
-		PlayerMecanimController player = other.gameObject.GetComponent<PlayerMecanimController>();
-		player.ResetDirections();
+
+		// TODO: move to better place
+		QuickTimeEvent qte = player.GetComponent<QuickTimeEvent>();
+		if(qte != null && qte.noChoice)
+		{
+			Debug.Log ("No choice");
+		}
+		Destroy(player.GetComponent<QuickTimeEvent>());
 		isLocked = false;
 	}
 	
-	void CheckPlayerPossibleDirectionsForPlayer(PlayerMecanimController player)
+	MoveDirections CheckPossibleDirections()
 	{
+		MoveDirections availableDirs = new MoveDirections();
+		float rayDistance = 2f;
 		Ray rayLeft = new Ray(transform.position, 	-transform.right); 
 		Ray rayRight = new Ray(transform.position, 	transform.right);    
 		Ray rayForward = new Ray(transform.position, transform.forward);   
 		//Ray rayDown = new Ray(transform.position,-transform.forward); 
 		
-		if (!Physics.Raycast (rayLeft, 2)) 
+		if (!Physics.Raycast (rayLeft, rayDistance)) 
 		{
-			player.leftArrow = true;
+			availableDirs.Left = true;
 		}
-		if (!Physics.Raycast (rayRight, 2)) 
+		if (!Physics.Raycast (rayRight, rayDistance)) 
 		{
-			player.rightArrow = true;
+			availableDirs.Right = true;
 		}
-		if (!Physics.Raycast (rayForward, 2)) 
+		if (!Physics.Raycast (rayForward, rayDistance)) 
 		{
-			player.upArrow = true;
+			availableDirs.Forward = true;
 		} 
-		Debug.Log (string.Format("# Possible directions: L:{0} R:{1} UP:{2} ", 
-		                         player.leftArrow, player.rightArrow, player.upArrow));
+		return availableDirs;
 	}
 }

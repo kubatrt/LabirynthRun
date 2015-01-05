@@ -27,7 +27,7 @@ public class UIMainMenu : MonoBehaviour
 		nameInputField.enabled = false;
 	}
 	
-	public void ClearInputField ()
+	public void ClearInputName ()
 	{
 		username = "";
 		nameText.text = username;

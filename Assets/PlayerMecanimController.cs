@@ -1,31 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class PlayerMecanimController : MonoBehaviour 
 {
 	// player states
 	public bool isMoving = false;
-	public bool chanceToChoice = false;
-	public bool isDead = false;
+	public bool isAlive = false;
 	
 	public float minSpeed = 0.5f;
 	public float maxSpeed = 5;
 	public float speed;
 	public float angle;
+	public int failures;
 	
 	//  timers
 	public float coroutineTimer;
 	public float rotationTime = 0.25f;
-	
-	//[SerializeField] float startupTimer = 0;
-	
-	// QTE crossing possibility of movement
-	public bool leftArrow, rightArrow, upArrow;
+	public float gameTimer; // TEMP
+
+	static readonly float rotationLeft = -90f;
+	static readonly float rotationRight = 90f;
 
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
-	
-	Animator animator;
+	Animator 	animator;
 	
 	
 	void Awake()
@@ -41,15 +41,17 @@ public class PlayerMecanimController : MonoBehaviour
 		
 		startupPosition = transform.position;
 		startupRotation = transform.rotation;
-		Invoke ("PlayerStart", 1f);
-		
 		animator.SetBool ("Run", false);
 		animator.SetBool ("Ded", false);
+		Invoke ("StartPlayer", 1f); // self - temp
 	}
 	
 	void Update () 
 	{
 		Move();
+
+		if(isAlive)
+			gameTimer += Time.deltaTime;
 	}
 	
 	
@@ -60,33 +62,28 @@ public class PlayerMecanimController : MonoBehaviour
 			ToggleMoving();
 			transform.Translate(new Vector3(0,0,-0.25f));
 			SetDedAnim();
-			RestartGame();
+			isAlive = false;
+			Invoke("ResetPlayer", 3f);	// animation.Lenght
 		}
 	}
-	
-	
-	void RestartGame()
-	{
-		Debug.Log ("### RestartGame ");
-		Invoke("ResetPlayer", 3f);
-		Invoke("ToggleMoving", 5f);
-		Invoke("SetMovingAnim", 5f);
-	}
+
 	
 	void StartPlayer()
 	{
 		speed = maxSpeed;
 		ToggleMoving ();
 		SetMovingAnim ();
-		Debug.Log ("### StartPlayer ");
+		failures = 0;
+		isAlive = true;
+		gameTimer = 0;
 	}
 	
 	void ResetPlayer()
 	{
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
-		ResetAnimations ();
-		ResetDirections ();
+		ResetAnimations();
+		Invoke("StartPlayer", 1f);
 	}
 	
 	void ResetAnimations()
@@ -95,20 +92,45 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool("Ded", false);
 		animator.SetBool("SlowDown", false);
 	}
-	
-	public void MoveOverCrossroad(Vector3 triggerPos)
+
+	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
 	{
-		ToggleMoving();
+		angle = 0f;
+
+		switch (crossingType) 
+		{
+			case TriggerCrossing.OneWay:
+				Debug.Log ("@ EnterCrossroad:OneWay");
+				if(directions.Right)
+					angle = rotationRight;
+				else if(directions.Left)
+					angle = rotationLeft;
+				break;
+				
+			case TriggerCrossing.MoreWays:
+				Debug.Log ("@ EnterCrossroad:MoreWays");
+
+				float timeForDecision = 2f;
+				SlowDownMovement();
+				QuickTimeEvent qte = gameObject.AddComponent<QuickTimeEvent>();
+				qte.directions = directions;
+				break;
+		}
+	}
+	
+	public void MoveOverCrossroad(Vector3 triggerPos, TriggerCrossing crossingType)
+	{
 		transform.position = triggerPos;
+
 		if(angle != 0)
 		{					
+			ToggleMoving();
 			Rotate(rotationTime); // turn and go
-			Invoke ("ToggleMoving", (rotationTime + 0.05f)); // TODO: MagicNumber
+			Invoke ("ToggleMoving", (rotationTime + 0.05f));
 		}
-		else
-		{
-			ToggleMoving(); // just go
-		}
+
+		if(crossingType == TriggerCrossing.MoreWays)
+			AccelerateMovement();
 	}
 	
 	void Move()
@@ -116,11 +138,33 @@ public class PlayerMecanimController : MonoBehaviour
 		if(isMoving == true)
 			transform.Translate(0, 0, speed * Time.deltaTime);
 	}
-	
+
 	public void ToggleMoving() 
 	{ 
 		isMoving = !isMoving; 
 	}
+
+	public void GoForward()
+	{
+		angle = 0;
+		BreakSlowAndGo();
+	}
+
+	public void GoLeft()
+	{
+		angle = rotationLeft;
+		BreakSlowAndGo();
+	}
+
+	public void GoRight()
+	{
+		angle = rotationRight;
+		BreakSlowAndGo();
+	}
+
+
+
+
 	
 	void SetMovingAnim() 
 	{ 
@@ -151,6 +195,27 @@ public class PlayerMecanimController : MonoBehaviour
 		StartCoroutine(LerpRotation(currentRotation, new Vector3(currentRotation.x, angle, currentRotation.z), exTime));
 	}
 	
+	public void SlowDownMovement()
+	{
+		StartCoroutine ( LerpSpeed(speed, minSpeed, 0.3f));
+		SetSlowDownAnim (true);
+	}
+	
+	public void AccelerateMovement()
+	{
+		StartCoroutine (LerpSpeed (speed, maxSpeed, 0.3f));
+		SetSlowDownAnim (false);
+	}
+	
+	public void BreakSlowAndGo()
+	{
+		StopCoroutine("LerpSpeed");
+		StartCoroutine (LerpSpeed (speed, maxSpeed, coroutineTimer));
+		SetSlowDownAnim (false);
+	}
+
+	#region Coroutines
+
 	IEnumerator LerpRotation(Vector3 from, Vector3 to, float exTime)
 	{
 		float startTime = Time.time;
@@ -180,28 +245,6 @@ public class PlayerMecanimController : MonoBehaviour
 		coroutineTimer = Time.time - startTime;
 		speed = B.x;
 	}
-	
-	public void SlowDownPlayer()
-	{
-		StartCoroutine ( LerpSpeed(speed, minSpeed, 0.3f));
-		SetSlowDownAnim (true);
-	}
-	
-	public void AcceleratePlayer()
-	{
-		StartCoroutine (LerpSpeed (speed, maxSpeed, 0.3f));
-		SetSlowDownAnim (false);
-	}
-	
-	public void BreakSlowAndGo()
-	{
-		StopCoroutine("LerpSpeed");
-		StartCoroutine (LerpSpeed (speed, maxSpeed, coroutineTimer));
-		SetSlowDownAnim (false);
-	}
-	
-	public void ResetDirections()
-	{
-		upArrow = leftArrow = rightArrow = false;
-	}
+
+	#endregion
 }
