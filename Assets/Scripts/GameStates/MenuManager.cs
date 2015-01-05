@@ -39,4 +39,9 @@ public class MenuManager : MonoBehaviour
 	{
 		text.text = username;
 	}
+
+	public void SetUsername()
+	{
+		GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameManager> ().playerName = username;
+	}
 }

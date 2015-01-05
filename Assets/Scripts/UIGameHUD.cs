@@ -9,12 +9,14 @@ public class UIGameHUD : MonoBehaviour
 	public Text failuresText; 
 
 	PlayerMecanimController player;
+	GameManager gm;
 
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		playerText.text = player.gameObject.name;
+		gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+		playerText.text = gm.playerName;
 	}
 	
 	void Update () 
