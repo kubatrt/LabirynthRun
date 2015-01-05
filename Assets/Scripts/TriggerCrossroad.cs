@@ -17,7 +17,10 @@ public class MoveDirections
 	
 	public MoveDirections()
 	{
-		Left = Right = Forward = Back = false;
+		Left = false;
+		Right = false;
+		Forward = false;
+		Back = false;
 	}
 };
 

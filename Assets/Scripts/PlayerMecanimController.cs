@@ -16,8 +16,7 @@ public class PlayerMecanimController : MonoBehaviour
 	public int failures;
 	
 	//  timers
-	public float coroutineTimer = 0.3f;
-	public float rotationTime = 0.25f;
+	[SerializeField] float rotationTime;
 	public float gameTimer; // TEMP
 
 	static readonly float rotationLeft = -90f;
@@ -27,10 +26,13 @@ public class PlayerMecanimController : MonoBehaviour
 	Quaternion 	startupRotation;
 	Animator 	animator;
 	
-	
+	public QuickTimeEvent qte;
+
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
+		qte = GameObject.FindWithTag("QTE").GetComponent<QuickTimeEvent>();
+		qte.player = this;
 	}
 	
 	void Start () 
@@ -43,7 +45,9 @@ public class PlayerMecanimController : MonoBehaviour
 		startupRotation = transform.rotation;
 		animator.SetBool ("Run", false);
 		animator.SetBool ("Ded", false);
-		Invoke ("StartPlayer", 1f); // self - temp
+
+		qte.gameObject.SetActive(false);
+		Invoke ("StartPlayer", 1f);
 	}
 	
 	void Update () 
@@ -76,6 +80,7 @@ public class PlayerMecanimController : MonoBehaviour
 		failures = 0;
 		isAlive = true;
 		gameTimer = 0;
+		Debug.Log ("StartPlayer");
 	}
 	
 	void ResetPlayer()
@@ -112,8 +117,11 @@ public class PlayerMecanimController : MonoBehaviour
 
 				float timeForDecision = 2f;
 				SlowDownMovement();
-				QuickTimeEvent qte = gameObject.AddComponent<QuickTimeEvent>();
+				
 				qte.directions = directions;
+				qte.gameObject.SetActive(true);
+				
+
 				break;
 		}
 	}
@@ -135,8 +143,9 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	void Move()
 	{
-		if(isMoving == true)
-			transform.Translate(0, 0, speed * Time.deltaTime);
+		if(isMoving == true) {
+			transform.Translate(Vector3.forward * speed * Time.deltaTime);
+		}
 	}
 
 	public void ToggleMoving() 
@@ -197,20 +206,20 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public void SlowDownMovement()
 	{
-		StartCoroutine( LerpSpeed(speed, minSpeed, coroutineTimer));
+		StartCoroutine( LerpSpeed(speed, minSpeed, 0.3f));
 		SetSlowDownAnim(true);
 	}
 	
 	public void AccelerateMovement()
 	{
-		StartCoroutine( LerpSpeed(speed, maxSpeed, coroutineTimer));
+		StartCoroutine( LerpSpeed(speed, maxSpeed, 0.3f));
 		SetSlowDownAnim(false);
 	}
 	
 	public void BreakSlowAndGo()
 	{
 		StopCoroutine("LerpSpeed");
-		StartCoroutine( LerpSpeed(speed, maxSpeed, 0f));
+		StartCoroutine( LerpSpeed(speed, maxSpeed, 0.25f));
 		SetSlowDownAnim(false);
 	}
 
