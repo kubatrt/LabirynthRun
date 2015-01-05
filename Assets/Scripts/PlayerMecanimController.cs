@@ -18,6 +18,7 @@ public class PlayerMecanimController : MonoBehaviour
 	//  timers
 	[SerializeField] float rotationTime;
 	public float gameTimer; // TEMP
+	float coroutineTimer;
 
 	static readonly float rotationLeft = -90f;
 	static readonly float rotationRight = 90f;
@@ -140,6 +141,13 @@ public class PlayerMecanimController : MonoBehaviour
 		if(crossingType == TriggerCrossing.MoreWays)
 			AccelerateMovement();
 	}
+
+	public void LeaveCrossroad(TriggerCrossing crossingType)
+	{
+		if(qte.noChoice && (crossingType == TriggerCrossing.MoreWays)) 
+			failures++;
+		qte.gameObject.SetActive(false);
+	}
 	
 	void Move()
 	{
@@ -219,7 +227,7 @@ public class PlayerMecanimController : MonoBehaviour
 	public void BreakSlowAndGo()
 	{
 		StopCoroutine("LerpSpeed");
-		StartCoroutine( LerpSpeed(speed, maxSpeed, 0.25f));
+		StartCoroutine( LerpSpeed(speed, maxSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
 	}
 

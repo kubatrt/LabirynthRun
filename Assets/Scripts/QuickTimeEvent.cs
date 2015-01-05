@@ -6,7 +6,7 @@ using System.Collections;
 
 public class QuickTimeEvent : MonoBehaviour 
 {
-	public RectTransform	panel;
+	public GameObject	panel;
 
 	public float startTime;
 	public float responseTime;
@@ -16,7 +16,7 @@ public class QuickTimeEvent : MonoBehaviour
 
 	public PlayerMecanimController player;
 
-	public Button buttonLeft, buttonRight, buttonUp;
+	Button buttonLeft, buttonRight, buttonUp;
 	Text responseText; 
 
 	void Awake() 
@@ -29,13 +29,13 @@ public class QuickTimeEvent : MonoBehaviour
 		buttonRight.onClick.AddListener(OnClickButtonRight);
 		buttonUp.onClick.AddListener(OnClickButtonUp);
 
-
 		responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
 	}
 
 	void Start() 
 	{
-		//player = GameObject.FindWithTag("Player").GetComponent <PlayerMecanimController>();
+		if(player == null)
+			player = GameObject.FindObjectOfType<PlayerMecanimController>();
 		// start as diabled
 		//panel.gameObject.SetActive(false);
 	}
@@ -45,20 +45,25 @@ public class QuickTimeEvent : MonoBehaviour
 		noChoice = true;
 		startTime = Time.time;
 		responseTime = 0;
-		panel.gameObject.SetActive(true);
+		panel.SetActive(true);
+		//panel.
 		SetupButtons();
+
 		Debug.Log ("QTE OnEnable()");
 	}
 
 	void OnDisable()
 	{
-		panel.gameObject.SetActive(false);
+		if(panel != null) {
+			panel.SetActive(false);
+//			panel.GetComponent<Image>().color.a = 0f;
+			//Debug.LogWarning("No panel reference");
+		}
 		Debug.Log ("QTE OnDisable()");
 	}
 	
 	void Update () 
 	{
-
 		responseTime += Time.deltaTime;
 		responseText.text = responseTime.ToString();
 	}

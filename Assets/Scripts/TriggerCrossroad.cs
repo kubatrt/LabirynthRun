@@ -28,7 +28,7 @@ public class TriggerCrossroad : MonoBehaviour {
 	
 	public TriggerCrossing crossingType;
 	
-	float collisionTolerance = 0.1f;
+	float collisionTolerance = 0.15f;
 	bool isLocked;
 
 	PlayerMecanimController player;
@@ -37,6 +37,7 @@ public class TriggerCrossroad : MonoBehaviour {
 	{
 		isLocked = false;
 		player = GameObject.FindObjectOfType<PlayerMecanimController>();
+		// TODO: all triggers need to find player reference, or get it from collision
 	}
 
 
@@ -65,13 +66,15 @@ public class TriggerCrossroad : MonoBehaviour {
 		float distance = Vector3.Distance(triggerPos, playerPos);
 		distance = Mathf.Abs(distance);
 		
-		// when player is on middle of crossing, go out
+		// when player is on middle of crossing, go out -
+		// TODO: do it better, move player to target, after reaching target set new 
 		if(!isLocked && distance >= 0 && distance < collisionTolerance)
 		{
 			isLocked = true;
 			player.MoveOverCrossroad(triggerPos, crossingType);
 
 			Debug.Log ("# Leaving trigger # ");
+			player.LeaveCrossroad(crossingType);
 		}
 		
 		//Debug.Log ("# " + gameObject.name + " Dist: " + distance + " # Pos: " + triggerPos + " PlayerPos: " + playerPos);
@@ -82,14 +85,7 @@ public class TriggerCrossroad : MonoBehaviour {
 		if(other.gameObject.tag != "Player")
 			return;
 
-		// TODO: move to better place
-		QuickTimeEvent qte = player.GetComponent<QuickTimeEvent>();
-		if(qte != null && qte.noChoice)
-		{
-			Debug.Log ("### No choice");
-			player.failures++;
-		}
-		Destroy(player.GetComponent<QuickTimeEvent>());
+
 		isLocked = false;
 	}
 	

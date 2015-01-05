@@ -1,26 +1,49 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class UIGameHUD : MonoBehaviour 
 {
-	public UnityEngine.UI.Text timeText;
-
+	public Text playerText;
+	public Text timeText;
+	public Text failuresText; 
 
 	PlayerMecanimController player;
 
 
-	// Use this for initialization
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+		playerText.text = player.gameObject.name;
 	}
 	
-	// Update is called once per frame
 	void Update () 
 	{
 		if(player == null)
 			return;
 
-		timeText.text = player.gameTimer.ToString();
+		failuresText.text = player.failures.ToString();
+		timeText.text = string.Format(" {0:F2} ", player.gameTimer);
+	}
+
+
+	public void OnClickMapButton()
+	{
+
+	}
+
+	public void OnClickRestartButton()
+	{
+
+	}
+
+	public void OnClickQuitButton()
+	{
+		Application.LoadLevel("Animated Menu");
+	}
+
+	public void OnClickPauseButton()
+	{
+
 	}
 }
