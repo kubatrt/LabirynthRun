@@ -10,6 +10,7 @@ public class QuickTimeEvent : MonoBehaviour
 
 	public float startTime;
 	public float responseTime;
+	public float timeLimit = 2.0f;
 	public bool noChoice;
 
 	public MoveDirections directions = new MoveDirections();
@@ -18,26 +19,26 @@ public class QuickTimeEvent : MonoBehaviour
 
 	Button buttonLeft, buttonRight, buttonUp;
 	Text responseText; 
+	Slider sliderTimeLeft;
 
 	void Awake() 
 	{
+		// find controls in "Panel" childs, could be public
 		buttonLeft = panel.transform.FindChild("ButtonLeft").GetComponent<Button>();
 		buttonRight = panel.transform.FindChild("ButtonRight").GetComponent<Button>();
 		buttonUp = panel.transform.FindChild("ButtonUp").GetComponent<Button>();
+		responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
+		sliderTimeLeft = panel.transform.FindChild("SliderTimeLeft").GetComponent<Slider>();
 
 		buttonLeft.onClick.AddListener(OnClickButtonLeft);
 		buttonRight.onClick.AddListener(OnClickButtonRight);
 		buttonUp.onClick.AddListener(OnClickButtonUp);
-
-		responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
 	}
 
 	void Start() 
 	{
 		if(player == null)
 			player = GameObject.FindObjectOfType<PlayerMecanimController>();
-		// start as diabled
-		//panel.gameObject.SetActive(false);
 	}
 
 	void OnEnable()
@@ -48,24 +49,27 @@ public class QuickTimeEvent : MonoBehaviour
 		panel.SetActive(true);
 		//panel.
 		SetupButtons();
+		sliderTimeLeft.maxValue = timeLimit;
+		sliderTimeLeft.minValue = 0f;
+		sliderTimeLeft.value = timeLimit;	// 2s with speed = 5
 
-		Debug.Log ("QTE OnEnable()");
+		//Debug.Log ("QTE OnEnable()");
 	}
 
 	void OnDisable()
 	{
 		if(panel != null) {
 			panel.SetActive(false);
-//			panel.GetComponent<Image>().color.a = 0f;
-			//Debug.LogWarning("No panel reference");
 		}
-		Debug.Log ("QTE OnDisable()");
+		//Debug.Log ("QTE OnDisable()");
 	}
 	
 	void Update () 
 	{
 		responseTime += Time.deltaTime;
-		responseText.text = responseTime.ToString();
+
+		responseText.text = string.Format ("{0:F2}", responseTime);
+		sliderTimeLeft.value = timeLimit - responseTime;
 	}
 
 	void ResetButtons()
@@ -80,7 +84,6 @@ public class QuickTimeEvent : MonoBehaviour
 
 	void SetupButtons()
 	{
-		Debug.Log("SetupButtons() L: " + directions.Left + " R:" + directions.Right + " F:" + directions.Forward);
 		ResetButtons();
 
 		if(directions.Left) {

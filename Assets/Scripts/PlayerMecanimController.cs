@@ -53,10 +53,10 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	void Update () 
 	{
-		Move();
-
-		if(isAlive)
+		if(isAlive) {
+			Move();
 			gameTimer += Time.deltaTime;
+		}
 	}
 	
 	
@@ -81,7 +81,6 @@ public class PlayerMecanimController : MonoBehaviour
 		failures = 0;
 		isAlive = true;
 		gameTimer = 0;
-		Debug.Log ("StartPlayer");
 	}
 	
 	void ResetPlayer()
@@ -138,15 +137,12 @@ public class PlayerMecanimController : MonoBehaviour
 			Invoke ("ToggleMoving", (rotationTime + 0.05f));
 		}
 
-		if(crossingType == TriggerCrossing.MoreWays)
+		if(crossingType == TriggerCrossing.MoreWays) {
 			AccelerateMovement();
-	}
-
-	public void LeaveCrossroad(TriggerCrossing crossingType)
-	{
-		if(qte.noChoice && (crossingType == TriggerCrossing.MoreWays)) 
-			failures++;
-		qte.gameObject.SetActive(false);
+			if(qte.noChoice)
+				failures++;
+			qte.gameObject.SetActive(false);
+		}
 	}
 	
 	void Move()

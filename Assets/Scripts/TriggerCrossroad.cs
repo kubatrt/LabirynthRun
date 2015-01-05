@@ -10,10 +10,10 @@ public enum TriggerCrossing
 
 public class MoveDirections
 {
-	public bool Left {get; set; }
-	public bool Right {get; set; }
+	public bool Left 	{get; set; }
+	public bool Right 	{get; set; }
 	public bool Forward { get; set; }
-	public bool Back { get; set; }
+	public bool Back 	{ get; set; }
 	
 	public MoveDirections()
 	{
@@ -36,8 +36,7 @@ public class TriggerCrossroad : MonoBehaviour {
 	void Start()
 	{
 		isLocked = false;
-		player = GameObject.FindObjectOfType<PlayerMecanimController>();
-		// TODO: all triggers need to find player reference, or get it from collision
+		player = GameObject.FindObjectOfType<PlayerMecanimController>(); // TODO: is it the good way?
 	}
 
 
@@ -66,15 +65,14 @@ public class TriggerCrossroad : MonoBehaviour {
 		float distance = Vector3.Distance(triggerPos, playerPos);
 		distance = Mathf.Abs(distance);
 		
-		// when player is on middle of crossing, go out -
-		// TODO: do it better, move player to target, after reaching target set new 
+		// when player is on middle of crossing, go out
+		// TODO: needs do be done better
 		if(!isLocked && distance >= 0 && distance < collisionTolerance)
 		{
 			isLocked = true;
 			player.MoveOverCrossroad(triggerPos, crossingType);
-
 			Debug.Log ("# Leaving trigger # ");
-			player.LeaveCrossroad(crossingType);
+
 		}
 		
 		//Debug.Log ("# " + gameObject.name + " Dist: " + distance + " # Pos: " + triggerPos + " PlayerPos: " + playerPos);
