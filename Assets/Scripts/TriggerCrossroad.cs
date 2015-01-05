@@ -68,12 +68,10 @@ public class TriggerCrossroad : MonoBehaviour {
 			isLocked = true;
 			player.MoveOverCrossroad(triggerPos, crossingType);
 
-			Debug.Log ("# Leaving trigger ### ");
-			Debug.Log ("# " + gameObject.name + " dist: " + distance);
-			Debug.Log ("# Trigger: " + triggerPos + " Player: " + playerPos);
+			Debug.Log ("# Leaving trigger # ");
 		}
 		
-		
+		//Debug.Log ("# " + gameObject.name + " Dist: " + distance + " # Pos: " + triggerPos + " PlayerPos: " + playerPos);
 	}
 
 	void OnTriggerExit(Collider other)
@@ -85,7 +83,8 @@ public class TriggerCrossroad : MonoBehaviour {
 		QuickTimeEvent qte = player.GetComponent<QuickTimeEvent>();
 		if(qte != null && qte.noChoice)
 		{
-			Debug.Log ("No choice");
+			Debug.Log ("### No choice");
+			player.failures++;
 		}
 		Destroy(player.GetComponent<QuickTimeEvent>());
 		isLocked = false;

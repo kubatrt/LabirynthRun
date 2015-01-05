@@ -16,7 +16,7 @@ public class PlayerMecanimController : MonoBehaviour
 	public int failures;
 	
 	//  timers
-	public float coroutineTimer;
+	public float coroutineTimer = 0.3f;
 	public float rotationTime = 0.25f;
 	public float gameTimer; // TEMP
 
@@ -100,7 +100,7 @@ public class PlayerMecanimController : MonoBehaviour
 		switch (crossingType) 
 		{
 			case TriggerCrossing.OneWay:
-				Debug.Log ("@ EnterCrossroad:OneWay");
+				Debug.Log ("# EnterCrossroad:OneWay");
 				if(directions.Right)
 					angle = rotationRight;
 				else if(directions.Left)
@@ -108,7 +108,7 @@ public class PlayerMecanimController : MonoBehaviour
 				break;
 				
 			case TriggerCrossing.MoreWays:
-				Debug.Log ("@ EnterCrossroad:MoreWays");
+				Debug.Log ("# EnterCrossroad:MoreWays");
 
 				float timeForDecision = 2f;
 				SlowDownMovement();
@@ -197,21 +197,21 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public void SlowDownMovement()
 	{
-		StartCoroutine ( LerpSpeed(speed, minSpeed, 0.3f));
-		SetSlowDownAnim (true);
+		StartCoroutine( LerpSpeed(speed, minSpeed, coroutineTimer));
+		SetSlowDownAnim(true);
 	}
 	
 	public void AccelerateMovement()
 	{
-		StartCoroutine (LerpSpeed (speed, maxSpeed, 0.3f));
-		SetSlowDownAnim (false);
+		StartCoroutine( LerpSpeed(speed, maxSpeed, coroutineTimer));
+		SetSlowDownAnim(false);
 	}
 	
 	public void BreakSlowAndGo()
 	{
 		StopCoroutine("LerpSpeed");
-		StartCoroutine (LerpSpeed (speed, maxSpeed, coroutineTimer));
-		SetSlowDownAnim (false);
+		StartCoroutine( LerpSpeed(speed, maxSpeed, 0f));
+		SetSlowDownAnim(false);
 	}
 
 	#region Coroutines
