@@ -14,24 +14,18 @@ public class MazeGenerator : MonoBehaviour
 	public bool Wrap = false;
 
 	public Vector2 startPosition;
-	[SerializeField] Vector2 finishPosition;
+	Vector2 finishPosition;
 
 	Grid<MazeCell> maze;
 
-	void Awake()
-	{
-		Generate();
-	}
 
 	public void Generate()
 	{
 		maze = new Grid<MazeCell>(Width, Height);
 		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
-		// regular maze
-		UnityEngine.Random.seed = Seed;
-		// random maze
-		//Seed = UnityEngine.Random.seed;
 
+		if(Seed != 0)
+			UnityEngine.Random.seed = Seed;
 
 		int distance = 0;
 		int maxDistance = 0;
@@ -129,8 +123,8 @@ public class MazeGenerator : MonoBehaviour
 			}
 		}
 
-		Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}]", 
-		                         maxDistance, finishPosition.x, finishPosition.y)); 
+		Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
+		                         maxDistance, finishPosition.x, finishPosition.y, maze.Area )); 
 		//maze = mazeGrid;
 		//return mazeGrid;
 	}

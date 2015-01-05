@@ -5,31 +5,8 @@ using System.Collections.Generic;
 
 
 //----------------------------------------------------------------------------------------------------------------------
-public class Vector3SortByX : IComparer<Vector3>
-{
-	public int Compare( Vector3 a, Vector3 b)
-	{
-		if(a.x > b.x) return 1;
-		else if (a.x < b.x) return -1;
-		else return 0;
-	}
-}
-
-public class Vector3SortByZ : IComparer<Vector3>
-{
-	public int Compare( Vector3 a, Vector3 b)
-	{
-		if(a.z > b.z) return 1;
-		else if (a.z < b.z) return -1;
-		else return 0;
-	}
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
 public class Labyrinth : MonoBehaviour 
 {
-
 	public GameObject wallPrefab;
 	public GameObject wall2Prefab;
 	public GameObject deadEndPrefab;
@@ -46,7 +23,7 @@ public class Labyrinth : MonoBehaviour
 	public float offset = 4f;	// distance between centers of cells * offset = distance between cells
 	public float wallHeight = 0f;
 
-	public int debugObjectCount = 0;
+	int debugObjectCount;
 
 	MazeGenerator maze;
 	List<MazeCell> cells = new List<MazeCell>();
@@ -56,21 +33,38 @@ public class Labyrinth : MonoBehaviour
 	GameObject objectsContainer;
 	GameObject triggersContainer;
 
+	GameObject mapCamera;
+	//int mazeWidth;
+	//int mazeHeight;
+
+
 	// local method, or use MazeGenerator.GridToRorld
 	Vector3 MazeToWorld(GridPosition cellPos)
 	{
 		return new Vector3((float)cellPos.x * offset, wallHeight, (float)cellPos.y * offset);
 	}
 
-	void Start () 
-	{
-		// all other components can access maze like this
-		maze = GetComponent<MazeGenerator>();
-		cells = maze.GetCells(); 
 
-		CreateContainers();
+	void Awake () 
+	{
+		// if maze already exists, do not generate it again
+		if(Application.isEditor)
+			if(transform.GetComponentsInChildren<Transform>().Length != 1)
+				return;
+		
+		GenerateMaze();
 		BuildWalls();
 		CreateGameObjects();
+		CreateMapCamera();
+	}
+
+	public void GenerateMaze()
+	{
+		debugObjectCount = 0;
+		maze = GetComponent<MazeGenerator>();
+		maze.Generate();
+		cells = maze.GetCells();
+		CreateContainers();
 	}
 
 	void CreateContainers()
@@ -78,47 +72,52 @@ public class Labyrinth : MonoBehaviour
 		if(GameObject.Find("_Walls") == null) {
 			wallContainer = new GameObject("_Walls");
 			wallContainer.transform.parent = transform;
-		}
+		} 
+
 		if(GameObject.Find ("_Objects") == null) {
 			objectsContainer = new GameObject("_Objects");
 			objectsContainer.transform.parent = transform;
 		}
+
 		if(GameObject.Find ("_Triggers") == null) {
 			triggersContainer = new GameObject("_Triggers");
 			triggersContainer.transform.parent = transform;
 		}
 	}
 
-	GameObject mapCamera;
-	private void CreateMapCamera()
+	void CreateMapCamera()
 	{
 		mapCamera = (GameObject)GameObject.Instantiate(mapCameraPrefab, new Vector3(15,5,14), Quaternion.identity);
 		mapCamera.transform.parent = objectsContainer.transform;
 		mapCamera.transform.Rotate (new Vector3(90,0,0));
 	}
 
-	private void CreateGameObjects()
+	public void CreateGameObjects()
 	{
-		// map camera
-		CreateMapCamera();
-
+		int triggersCounter = 0;
 		foreach(MazeCell cell in cells) 
 		{
 			if(cell.IsStartCell) 
 			{
 				// create player and set rotation
 				GameObject newObject = (GameObject)GameObject.Instantiate(
-					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, playerPrefab.transform.localScale.y), Quaternion.identity);
+					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;
+				// TODO: refator
+
+
 				if(cell.ExitEast)
 				{
-					newObject.transform.Rotate(new Vector3(0,90,0));
+					Vector3 rotationRight = new Vector3(0,90f,0);
+					newObject.transform.Rotate(rotationRight);
 				}
 				else if(cell.ExitWest)
 				{
-					newObject.transform.Rotate(new Vector3(0,-90,0));
+					Vector3 rotationLeft = new Vector3(0,-90f,0);
+					newObject.transform.Rotate(rotationLeft);
 				}
-				newObject.transform.Translate(new Vector3(0,0,1));
+
+				//newObject.transform.Translate(new Vector3(0,0,1));
 				newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = mapCameraPrefab.GetComponent<Camera>();
 			}
 			else if(cell.IsFinishCell) 
@@ -138,15 +137,17 @@ public class Labyrinth : MonoBehaviour
 				triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.MoreWays;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-				newObject.transform.parent = triggersContainer.transform;	
+				newObject.transform.parent = triggersContainer.transform;
+				newObject.name = "Trigger(MoreWays) " + triggersCounter++;
 			}
-			else if (	(cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) 
-			         || (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) 
+			else if((cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) || 
+			        (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) 
 			{
 				triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.OneWay;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-				newObject.transform.parent = triggersContainer.transform;	
+				newObject.transform.parent = triggersContainer.transform;
+				newObject.name = "Trigger(OneWay) " + triggersCounter++;
 			} 
 			if(cell.TotalExits > 2) // debug
 			{
@@ -157,8 +158,9 @@ public class Labyrinth : MonoBehaviour
 		}
 	}
 
-	void BuildWalls()
+	public void BuildWalls()
 	{
+		wallsWorldPositions.Clear();
 		int duplicates = 0;	// debug only
 		// Step I. Generate basic data, all corners and middles in cells
 		foreach(MazeCell cell in cells) 
@@ -290,4 +292,25 @@ public class Labyrinth : MonoBehaviour
 	}
 
 	#endregion
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+public class Vector3SortByX : IComparer<Vector3>
+{
+	public int Compare( Vector3 a, Vector3 b)
+	{
+		if(a.x > b.x) return 1;
+		else if (a.x < b.x) return -1;
+		else return 0;
+	}
+}
+
+public class Vector3SortByZ : IComparer<Vector3>
+{
+	public int Compare( Vector3 a, Vector3 b)
+	{
+		if(a.z > b.z) return 1;
+		else if (a.z < b.z) return -1;
+		else return 0;
+	}
 }

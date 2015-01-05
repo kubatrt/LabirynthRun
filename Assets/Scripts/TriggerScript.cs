@@ -52,9 +52,10 @@ public class TriggerScript : MonoBehaviour {
 		// inside of crossing change direction and move 
 		if(targetColl.transform == PlayerController.Instance.gameObject.transform)
 		{
-			Vector3 playerPos;
-			playerPos = PlayerController.Instance.gameObject.transform.position;
-			distance = Vector3.Distance(transform.position, playerPos);
+			Vector3 playerPos = PlayerController.Instance.gameObject.transform.position; playerPos.y = 0;
+			Vector3 triggerPos = transform.position; triggerPos.y = 0;
+
+			distance = Vector3.Distance(triggerPos, playerPos);
 			distance = Mathf.Abs(distance);
 			// when player is on middle of crossing
 			if(!isLocked && distance >= 0 && distance < 0.1f)
@@ -63,13 +64,13 @@ public class TriggerScript : MonoBehaviour {
 				switch(crossingType)
 				{
 				case Crossing.OneWay:
-					PlayerController.Instance.DoSomethingFun(transform.position);
+					PlayerController.Instance.DoSomethingFun(triggerPos);
 					break;
 				case Crossing.MoreWays:
 					// if player didnt choose clear chance to choice
 					PlayerController.Instance.chanceToChoice = false;
 					// go exacly on the middle and set way to move (rotate and push)
-					PlayerController.Instance.DoSomethingFun(transform.position);
+					PlayerController.Instance.DoSomethingFun(triggerPos);
 					PlayerController.Instance.acceleratePlayer();
 					break;
 				}
