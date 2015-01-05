@@ -255,7 +255,7 @@ public class PlayerMecanimController : MonoBehaviour
 			speed = Vector3.Lerp(A, B, (Time.time - startTime)*n).x;
 			yield return null;
 		}
-		//coroutineTimer = Time.time - startTime;
+		coroutineTimer = Time.time - startTime;
 		speed = B.x;
 	}
 
