@@ -12,7 +12,7 @@ public class UIMainMenu : MonoBehaviour
 
 	public void StartGame()
 	{
-		Application.LoadLevel ("Random Maze 2K");
+		Application.LoadLevel ("Random Maze (Krystian)");
 	}
 	
 	public void ExitGame()
