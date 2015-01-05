@@ -28,9 +28,9 @@ public class MazeGenerator : MonoBehaviour
 		maze = new Grid<MazeCell>(Width, Height);
 		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
 		// regular maze
-		UnityEngine.Random.seed = Seed;
+		//UnityEngine.Random.seed = Seed;
 		// random maze
-		//Seed = UnityEngine.Random.seed;
+		Seed = UnityEngine.Random.seed;
 
 
 		int distance = 0;
