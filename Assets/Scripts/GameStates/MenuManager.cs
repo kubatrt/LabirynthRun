@@ -4,6 +4,7 @@ using System.Collections;
 public class MenuManager : MonoBehaviour
 {
 	public NewMenu CurrentMenu;
+	public string username;
 
 	public void Start()
 	{
@@ -27,5 +28,15 @@ public class MenuManager : MonoBehaviour
 	public void ExitGame()
 	{
 		Application.Quit ();
+	}
+
+	public void GetUsername(UnityEngine.UI.InputField inputFiled)
+	{
+		username = inputFiled.text;
+	}
+
+	public void ShowUsername(UnityEngine.UI.Text text)
+	{
+		text.text = username;
 	}
 }
