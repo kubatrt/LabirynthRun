@@ -3,13 +3,20 @@ using System.Collections;
 
 public class LevelEnd : MonoBehaviour {
 
+	PlayerMecanimController player;
+
+	void Awake()
+	{
+		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerMecanimController> ();
+	}
 	void OnTriggerEnter(Collider targetColl)
 	{
 		
-		if (targetColl.transform == PlayerController.Instance.gameObject.transform) 
+		if (targetColl.transform == player.transform) 
 		{
-			PlayerController.Instance.changeMoving();
-			PlayerController.Instance.SetCelebrateAnim();
+			Destroy(gameObject);
+			player.ToggleMoving();
+			player.SetCelebrateAnim();
 			Invoke("RestartLevel", 5);
 		}
 
