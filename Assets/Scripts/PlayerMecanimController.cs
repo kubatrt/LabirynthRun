@@ -10,7 +10,8 @@ public class PlayerMecanimController : MonoBehaviour
 	public bool isAlive = false;
 	
 	public float minSpeed = 0.5f;
-	public float maxSpeed = 5;
+	public float normalSpeed = 5f;
+	public float runSpeed = 7f;
 	public float speed;
 	public float angle;
 	public int failures;
@@ -26,12 +27,15 @@ public class PlayerMecanimController : MonoBehaviour
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
 	Animator 	animator;
+	public PlayerCamera	playerCamera;
 	
 	public QuickTimeEvent qte;
 
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
+		playerCamera = transform.GetComponentInChildren<PlayerCamera>();
+		playerCamera.player = this;
 		qte = GameObject.FindWithTag("QTE").GetComponent<QuickTimeEvent>();
 		qte.player = this;
 	}
@@ -39,7 +43,7 @@ public class PlayerMecanimController : MonoBehaviour
 	void Start () 
 	{
 		minSpeed = 0.5f;
-		maxSpeed = 5;
+		normalSpeed = 5;
 		rotationTime  = 0.25f;
 		
 		startupPosition = transform.position;
@@ -56,6 +60,7 @@ public class PlayerMecanimController : MonoBehaviour
 		if(isAlive) {
 			Move();
 			gameTimer += Time.deltaTime;
+			//playerCamera.AdjustFovToPlayerSpeed();
 		}
 	}
 	
@@ -65,17 +70,18 @@ public class PlayerMecanimController : MonoBehaviour
 		if (col.transform.tag == "Wall")
 		{
 			ToggleMoving();
-			transform.Translate(new Vector3(0,0,-0.25f));
-			SetDedAnim();
 			isAlive = false;
-			Invoke("ResetPlayer", 3f);	// animation.Lenght
+			transform.Translate(new Vector3(0,0,-0.25f));
+			//playerCamera.transform.Translate(new Vector3(0,0,-0.5f));
+			SetDedAnim();
+			Invoke("ResetPlayer", 3f);
 		}
 	}
 
 	
 	void StartPlayer()
 	{
-		speed = maxSpeed;
+		speed = normalSpeed;
 		ToggleMoving ();
 		SetMovingAnim ();
 		failures = 0;
@@ -115,12 +121,9 @@ public class PlayerMecanimController : MonoBehaviour
 			case TriggerCrossing.MoreWays:
 				Debug.Log ("# EnterCrossroad:MoreWays");
 
-				float timeForDecision = 2f;
+				//float timeForDecision = 2f;
 				SlowDownMovement();
-				
-				qte.directions = directions;
-				qte.gameObject.SetActive(true);
-				
+				StartQTE(directions);
 
 				break;
 		}
@@ -139,10 +142,21 @@ public class PlayerMecanimController : MonoBehaviour
 
 		if(crossingType == TriggerCrossing.MoreWays) {
 			AccelerateMovement();
-			if(qte.noChoice)
-				failures++;
-			qte.gameObject.SetActive(false);
+			EndQTE();
 		}
+	}
+
+	void StartQTE(MoveDirections dirs)
+	{
+		qte.directions = dirs;
+		qte.gameObject.SetActive(true);
+	}
+
+	void EndQTE()
+	{
+		if(qte.noChoice)
+			failures++;
+		qte.gameObject.SetActive(false);
 	}
 	
 	void Move()
@@ -175,10 +189,6 @@ public class PlayerMecanimController : MonoBehaviour
 		BreakSlowAndGo();
 	}
 
-
-
-
-	
 	void SetMovingAnim() 
 	{ 
 		ResetAnimations();
@@ -190,10 +200,11 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("SlowDown", choice);
 	}
 	
-	void SetDedAnim()
+	float SetDedAnim()
 	{
 		ResetAnimations();
 		animator.SetBool ("Ded", true);
+		return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 	}
 	
 	public void SetCelebrateAnim()
@@ -216,14 +227,14 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public void AccelerateMovement()
 	{
-		StartCoroutine( LerpSpeed(speed, maxSpeed, 0.3f));
+		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 		SetSlowDownAnim(false);
 	}
 	
 	public void BreakSlowAndGo()
 	{
 		StopCoroutine("LerpSpeed");
-		StartCoroutine( LerpSpeed(speed, maxSpeed, coroutineTimer));
+		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
 	}
 

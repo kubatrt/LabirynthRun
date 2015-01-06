@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelEnd : MonoBehaviour {
-
+public class LevelEnd : MonoBehaviour 
+{
 	PlayerMecanimController player;
 
 	void Awake()
 	{
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerMecanimController> ();
 	}
+
 	void OnTriggerEnter(Collider targetColl)
 	{
 		
@@ -24,6 +25,6 @@ public class LevelEnd : MonoBehaviour {
 
 	void RestartLevel()
 	{
-		Application.LoadLevel(0);
+		Application.LoadLevel(Application.loadedLevel);
 	}
 }

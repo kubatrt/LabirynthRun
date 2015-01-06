@@ -42,6 +42,6 @@ public class MenuManager : MonoBehaviour
 
 	public void SetUsername()
 	{
-		GameObject.FindGameObjectWithTag ("GameManager").GetComponent<GameManager> ().playerName = username;
+		GameManager.Instance.PlayerName = username;
 	}
 }

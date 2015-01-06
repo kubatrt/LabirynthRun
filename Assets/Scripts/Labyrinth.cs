@@ -128,12 +128,12 @@ public class Labyrinth : MonoBehaviour
 					finishPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), finishPrefab.transform.rotation);
 				newObject.transform.parent = objectsContainer.transform;	
 			}
-			else if(cell.IsDeadEnd) 
+			/*else if(cell.IsDeadEnd) 
 			{
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					deadEndPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;	
-			}
+			}*/
 			else if(cell.TotalExits > 2) 
 			{
 				if(Application.loadedLevelName == "Random Maze (Krystian)") {
@@ -171,12 +171,12 @@ public class Labyrinth : MonoBehaviour
 					newObject.name = "TriggerCrossroad(OneWay) " + triggersCounter++;
 				}
 			} 
-			if(cell.TotalExits > 2) // debug
+			/*if(cell.TotalExits > 2) // debug
 			{
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					debugPrefab, MazeGenerator.GridToWorld(cell.Position, offset, debugPrefab.transform.localScale.y/2f), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;	
-			}
+			}*/
 		}
 	}
 
@@ -184,6 +184,7 @@ public class Labyrinth : MonoBehaviour
 	{
 		wallsWorldPositions.Clear();
 		int duplicates = 0;	// debug only
+
 		// Step I. Generate basic data, all corners and middles in cells
 		foreach(MazeCell cell in cells) 
 		{
@@ -226,7 +227,7 @@ public class Labyrinth : MonoBehaviour
 		for(float z = -scale; z <= horizontalMax; z +=scale) 
 		{
 			horizontalLine = GetHorizontalPositionsAt((int)z);
-			horizontalLine.Sort(new Vector3SortByX());
+			horizontalLine.Sort(new SortVector3ByX());
 			List<Vector3> newHorizontalLine = GenerateWallsBetweenHorizontally(horizontalLine);
 			BuildWallsFromList(newHorizontalLine, wall2Prefab);
 		}
@@ -236,7 +237,7 @@ public class Labyrinth : MonoBehaviour
 		for(float x = -scale; x <= verticalMax; x +=scale)
 		{
 			verticalLine = GetVerticalPositions((int)x);
-			verticalLine.Sort(new Vector3SortByZ());
+			verticalLine.Sort(new SortVector3ByZ());
 			List<Vector3> newVerticalLine= GenerateWallsBetweenVertically(verticalLine);
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
@@ -317,7 +318,7 @@ public class Labyrinth : MonoBehaviour
 }
 
 //----------------------------------------------------------------------------------------------------------------------
-public class Vector3SortByX : IComparer<Vector3>
+public class SortVector3ByX : IComparer<Vector3>
 {
 	public int Compare( Vector3 a, Vector3 b)
 	{
@@ -327,7 +328,7 @@ public class Vector3SortByX : IComparer<Vector3>
 	}
 }
 
-public class Vector3SortByZ : IComparer<Vector3>
+public class SortVector3ByZ : IComparer<Vector3>
 {
 	public int Compare( Vector3 a, Vector3 b)
 	{

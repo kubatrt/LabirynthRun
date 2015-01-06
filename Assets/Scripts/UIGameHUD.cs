@@ -9,14 +9,12 @@ public class UIGameHUD : MonoBehaviour
 	public Text failuresText; 
 
 	PlayerMecanimController player;
-	GameManager gm;
 
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-		playerText.text = gm.playerName;
+		playerText.text = GameManager.Instance.PlayerName;
 	}
 	
 	void Update () 
@@ -28,6 +26,12 @@ public class UIGameHUD : MonoBehaviour
 		timeText.text = string.Format(" {0:F2} ", player.gameTimer);
 	}
 
+	#region UI controls
+
+	public void OnClickQuitButton()
+	{
+		Application.LoadLevel("Animated Menu");
+	}
 
 	public void OnClickMapButton()
 	{
@@ -39,13 +43,10 @@ public class UIGameHUD : MonoBehaviour
 
 	}
 
-	public void OnClickQuitButton()
-	{
-		Application.LoadLevel("Animated Menu");
-	}
-
 	public void OnClickPauseButton()
 	{
 
 	}
+
+	#endregion
 }

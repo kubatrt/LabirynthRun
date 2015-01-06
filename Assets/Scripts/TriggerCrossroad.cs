@@ -24,19 +24,21 @@ public class MoveDirections
 	}
 };
 
-public class TriggerCrossroad : MonoBehaviour {
+public class TriggerCrossroad : MonoBehaviour 
+{
 	
 	public TriggerCrossing crossingType;
-	
+
+	PlayerMecanimController player;
 	float collisionTolerance = 0.15f;
 	bool isLocked;
 
-	PlayerMecanimController player;
+
 	
 	void Start()
 	{
 		isLocked = false;
-		player = GameObject.FindObjectOfType<PlayerMecanimController>(); // TODO: is it the good way?
+		player = GameObject.FindObjectOfType<PlayerMecanimController>();
 	}
 
 

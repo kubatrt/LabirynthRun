@@ -10,7 +10,7 @@ public class QuickTimeEvent : MonoBehaviour
 
 	public float startTime;
 	public float responseTime;
-	public float timeLimit = 2.0f;
+	public float timeLimit = 2.0f; // about 2s with speed = 5
 	public bool noChoice;
 
 	public MoveDirections directions = new MoveDirections();
@@ -23,7 +23,6 @@ public class QuickTimeEvent : MonoBehaviour
 
 	void Awake() 
 	{
-		// find controls in "Panel" childs, could be public
 		buttonLeft = panel.transform.FindChild("ButtonLeft").GetComponent<Button>();
 		buttonRight = panel.transform.FindChild("ButtonRight").GetComponent<Button>();
 		buttonUp = panel.transform.FindChild("ButtonUp").GetComponent<Button>();
@@ -47,43 +46,35 @@ public class QuickTimeEvent : MonoBehaviour
 		startTime = Time.time;
 		responseTime = 0;
 		panel.SetActive(true);
-		//panel.
 		SetupButtons();
 		sliderTimeLeft.maxValue = timeLimit;
 		sliderTimeLeft.minValue = 0f;
-		sliderTimeLeft.value = timeLimit;	// 2s with speed = 5
+		sliderTimeLeft.value = timeLimit;	
 
 		//Debug.Log ("QTE OnEnable()");
 	}
 
 	void OnDisable()
 	{
-		if(panel != null) {
+		if(panel != null)
 			panel.SetActive(false);
-		}
+
 		//Debug.Log ("QTE OnDisable()");
 	}
 	
 	void Update () 
 	{
-		responseTime += Time.deltaTime;
+		if(noChoice)
+			responseTime += Time.deltaTime;
 
 		responseText.text = string.Format ("{0:F2}", responseTime);
 		sliderTimeLeft.value = timeLimit - responseTime;
 	}
 
-	void ResetButtons()
-	{
-		buttonLeft.enabled = false;
-		buttonLeft.targetGraphic.enabled = false;
-		buttonRight.enabled = false;
-		buttonRight.targetGraphic.enabled = false;
-		buttonUp.enabled = false;
-		buttonUp.targetGraphic.enabled = false;
-	}
-
 	void SetupButtons()
 	{
+		Debug.Log (string.Format ("# SetupButtons L: {0} R: {1} F: {2}", 
+		                          directions.Left, directions.Right, directions.Forward));
 		ResetButtons();
 
 		if(directions.Left) {
@@ -96,10 +87,21 @@ public class QuickTimeEvent : MonoBehaviour
 		}
 		if(directions.Forward) {
 			buttonUp.enabled = true;
-			buttonUp.targetGraphic.enabled = false;
+			buttonUp.targetGraphic.enabled = true;
 		}
 	}
 
+	void ResetButtons()
+	{
+		buttonLeft.enabled = false;
+		buttonLeft.targetGraphic.enabled = false;
+		buttonRight.enabled = false;
+		buttonRight.targetGraphic.enabled = false;
+		buttonUp.enabled = false;
+		buttonUp.targetGraphic.enabled = false;
+	}
+
+	// TODO: consider separate component for manage UI controls
 	#region UI controls
 
 	void OnClickButtonLeft()

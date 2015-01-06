@@ -13,18 +13,22 @@ public enum GameState
 
 public class GameManager : MonoBehaviour 
 {
-	public string playerName;
-
-	float gameStartupTimer;
-	float gameTimeElapsed;
-
-
-
-	private static GameManager instance;
+	// Singleton with GameObject instance
+	static GameManager instance;
 	public static GameManager Instance { 
 		get; 
 		private set;
 	}
+
+	string playerName = "";
+	public string PlayerName {
+		get { return playerName.Equals("") ? "Player" : playerName; }
+		set { playerName = value; }
+	}
+
+	float gameStartupTimer;
+	float gameTimeElapsed;
+
 
 	void Awake() 
 	{
