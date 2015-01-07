@@ -124,9 +124,7 @@ public class MazeGenerator : MonoBehaviour
 		}
 
 		Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
-		                         maxDistance, finishPosition.x, finishPosition.y, maze.Area )); 
-		//maze = mazeGrid;
-		//return mazeGrid;
+		                         maxDistance, finishPosition.x, finishPosition.y, maze.Area ));
 	}
 
 	MazeCellExits GetRandomExit(MazeCellExits validExits)

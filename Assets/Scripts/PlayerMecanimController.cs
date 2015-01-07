@@ -74,7 +74,6 @@ public class PlayerMecanimController : MonoBehaviour
 			transform.Translate(new Vector3(0,0,-0.25f));
 			//playerCamera.transform.Translate(new Vector3(0,0,-0.5f));
 			SetDedAnim();
-			Invoke("ResetPlayer", 3f);
 		}
 	}
 
@@ -204,7 +203,7 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		ResetAnimations();
 		animator.SetBool ("Ded", true);
-		return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+		return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;	// just cheking
 	}
 	
 	public void SetCelebrateAnim()
@@ -236,6 +235,11 @@ public class PlayerMecanimController : MonoBehaviour
 		StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
+	}
+
+	public void AnimEvent_DeadEnd()
+	{
+		Invoke("ResetPlayer", 2f);
 	}
 
 	#region Coroutines
