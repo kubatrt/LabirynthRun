@@ -52,7 +52,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("Ded", false);
 
 		qte.gameObject.SetActive(false);
-		Invoke ("StartPlayer", 1f);
+		//Invoke ("StartPlayer", 1f);
 	}
 	
 	void Update () 
@@ -78,7 +78,7 @@ public class PlayerMecanimController : MonoBehaviour
 	}
 
 	
-	void StartPlayer()
+	public void StartPlayer()
 	{
 		speed = normalSpeed;
 		ToggleMoving ();
@@ -87,7 +87,15 @@ public class PlayerMecanimController : MonoBehaviour
 		isAlive = true;
 		gameTimer = 0;
 	}
-	
+
+	public void StopPlayer()
+	{
+		ToggleMoving ();
+		transform.position = startupPosition;
+		transform.rotation = startupRotation;
+		ResetAnimations();
+	}
+
 	void ResetPlayer()
 	{
 		transform.position = startupPosition;
@@ -101,6 +109,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool("Run", false);
 		animator.SetBool("Ded", false);
 		animator.SetBool("SlowDown", false);
+		animator.SetBool ("Celebrate", false);
 	}
 
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)

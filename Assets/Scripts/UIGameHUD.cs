@@ -28,9 +28,15 @@ public class UIGameHUD : MonoBehaviour
 
 	#region UI controls
 
+	public void OnClickPlayButton()
+	{
+		player.StartPlayer ();
+	}
+
 	public void OnClickQuitButton()
 	{
-		Application.LoadLevel("Animated Menu");
+	//	player.StopPlayer ();
+		Application.LoadLevel (Application.loadedLevel);
 	}
 
 	public void OnClickMapButton()

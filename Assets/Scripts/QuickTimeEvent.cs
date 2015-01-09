@@ -26,7 +26,7 @@ public class QuickTimeEvent : MonoBehaviour
 		buttonLeft = panel.transform.FindChild("ButtonLeft").GetComponent<Button>();
 		buttonRight = panel.transform.FindChild("ButtonRight").GetComponent<Button>();
 		buttonUp = panel.transform.FindChild("ButtonUp").GetComponent<Button>();
-		responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
+		//responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
 		sliderTimeLeft = panel.transform.FindChild("SliderTimeLeft").GetComponent<Slider>();
 
 		buttonLeft.onClick.AddListener(OnClickButtonLeft);
@@ -67,7 +67,7 @@ public class QuickTimeEvent : MonoBehaviour
 		if(noChoice)
 			responseTime += Time.deltaTime;
 
-		responseText.text = string.Format ("{0:F2}", responseTime);
+		//responseText.text = string.Format ("{0:F2}", responseTime);
 		sliderTimeLeft.value = timeLimit - responseTime;
 	}
 
