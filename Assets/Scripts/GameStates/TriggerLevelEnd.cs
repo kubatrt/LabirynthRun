@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelEnd : MonoBehaviour 
+public class TriggerLevelEnd : MonoBehaviour 
 {
 	PlayerMecanimController player;
 
@@ -13,8 +13,9 @@ public class LevelEnd : MonoBehaviour
 	void OnTriggerEnter(Collider targetColl)
 	{
 		
-		if (targetColl.transform == player.transform) 
+		if (targetColl.gameObject.tag == "Player") 
 		{
+
 			Destroy(gameObject);
 			player.ToggleMoving();
 			player.SetCelebrateAnim();
@@ -25,6 +26,7 @@ public class LevelEnd : MonoBehaviour
 
 	void RestartLevel()
 	{
+		Debug.Log("# Restart level ");
 		Application.LoadLevel(Application.loadedLevel);
 	}
 }

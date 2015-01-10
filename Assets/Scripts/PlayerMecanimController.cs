@@ -15,7 +15,7 @@ public class PlayerMecanimController : MonoBehaviour
 	public float speed;
 	public float angle;
 	public int failures;
-	
+
 	//  timers
 	[SerializeField] float rotationTime;
 	public float gameTimer; // TEMP
@@ -52,7 +52,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("Ded", false);
 
 		qte.gameObject.SetActive(false);
-		//Invoke ("StartPlayer", 1f);
+		// Invoke ("StartPlayer", 1f);
 	}
 	
 	void Update () 

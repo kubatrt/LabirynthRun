@@ -91,7 +91,7 @@ public class MazeGenerator : MonoBehaviour
 				cell = maze.GetCellAt(cellPos);
 				cell.Exits = cell.Exits | exit;
 				// set index
-				cell.Index = cellIndex++;
+				cell.Index = ++cellIndex;
 			}
 			else 
 			{
