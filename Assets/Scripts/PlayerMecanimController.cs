@@ -54,8 +54,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("Ded", false);
 
 		qte.gameObject.SetActive(false);
-		
-		SetCameraAtStartPosition ();
+		playerCamera.transform.eulerAngles = new Vector3 (90,playerCamera.transform.eulerAngles.y,playerCamera.transform.eulerAngles.z);
 	}
 	
 	void Update () 
@@ -84,22 +83,18 @@ public class PlayerMecanimController : MonoBehaviour
 		Invoke ("StartPlayer", cameraCoroutineTime+startTime);
 	}
 
-	void SetCameraAtStartPosition()
-	{
-		//set camera view
-		float x = ((8 / 2 - 1) * 4) + 2;
-		float z = ((8 / 2 - 1) * 4) + 2;
-		playerCamera.transform.position = new Vector3 (x,50,z);
-
-		float yRot;
-		playerCamera.transform.rotation = transform.rotation;
-		playerCamera.transform.Rotate (new Vector3(90,0,0));
-	}
-
 	void StartPlayerCamera()
 	{
-		StartCoroutine( LerpCameraPosition(playerCamera.transform.position, new Vector3 (0,2.5f,-1.75f), cameraCoroutineTime));
-		StartCoroutine (LerpCameraRotation (playerCamera.transform.eulerAngles, new Vector3(30,0,0), cameraCoroutineTime));
+		if(transform.eulerAngles.y == 0)
+		{
+			StartCoroutine( LerpCameraPosition(playerCamera.transform.position,new Vector3 (0,2.5f,-1.75f), cameraCoroutineTime));
+			StartCoroutine (LerpCameraRotation (playerCamera.transform.eulerAngles,new Vector3(30,0,0),cameraCoroutineTime));
+		}
+		else if(transform.eulerAngles.y > 89 && transform.eulerAngles.y < 91)
+		{
+			StartCoroutine( LerpCameraPosition(playerCamera.transform.position,new Vector3 (-1.75f,2.5f,0), cameraCoroutineTime));
+			StartCoroutine (LerpCameraRotation (playerCamera.transform.eulerAngles,new Vector3(30,90,0),cameraCoroutineTime));
+		}
 	}
 
 	void StartPlayer()

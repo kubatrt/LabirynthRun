@@ -103,21 +103,24 @@ public class Labyrinth : MonoBehaviour
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;
+
 				// TODO: refator
 
-				/*if(cell.ExitEast)
+				if(cell.ExitEast)
 				{
 					Vector3 rotationRight = new Vector3(0,90f,0);
 					newObject.transform.Rotate(rotationRight);
-					newObject.transform.FindChild("Player Camera").transform.Rotate( new Vector3(90,0,0));
+					newObject.transform.FindChild("Player Camera").transform.Rotate(new Vector3(0,-90f,0));
 				}
 				else if(cell.ExitWest)
 				{
 					Vector3 rotationLeft = new Vector3(0,-90f,0);
 					newObject.transform.Rotate(rotationLeft);
-					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationLeft);
-				}*/
-
+				}
+				// set camera at start position
+				float x = ((maze.Width/2-1)*4)+2;
+				float z = ((maze.Height/2-1)*4)-2;
+				newObject.transform.FindChild("Player Camera").transform.position = new Vector3(x,x*4,z);
 
 				if(Application.loadedLevelName == "Random Maze Krystian")
 					newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = mapCameraPrefab.GetComponent<Camera>();
