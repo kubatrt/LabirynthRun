@@ -10,7 +10,6 @@ public class UIGameHUD : MonoBehaviour
 
 	PlayerMecanimController player;
 
-
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
@@ -31,6 +30,16 @@ public class UIGameHUD : MonoBehaviour
 	public void OnClickPlayButton()
 	{
 		player.StartPlayerGame ();
+		GameManager.Instance.ChangeGameState (GameState.Start);
+		Invoke ("Run", 6);
+	}
+
+	private void Run(){ GameManager.Instance.ChangeGameState (GameState.Run); }
+
+	public void OnClickResumeButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Run);
+		player.SetMovingAnim ();
 	}
 
 	public void OnClickQuitButton()
@@ -41,17 +50,19 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickMapButton()
 	{
-
+		GameManager.Instance.ChangeGameState (GameState.Pause);
 	}
 
 	public void OnClickRestartButton()
 	{
-
+		GameManager.Instance.ChangeGameState (GameState.Menu);
+		Application.LoadLevel (Application.loadedLevel);
 	}
 
 	public void OnClickPauseButton()
 	{
-
+		GameManager.Instance.ChangeGameState (GameState.Pause);
+		player.ResetAnimations ();
 	}
 
 	#endregion

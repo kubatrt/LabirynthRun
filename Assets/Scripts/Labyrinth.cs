@@ -106,17 +106,27 @@ public class Labyrinth : MonoBehaviour
 
 				// TODO: refator
 
+				Vector3 rotationRight = new Vector3(0,90f,0);
+				Vector3 rotationLeft = new Vector3(0,-90f,0);
+				Vector3 rotationBack = new Vector3(0,180f,0);
+				Vector3 rotationBack2 = new Vector3(0,-180f,0);
+
 				if(cell.ExitEast)
 				{
-					Vector3 rotationRight = new Vector3(0,90f,0);
 					newObject.transform.Rotate(rotationRight);
-					newObject.transform.FindChild("Player Camera").transform.Rotate(new Vector3(0,-90f,0));
+					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationLeft);
 				}
 				else if(cell.ExitWest)
 				{
-					Vector3 rotationLeft = new Vector3(0,-90f,0);
 					newObject.transform.Rotate(rotationLeft);
+					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationRight);
 				}
+				else if(cell.ExitNorth)
+				{
+					newObject.transform.Rotate(rotationBack);
+					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationBack2);
+				}
+
 				// set camera at start position
 				float x = ((maze.Width/2-1)*4)+2;
 				float z = ((maze.Height/2-1)*4)-2;

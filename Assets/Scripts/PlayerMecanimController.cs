@@ -8,6 +8,7 @@ public class PlayerMecanimController : MonoBehaviour
 	// player states
 	public bool isMoving = false;
 	public bool isAlive = false;
+	public bool isPaused = false;
 	
 	public float minSpeed = 0.5f;
 	public float normalSpeed = 5f;
@@ -54,12 +55,14 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("Ded", false);
 
 		qte.gameObject.SetActive(false);
-		playerCamera.transform.eulerAngles = new Vector3 (90,playerCamera.transform.eulerAngles.y,playerCamera.transform.eulerAngles.z);
+		playerCamera.transform.eulerAngles = 
+			new Vector3 (90,playerCamera.transform.eulerAngles.y,playerCamera.transform.eulerAngles.z);
 	}
 	
 	void Update () 
 	{
-		if(isAlive) {
+		if(isAlive && GameManager.Instance.state == GameState.Run) 
+		{
 			Move();
 			gameTimer += Time.deltaTime;
 			//playerCamera.AdjustFovToPlayerSpeed();
@@ -122,6 +125,11 @@ public class PlayerMecanimController : MonoBehaviour
 		transform.rotation = startupRotation;
 		ResetAnimations();
 		Invoke("StartPlayer", 1f);
+	}
+
+	public void TogglePlayerPause()
+	{
+		isPaused = !isPaused;
 	}
 
 	#region Crossroads
@@ -214,7 +222,7 @@ public class PlayerMecanimController : MonoBehaviour
 	#endregion
 
 	#region Animations
-	void SetMovingAnim() 
+	public void SetMovingAnim() 
 	{ 
 		ResetAnimations();
 		animator.SetBool("Run", true);
@@ -238,7 +246,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool ("Celebrate", true);
 	}
 
-	void ResetAnimations()
+	public void ResetAnimations()
 	{
 		animator.SetBool("Run", false);
 		animator.SetBool("Ded", false);
