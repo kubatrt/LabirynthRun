@@ -30,7 +30,7 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickPlayButton()
 	{
-		player.StartPlayer ();
+		player.StartPlayerGame ();
 	}
 
 	public void OnClickQuitButton()

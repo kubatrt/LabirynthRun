@@ -105,20 +105,20 @@ public class Labyrinth : MonoBehaviour
 				newObject.transform.parent = objectsContainer.transform;
 				// TODO: refator
 
-
-				if(cell.ExitEast)
+				/*if(cell.ExitEast)
 				{
 					Vector3 rotationRight = new Vector3(0,90f,0);
 					newObject.transform.Rotate(rotationRight);
+					newObject.transform.FindChild("Player Camera").transform.Rotate( new Vector3(90,0,0));
 				}
 				else if(cell.ExitWest)
 				{
 					Vector3 rotationLeft = new Vector3(0,-90f,0);
 					newObject.transform.Rotate(rotationLeft);
-				}
+					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationLeft);
+				}*/
 
 
-				//newObject.transform.Translate(new Vector3(0,0,1));
 				if(Application.loadedLevelName == "Random Maze Krystian")
 					newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = mapCameraPrefab.GetComponent<Camera>();
 			}
