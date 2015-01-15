@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,6 +58,14 @@ public class Labyrinth : MonoBehaviour
 		CreateMapCamera();
 	}
 
+	void Start ()
+	{
+		// set camera at start position
+		float x = ((maze.Width/2-1)*4)+2;
+		float z = ((maze.Height/2-1)*4)-2;
+		PlayerCamera.Instance.SetPosition(x,x*4,z);
+	}
+
 	public void GenerateMaze()
 	{
 		debugObjectCount = 0;
@@ -101,7 +109,7 @@ public class Labyrinth : MonoBehaviour
 			{
 				// create player and set rotation
 				GameObject newObject = (GameObject)GameObject.Instantiate(
-					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f), Quaternion.identity);
+					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f),Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;
 
 				// TODO: refator
@@ -109,28 +117,20 @@ public class Labyrinth : MonoBehaviour
 				Vector3 rotationRight = new Vector3(0,90f,0);
 				Vector3 rotationLeft = new Vector3(0,-90f,0);
 				Vector3 rotationBack = new Vector3(0,180f,0);
-				Vector3 rotationBack2 = new Vector3(0,-180f,0);
 
 				if(cell.ExitEast)
 				{
 					newObject.transform.Rotate(rotationRight);
-					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationLeft);
 				}
 				else if(cell.ExitWest)
 				{
 					newObject.transform.Rotate(rotationLeft);
-					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationRight);
 				}
 				else if(cell.ExitNorth)
 				{
 					newObject.transform.Rotate(rotationBack);
-					newObject.transform.FindChild("Player Camera").transform.Rotate(rotationBack2);
 				}
 
-				// set camera at start position
-				float x = ((maze.Width/2-1)*4)+2;
-				float z = ((maze.Height/2-1)*4)-2;
-				newObject.transform.FindChild("Player Camera").transform.position = new Vector3(x,x*4,z);
 
 				if(Application.loadedLevelName == "Random Maze Krystian")
 					newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = mapCameraPrefab.GetComponent<Camera>();

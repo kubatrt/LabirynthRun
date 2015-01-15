@@ -4,6 +4,9 @@ using System.Collections;
 
 public class UIGameHUD : MonoBehaviour 
 {
+	public Camera playerCamera;
+	public Camera mapCamera;
+
 	public Text playerText;
 	public Text timeText;
 	public Text failuresText; 
@@ -24,22 +27,32 @@ public class UIGameHUD : MonoBehaviour
 		failuresText.text = player.failures.ToString();
 		timeText.text = string.Format(" {0:F2} ", player.gameTimer);
 	}
+	#region GamePlay Functions
+	private void PlayerStart() { player.StartPlayer (); }
+	private void PlayerCameraStart() { PlayerCamera.Instance.StartCamera (); }
+	private void GameStateRun(){ GameManager.Instance.ChangeGameState (GameState.Run); }
+
+	public void ToggleCameras()
+	{
+		playerCamera.enabled = !playerCamera.enabled;
+		mapCamera.enabled = !mapCamera.enabled;
+	}
+	#endregion
 
 	#region UI controls
 
 	public void OnClickPlayButton()
 	{
-		player.StartPlayerGame ();
 		GameManager.Instance.ChangeGameState (GameState.Start);
-		Invoke ("Run", 6);
+		Invoke ("PlayerCameraStart", 3);
+		Invoke ("PlayerStart", 6);
+		Invoke ("GameStateRun", 6);
 	}
-
-	private void Run(){ GameManager.Instance.ChangeGameState (GameState.Run); }
 
 	public void OnClickResumeButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Run);
-		player.SetMovingAnim ();
+		player.UnpauseAnimations ();
 	}
 
 	public void OnClickQuitButton()
@@ -50,7 +63,10 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickMapButton()
 	{
-		GameManager.Instance.ChangeGameState (GameState.Pause);
+		ToggleCameras ();
+		OnClickPauseButton();
+		Invoke ("OnClickResumeButton",3f);
+		Invoke ("ToggleCameras", 3f);
 	}
 
 	public void OnClickRestartButton()
@@ -62,7 +78,7 @@ public class UIGameHUD : MonoBehaviour
 	public void OnClickPauseButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Pause);
-		player.ResetAnimations ();
+		player.PauseAnimations ();
 	}
 
 	#endregion

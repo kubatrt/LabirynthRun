@@ -64,7 +64,7 @@ public class QuickTimeEvent : MonoBehaviour
 	
 	void Update () 
 	{
-		if(noChoice)
+		if(noChoice && GameManager.Instance.state == GameState.Run)
 			responseTime += Time.deltaTime;
 
 		//responseText.text = string.Format ("{0:F2}", responseTime);

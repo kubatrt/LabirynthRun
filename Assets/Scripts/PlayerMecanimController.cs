@@ -8,7 +8,6 @@ public class PlayerMecanimController : MonoBehaviour
 	// player states
 	public bool isMoving = false;
 	public bool isAlive = false;
-	public bool isPaused = false;
 	
 	public float minSpeed = 0.5f;
 	public float normalSpeed = 5f;
@@ -21,8 +20,6 @@ public class PlayerMecanimController : MonoBehaviour
 	[SerializeField] float rotationTime;
 	public float gameTimer; // TEMP
 	float coroutineTimer;
-	float startTime = 3f;
-	float cameraCoroutineTime = 2.9f;
 
 	static readonly float rotationLeft = -90f;
 	static readonly float rotationRight = 90f;
@@ -30,33 +27,30 @@ public class PlayerMecanimController : MonoBehaviour
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
 	Animator 	animator;
-	public PlayerCamera	playerCamera;
+
+	float AnimNormSpeed;
 	
 	public QuickTimeEvent qte;
 
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
-		playerCamera = transform.GetComponentInChildren<PlayerCamera>();
-		playerCamera.player = this;
 		qte = GameObject.FindWithTag("QTE").GetComponent<QuickTimeEvent>();
 		qte.player = this;
 	}
-	
+
 	void Start () 
 	{
+		PlayerCamera.Instance.player = this;
 		minSpeed = 0.5f;
 		normalSpeed = 5;
 		rotationTime  = 0.25f;
 		
 		startupPosition = transform.position;
 		startupRotation = transform.rotation;
-		animator.SetBool ("Run", false);
-		animator.SetBool ("Ded", false);
+		ResetAnimations ();
 
 		qte.gameObject.SetActive(false);
-		playerCamera.transform.eulerAngles = 
-			new Vector3 (90,playerCamera.transform.eulerAngles.y,playerCamera.transform.eulerAngles.z);
 	}
 	
 	void Update () 
@@ -65,7 +59,7 @@ public class PlayerMecanimController : MonoBehaviour
 		{
 			Move();
 			gameTimer += Time.deltaTime;
-			//playerCamera.AdjustFovToPlayerSpeed();
+			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
 		}
 	}
 
@@ -80,27 +74,7 @@ public class PlayerMecanimController : MonoBehaviour
 		}
 	}
 
-	public void StartPlayerGame()
-	{
-		Invoke ("StartPlayerCamera",startTime);
-		Invoke ("StartPlayer", cameraCoroutineTime+startTime);
-	}
-
-	void StartPlayerCamera()
-	{
-		if(transform.eulerAngles.y == 0)
-		{
-			StartCoroutine( LerpCameraPosition(playerCamera.transform.position,new Vector3 (0,2.5f,-1.75f), cameraCoroutineTime));
-			StartCoroutine (LerpCameraRotation (playerCamera.transform.eulerAngles,new Vector3(30,0,0),cameraCoroutineTime));
-		}
-		else if(transform.eulerAngles.y > 89 && transform.eulerAngles.y < 91)
-		{
-			StartCoroutine( LerpCameraPosition(playerCamera.transform.position,new Vector3 (-1.75f,2.5f,0), cameraCoroutineTime));
-			StartCoroutine (LerpCameraRotation (playerCamera.transform.eulerAngles,new Vector3(30,90,0),cameraCoroutineTime));
-		}
-	}
-
-	void StartPlayer()
+	public void StartPlayer()
 	{
 		speed = normalSpeed;
 		ToggleMoving ();
@@ -125,11 +99,6 @@ public class PlayerMecanimController : MonoBehaviour
 		transform.rotation = startupRotation;
 		ResetAnimations();
 		Invoke("StartPlayer", 1f);
-	}
-
-	public void TogglePlayerPause()
-	{
-		isPaused = !isPaused;
 	}
 
 	#region Crossroads
@@ -192,7 +161,8 @@ public class PlayerMecanimController : MonoBehaviour
 	#region Player Movements
 	void Move()
 	{
-		if(isMoving == true) {
+		if(isMoving == true) 
+		{
 			transform.Translate(Vector3.forward * speed * Time.deltaTime);
 		}
 	}
@@ -258,8 +228,19 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		Invoke("ResetPlayer", 2f);
 	}
+
+	public void PauseAnimations()
+	{
+		animator.enabled = false;
+	}
+
+	public void UnpauseAnimations()
+	{
+		animator.enabled = true;
+	}
 	#endregion
 
+	#region Player Actions
 	public void Rotate(float exTime)
 	{
 		Vector3 currentRotation = transform.eulerAngles;
@@ -284,6 +265,7 @@ public class PlayerMecanimController : MonoBehaviour
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
 	}
+	#endregion
 
 	#region Coroutines
 
@@ -316,32 +298,5 @@ public class PlayerMecanimController : MonoBehaviour
 		coroutineTimer = Time.time - startTime;
 		speed = B.x;
 	}
-
-	IEnumerator LerpCameraPosition(Vector3 from, Vector3 to, float exTime)
-	{
-		float startTime = Time.time;
-		float n = 1 / exTime;
-		
-		while (Time.time - startTime <= exTime) 
-		{
-			playerCamera.transform.position = Vector3.Lerp(from, to, (Time.time - startTime)*n);
-			yield return null;
-		}
-		playerCamera.transform.position = to;
-	}
-
-	IEnumerator LerpCameraRotation(Vector3 from, Vector3 to, float exTime)
-	{
-		float startTime = Time.time;
-		float n = 1 / exTime;
-		
-		while (Time.time - startTime <= exTime) 
-		{
-			playerCamera.transform.eulerAngles = Vector3.Lerp(from, to, (Time.time - startTime)*n);
-			yield return null;
-		}
-		playerCamera.transform.eulerAngles = to;
-	}
-
 	#endregion
 }
