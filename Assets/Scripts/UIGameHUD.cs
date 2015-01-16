@@ -49,24 +49,25 @@ public class UIGameHUD : MonoBehaviour
 		Invoke ("GameStateRun", 6);
 	}
 
+	public void OnClickMapButton()
+	{
+		ToggleCameras ();
+		GameManager.Instance.ChangeGameState (GameState.Map);
+		player.PauseAnimations ();
+		Invoke ("OnClickResumeButton",3f);
+		Invoke ("ToggleCameras", 3f);
+	}
+
+	public void OnClickPauseButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Pause);
+		player.PauseAnimations ();
+	}
+
 	public void OnClickResumeButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Run);
 		player.UnpauseAnimations ();
-	}
-
-	public void OnClickQuitButton()
-	{
-	//	player.StopPlayer ();
-		Application.LoadLevel (Application.loadedLevel);
-	}
-
-	public void OnClickMapButton()
-	{
-		ToggleCameras ();
-		OnClickPauseButton();
-		Invoke ("OnClickResumeButton",3f);
-		Invoke ("ToggleCameras", 3f);
 	}
 
 	public void OnClickRestartButton()
@@ -75,11 +76,14 @@ public class UIGameHUD : MonoBehaviour
 		Application.LoadLevel (Application.loadedLevel);
 	}
 
-	public void OnClickPauseButton()
+	public void OnClickQuitButton()
 	{
-		GameManager.Instance.ChangeGameState (GameState.Pause);
-		player.PauseAnimations ();
+		Application.LoadLevel (Application.loadedLevel);
 	}
+
+
+
+
 
 	#endregion
 }

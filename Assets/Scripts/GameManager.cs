@@ -7,7 +7,8 @@ public enum GameState
 	Start,
 	Run,
 	End,
-	Pause
+	Pause,
+	Map
 }
 
 
