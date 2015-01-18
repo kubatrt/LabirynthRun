@@ -9,6 +9,9 @@ public class PlayerCamera : MonoBehaviour
 		private set;
 	}
 
+	Vector3 startupPosition;
+	Quaternion startupRotation;
+
 	// TODO:
 	public float slowFov = 50f;
 	public float normalFov = 60f;
@@ -24,9 +27,10 @@ public class PlayerCamera : MonoBehaviour
 		Instance = this;
 	}
 
-	public void Update()
+	public void Start()
 	{
-
+		startupPosition = transform.position;
+		startupRotation = transform.rotation;
 	}
 
 	public void AdjustFovToPlayerSpeed()
@@ -47,6 +51,12 @@ public class PlayerCamera : MonoBehaviour
 	public void SetRotation(float x, float y, float z)
 	{
 		transform.eulerAngles = new Vector3 (x, y, z);
+	}
+
+	public void ResetCamera()
+	{
+		transform.position = startupPosition;
+		transform.rotation = startupRotation;
 	}
 
 	public void StartCamera()

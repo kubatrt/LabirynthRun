@@ -15,6 +15,8 @@ public class PlayerMecanimController : MonoBehaviour
 	public float speed;
 	public float angle;
 	public int failures;
+	public int lives;
+	public int maps;
 
 	//  timers
 	[SerializeField] float rotationTime;
@@ -45,6 +47,8 @@ public class PlayerMecanimController : MonoBehaviour
 		minSpeed = 0.5f;
 		normalSpeed = 5;
 		rotationTime  = 0.25f;
+		lives = 3;
+		maps = 3;
 		
 		startupPosition = transform.position;
 		startupRotation = transform.rotation;
@@ -58,7 +62,6 @@ public class PlayerMecanimController : MonoBehaviour
 		if(isAlive && GameManager.Instance.state == GameState.Run) 
 		{
 			Move();
-			gameTimer += Time.deltaTime;
 			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
 		}
 	}
@@ -71,6 +74,10 @@ public class PlayerMecanimController : MonoBehaviour
 			isAlive = false;
 			transform.Translate(new Vector3(0,0,-0.25f));
 			SetDedAnim();
+			if(lives>1)
+				lives--;
+			else 
+				GameManager.Instance.ChangeGameState(GameState.End);
 		}
 	}
 
@@ -85,15 +92,21 @@ public class PlayerMecanimController : MonoBehaviour
 		gameTimer = 0;
 	}
 
-	void StopPlayer()
+	public void ResetPlayer() // on game over
 	{
-		ToggleMoving ();
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
 		ResetAnimations();
+		lives = 3;
+		maps = 3;
 	}
 
-	void ResetPlayer()
+	public void decreaseMaps()
+	{
+		maps--;
+	}
+
+	public void RestartPlayer() // every single ded
 	{
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
@@ -226,7 +239,8 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void AnimEvent_DeadEnd()
 	{
-		Invoke("ResetPlayer", 2f);
+		if(GameManager.Instance.state == GameState.Run)
+			Invoke("RestartPlayer", 2f);
 	}
 
 	public void PauseAnimations()

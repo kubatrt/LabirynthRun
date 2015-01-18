@@ -4,12 +4,10 @@ using System.Collections;
 
 public class UIGameHUD : MonoBehaviour 
 {
-	public Camera playerCamera;
-	public Camera mapCamera;
-
 	public Text playerText;
 	public Text timeText;
 	public Text failuresText; 
+	public Text playerLives;
 
 	PlayerMecanimController player;
 
@@ -25,54 +23,38 @@ public class UIGameHUD : MonoBehaviour
 			return;
 
 		failuresText.text = player.failures.ToString();
-		timeText.text = string.Format(" {0:F2} ", player.gameTimer);
+		playerLives.text = player.lives.ToString();
+		timeText.text = string.Format(" {0:F2} ", GameManager.Instance.gameTimer);
 	}
-	#region GamePlay Functions
-	private void PlayerStart() { player.StartPlayer (); }
-	private void PlayerCameraStart() { PlayerCamera.Instance.StartCamera (); }
-	private void GameStateRun(){ GameManager.Instance.ChangeGameState (GameState.Run); }
-
-	public void ToggleCameras()
-	{
-		playerCamera.enabled = !playerCamera.enabled;
-		mapCamera.enabled = !mapCamera.enabled;
-	}
-	#endregion
 
 	#region UI controls
-
 	public void OnClickPlayButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Start);
-		Invoke ("PlayerCameraStart", 3);
-		Invoke ("PlayerStart", 6);
-		Invoke ("GameStateRun", 6);
 	}
 
 	public void OnClickMapButton()
 	{
-		ToggleCameras ();
 		GameManager.Instance.ChangeGameState (GameState.Map);
-		player.PauseAnimations ();
-		Invoke ("OnClickResumeButton",3f);
-		Invoke ("ToggleCameras", 3f);
 	}
 
 	public void OnClickPauseButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Pause);
-		player.PauseAnimations ();
 	}
 
 	public void OnClickResumeButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Run);
-		player.UnpauseAnimations ();
+	}
+
+	public void OnClickPlayAgainButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
 	public void OnClickRestartButton()
 	{
-		GameManager.Instance.ChangeGameState (GameState.Menu);
 		Application.LoadLevel (Application.loadedLevel);
 	}
 
@@ -80,10 +62,5 @@ public class UIGameHUD : MonoBehaviour
 	{
 		Application.LoadLevel (Application.loadedLevel);
 	}
-
-
-
-
-
 	#endregion
 }

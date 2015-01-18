@@ -10,40 +10,16 @@ public class MenuManager : MonoBehaviour
 	}
 
 	public NewMenu CurrentMenu;
-	public NewMenu MainMenu;
-	public NewMenu HUD;
-	public NewMenu PauseMenu;
-	public NewMenu EmptyMenu;
 
 	public string username;
 
+	public void Awake()
+	{
+		Instance = this;
+	}
 	public void Start()
 	{
-		ShowMenu (CurrentMenu);
-	}
-
-	void Update()
-	{
-		switch(GameManager.Instance.state)
-		{
-		case GameState.Start:
-			ShowMenu (EmptyMenu);
-			break;
-		case GameState.Run:
-			ShowMenu (HUD);
-			break;
-		case GameState.Pause:
-			ShowMenu (PauseMenu);
-			break;
-		case GameState.Menu:
-			ShowMenu (MainMenu);
-			break;
-		case GameState.End:
-			break;
-		case GameState.Map:
-			ShowMenu (EmptyMenu);
-			break;
-		}
+		//ShowMenu (CurrentMenu);
 	}
 
 	public void ShowMenu(NewMenu menu)
