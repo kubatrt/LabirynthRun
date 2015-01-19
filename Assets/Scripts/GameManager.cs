@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
 	public Camera playerCamera;
 	public Camera mapCamera;
 
+	public Animator cloudsAnimator;
+
 
 	void Awake() 
 	{
@@ -91,6 +93,7 @@ public class GameManager : MonoBehaviour
 		{
 		case GameState.Start:
 			MenuManager.Instance.ShowMenu (EmptyMenu);
+			cloudsAnimator.SetTrigger("Start");
 			player.ResetPlayer ();
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;
