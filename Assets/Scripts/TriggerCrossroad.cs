@@ -87,6 +87,8 @@ public class TriggerCrossroad : MonoBehaviour
 
 
 		isLocked = false;
+
+		player.RunPlayer ();
 	}
 	
 	MoveDirections CheckPossibleDirections()

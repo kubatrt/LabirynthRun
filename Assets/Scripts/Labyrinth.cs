@@ -131,9 +131,6 @@ public class Labyrinth : MonoBehaviour
 					newObject.transform.Rotate(rotationBack);
 				}
 
-
-				if(Application.loadedLevelName == "Random Maze Krystian")
-					newObject.transform.FindChild("Player Camera").GetComponent<CameraGUI>().mapCamera = mapCameraPrefab.GetComponent<Camera>();
 			}
 			else if(cell.IsFinishCell) 
 			{
@@ -149,40 +146,24 @@ public class Labyrinth : MonoBehaviour
 			}*/
 			else if(cell.TotalExits > 2) 
 			{
-				if(Application.loadedLevelName == "Random Maze (Krystian)") {
-					triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.MoreWays;
-					GameObject newObject = (GameObject)GameObject.Instantiate(
-						triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-					newObject.transform.parent = triggersContainer.transform;
-					newObject.name = "Trigger(MoreWays) " + triggersCounter++;
-				}
-				else
-				{
-					triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.MoreWays;
-					GameObject newObject = (GameObject)GameObject.Instantiate(
-						triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-					newObject.transform.parent = triggersContainer.transform;
-					newObject.name = "TriggerCrossroad(MoreWays) " + triggersCounter++;
-				}
+			
+				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.MoreWays;
+				GameObject newObject = (GameObject)GameObject.Instantiate(
+					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
+				newObject.transform.parent = triggersContainer.transform;
+				newObject.name = "TriggerCrossroad(MoreWays) " + triggersCounter++;
+
 			}
 			else if((cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) || 
 			        (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) 
 			{
-				if(Application.loadedLevelName == "Random Maze (Krystian)") {
-					triggerPrefab.GetComponent<TriggerScript>().crossingType = Crossing.OneWay;
-					GameObject newObject = (GameObject)GameObject.Instantiate(
-						triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-					newObject.transform.parent = triggersContainer.transform;
-					newObject.name = "Trigger(OneWay) " + triggersCounter++;
-				}
-				else
-				{
-					triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.OneWay;
-					GameObject newObject = (GameObject)GameObject.Instantiate(
-						triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
-					newObject.transform.parent = triggersContainer.transform;
-					newObject.name = "TriggerCrossroad(OneWay) " + triggersCounter++;
-				}
+			
+				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.OneWay;
+				GameObject newObject = (GameObject)GameObject.Instantiate(
+					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
+				newObject.transform.parent = triggersContainer.transform;
+				newObject.name = "TriggerCrossroad(OneWay) " + triggersCounter++;
+
 			} 
 			/*if(cell.TotalExits > 2) // debug
 			{

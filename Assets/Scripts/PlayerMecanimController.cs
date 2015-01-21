@@ -11,7 +11,7 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public float minSpeed = 0.5f;
 	public float normalSpeed = 5f;
-	public float runSpeed = 7f;
+	public float runSpeed = 8f;
 	public float speed;
 	public float angle;
 	public int failures;
@@ -90,6 +90,8 @@ public class PlayerMecanimController : MonoBehaviour
 		failures = 0;
 		isAlive = true;
 		gameTimer = 0;
+
+		RunPlayer ();
 	}
 
 	public void ResetPlayer() // on game over
@@ -278,6 +280,24 @@ public class PlayerMecanimController : MonoBehaviour
 		StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
+	}
+
+	public void WalkPlayer()
+	{
+		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
+	}
+
+
+	public void RunPlayer()
+	{
+		Ray ray = new Ray(transform.position, transform.forward); 
+		if (!Physics.Raycast (ray, 9f)) 
+		{
+			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
+			Invoke ("WalkPlayer", 1f);
+		}
+		else
+			speed = normalSpeed;
 	}
 	#endregion
 
