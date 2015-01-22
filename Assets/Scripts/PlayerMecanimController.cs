@@ -282,37 +282,32 @@ public class PlayerMecanimController : MonoBehaviour
 		SetSlowDownAnim(false);
 	}
 
-	void BackToWalkPlayer()
+	void BackToNormalSpeed()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 	}
 
-
 	public void RunPlayer()
 	{
-		Ray ray = new Ray(transform.position, transform.forward); 
-		if (!Physics.Raycast (ray, 15f)) 
+		float dist = 0;
+		float road = 0;
+		RaycastHit hit;
+		Ray ray = new Ray(transform.position, transform.forward);
+
+		if (Physics.Raycast(ray, out hit))
 		{
-			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
-			Invoke ("BackToWalkPlayer", 1.8f);
+			dist = Vector3.Distance(transform.position,hit.point);
+			road = dist -3;
 		}
-		else if (!Physics.Raycast (ray, 12f)) 
+		Debug.Log ("Distance:" + dist + "Road:" + road);
+
+		if(road > 1f)
 		{
-			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
-			Invoke ("BackToWalkPlayer", 1.6f);
+			Debug.Log ("im accelerating....!!!!");
+			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));
+			Invoke ("BackToNormalSpeed", road/runSpeed);
+			Debug.Log ("Time:" + road/runSpeed);
 		}
-		else if (!Physics.Raycast (ray, 9f)) 
-		{
-			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
-			Invoke ("BackToWalkPlayer", 1.4f);
-		}
-		else if (!Physics.Raycast (ray, 6f)) 
-		{
-			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
-			Invoke ("BackToWalkPlayer", 1f);
-		}
-		else
-			speed = normalSpeed;
 	}
 	#endregion
 
