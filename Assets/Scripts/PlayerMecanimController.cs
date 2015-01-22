@@ -77,7 +77,7 @@ public class PlayerMecanimController : MonoBehaviour
 			if(lives>1)
 				lives--;
 			else 
-				GameManager.Instance.ChangeGameState(GameState.End);
+				GameManager.Instance.ChangeGameState(GameState.EndLost);
 		}
 	}
 
@@ -282,7 +282,7 @@ public class PlayerMecanimController : MonoBehaviour
 		SetSlowDownAnim(false);
 	}
 
-	public void WalkPlayer()
+	void BackToWalkPlayer()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 	}
@@ -291,10 +291,25 @@ public class PlayerMecanimController : MonoBehaviour
 	public void RunPlayer()
 	{
 		Ray ray = new Ray(transform.position, transform.forward); 
-		if (!Physics.Raycast (ray, 9f)) 
+		if (!Physics.Raycast (ray, 15f)) 
 		{
 			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
-			Invoke ("WalkPlayer", 1f);
+			Invoke ("BackToWalkPlayer", 1.8f);
+		}
+		else if (!Physics.Raycast (ray, 12f)) 
+		{
+			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
+			Invoke ("BackToWalkPlayer", 1.6f);
+		}
+		else if (!Physics.Raycast (ray, 9f)) 
+		{
+			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
+			Invoke ("BackToWalkPlayer", 1.4f);
+		}
+		else if (!Physics.Raycast (ray, 6f)) 
+		{
+			StartCoroutine( LerpSpeed(speed, runSpeed, 0.3f));
+			Invoke ("BackToWalkPlayer", 1f);
 		}
 		else
 			speed = normalSpeed;

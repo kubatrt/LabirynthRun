@@ -10,23 +10,27 @@ public class TriggerLevelEnd : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerMecanimController> ();
 	}
 
+	void Update()
+	{
+		if(GameManager.Instance.state != GameState.Run && GameManager.Instance.state != GameState.Start
+		   && GameManager.Instance.state != GameState.Map)
+		{
+			gameObject.renderer.enabled = false;	
+		}
+		else
+			gameObject.renderer.enabled = true;
+	}
+
 	void OnTriggerEnter(Collider targetColl)
 	{
 		
 		if (targetColl.gameObject.tag == "Player") 
 		{
-
-			Destroy(gameObject);
+			gameObject.renderer.enabled = false;
 			player.ToggleMoving();
 			player.SetCelebrateAnim();
-			Invoke("RestartLevel", 5);
+			GameManager.Instance.ChangeGameState(GameState.EndWon);
 		}
 
-	}
-
-	void RestartLevel()
-	{
-		Debug.Log("# Restart level ");
-		Application.LoadLevel(Application.loadedLevel);
 	}
 }

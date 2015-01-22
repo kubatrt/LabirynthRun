@@ -4,17 +4,19 @@ using System.Collections;
 
 public class UIGameHUD : MonoBehaviour 
 {
-	public Text playerText;
 	public Text timeText;
 	public Text failuresText; 
-	public Text playerLives;
+	public Text playerLivesText;
+	public Text endTimeText;
+	public Text enterPlayerNameText;
+	public Text playerNameText;
 
 	PlayerMecanimController player;
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		playerText.text = GameManager.Instance.PlayerName;
+	//	playerNameText.text = GameManager.Instance.PlayerName;
 	}
 	
 	void Update () 
@@ -23,8 +25,18 @@ public class UIGameHUD : MonoBehaviour
 			return;
 
 		failuresText.text = player.failures.ToString();
-		playerLives.text = player.lives.ToString();
+		playerLivesText.text = player.lives.ToString();
 		timeText.text = string.Format(" {0:F2} ", GameManager.Instance.gameTimer);
+	}
+
+	public void ShowEndTime(float time)
+	{
+		endTimeText.text = string.Format(" {0:F2} ", time);
+	}
+
+	public void SetPlayerName()
+	{
+		playerNameText.text = enterPlayerNameText.text;
 	}
 
 	#region UI controls
@@ -56,6 +68,16 @@ public class UIGameHUD : MonoBehaviour
 	public void OnClickRestartButton()
 	{
 		Application.LoadLevel (Application.loadedLevel);
+	}
+
+	public void OnClickScoresButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Scores);
+	}
+
+	public void OnClickSettingsButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Settings);
 	}
 
 	public void OnClickQuitButton()

@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public enum GameState
 {
 	Menu,
+	Settings,
+	Scores,
 	Start,
 	Run,
-	End,
 	Pause,
-	Map
+	Map,
+	EndLost,
+	EndWon
 }
 
 
@@ -30,6 +34,8 @@ public class GameManager : MonoBehaviour
 		set { playerName = value; }
 	}
 
+	public UIGameHUD UI;
+
 	float gameStartupTimer;
 	float gameTimeElapsed;
 	public float gameTimer;
@@ -39,6 +45,9 @@ public class GameManager : MonoBehaviour
 	public NewMenu PauseMenu;
 	public NewMenu EmptyMenu;
 	public NewMenu GameOverMenu;
+	public NewMenu WonMenu;
+	public NewMenu SettingsMenu;
+	public NewMenu ScoresMenu;
 
 	public Camera playerCamera;
 	public Camera mapCamera;
@@ -95,6 +104,7 @@ public class GameManager : MonoBehaviour
 			MenuManager.Instance.ShowMenu (EmptyMenu);
 			cloudsAnimator.SetTrigger("Start");
 			player.ResetPlayer ();
+			player.ResetAnimations();
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;
 			Invoke ("PlayerCameraStart", 3);
@@ -104,6 +114,8 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Run:
 			MenuManager.Instance.ShowMenu (HUD);
+			UI.GetComponent<UIGameHUD>().SetPlayerName();
+			Debug.Log("Set Player Name");
 			player.UnpauseAnimations ();
 			break;
 
@@ -116,8 +128,13 @@ public class GameManager : MonoBehaviour
 			MenuManager.Instance.ShowMenu (MainMenu);
 			break;
 
-		case GameState.End:
+		case GameState.EndLost:
 			MenuManager.Instance.ShowMenu(GameOverMenu);
+			break;
+
+		case GameState.EndWon:
+			MenuManager.Instance.ShowMenu(WonMenu);
+			UI.GetComponent<UIGameHUD>().ShowEndTime(gameTimer);
 			break;
 
 		case GameState.Map:
@@ -134,6 +151,14 @@ public class GameManager : MonoBehaviour
 			else
 				ChangeGameState(GameState.Run);
 			break; 
+
+		case GameState.Settings:
+			MenuManager.Instance.ShowMenu(SettingsMenu);
+			break;
+
+		case GameState.Scores:
+			MenuManager.Instance.ShowMenu(ScoresMenu);
+			break;
 		}
 	}
 }

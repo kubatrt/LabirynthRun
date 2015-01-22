@@ -34,8 +34,8 @@ public class Labyrinth : MonoBehaviour
 	GameObject triggersContainer;
 
 	GameObject mapCamera;
-	//int mazeWidth;
-	//int mazeHeight;
+	float mazeWidth;
+	float mazeHeight;
 
 
 	// local method, or use MazeGenerator.GridToRorld
@@ -56,14 +56,19 @@ public class Labyrinth : MonoBehaviour
 		BuildWalls();
 		CreateGameObjects();
 		CreateMapCamera();
+		mazeHeight = maze.Height;
+		mazeWidth = maze.Width;
 	}
 
 	void Start ()
 	{
 		// set camera at start position
-		float x = ((maze.Width/2-1)*4)+2;
-		float z = ((maze.Height/2-1)*4)-2;
+		float x = (((float)(maze.Width)/2-1)*4)+2;
+		float z = (((float)(maze.Height)/2-1)*4)-2;
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
+		Debug.Log ("width:" + mazeWidth + " height:" + mazeHeight);
+
+		
 	}
 
 	public void GenerateMaze()
