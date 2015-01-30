@@ -20,7 +20,6 @@ public class PlayerMecanimController : MonoBehaviour
 
 	//  timers
 	[SerializeField] float rotationTime;
-	public float gameTimer; // TEMP
 	float coroutineTimer;
 
 	static readonly float rotationLeft = -90f;
@@ -89,13 +88,13 @@ public class PlayerMecanimController : MonoBehaviour
 
 		failures = 0;
 		isAlive = true;
-		gameTimer = 0;
 
 		RunPlayer ();
 	}
 
 	public void ResetPlayer() // on game over
 	{
+		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
 		ResetAnimations();
@@ -110,9 +109,11 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void RestartPlayer() // every single ded
 	{
+		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
 		ResetAnimations();
+		maps = 3;
 		Invoke("StartPlayer", 1f);
 	}
 

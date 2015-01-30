@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
 	float gameTimeElapsed;
 	public float gameTimer;
 
+	public int level;
+	int previousLevel;
+
+	public NewMenu CurrentMenu;
 	public NewMenu MainMenu;
 	public NewMenu HUD;
 	public NewMenu PauseMenu;
@@ -71,6 +75,7 @@ public class GameManager : MonoBehaviour
 		Debug.Log ("GameManager.Start()");
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 		ChangeGameState (GameState.Menu);
+		level = 1;
 	}
 
 	void Update()
@@ -92,8 +97,20 @@ public class GameManager : MonoBehaviour
 		playerCamera.enabled = !playerCamera.enabled;
 		mapCamera.enabled = !mapCamera.enabled;
 	}
+
+	public void AddLevel() { level++; }
 	#endregion
 
+	void ShowMenu(NewMenu menu)
+	{
+		if(CurrentMenu != null)
+			CurrentMenu.IsOpen = false;
+		
+		CurrentMenu = menu;
+		CurrentMenu.IsOpen = true;
+	}
+
+	// game state manager
 	public void ChangeGameState(GameState gameState)
 	{
 		state = gameState;
@@ -101,7 +118,32 @@ public class GameManager : MonoBehaviour
 		switch(state)
 		{
 		case GameState.Start:
-			MenuManager.Instance.ShowMenu (EmptyMenu);
+			/* creating level */
+			if(level != previousLevel)
+			{
+				// generate new maze
+				switch(level)
+				{
+				case 1: 
+					// maze dimensions 6x6 
+					break;
+				case 2:
+					// maze dimensions 7x7 
+					break;
+				case 3: 
+					break;
+					// maze dimensions 7x8 
+				case 4:
+					break;
+					// maze dimensions 8x7 
+				case 5: 
+					break;
+					// maze dimensions 8x8 
+				}
+			}
+			previousLevel = level;
+
+			ShowMenu (EmptyMenu);
 			cloudsAnimator.SetTrigger("Start");
 			player.ResetPlayer ();
 			player.ResetAnimations();
@@ -113,35 +155,38 @@ public class GameManager : MonoBehaviour
 			break; 
 
 		case GameState.Run:
-			MenuManager.Instance.ShowMenu (HUD);
+			ShowMenu (HUD);
 			UI.GetComponent<UIGameHUD>().SetPlayerName();
 			Debug.Log("Set Player Name");
 			player.UnpauseAnimations ();
 			break;
 
 		case GameState.Pause:
-			MenuManager.Instance.ShowMenu (PauseMenu);
+			ShowMenu (PauseMenu);
 			player.PauseAnimations ();
 			break;
 
 		case GameState.Menu:
-			MenuManager.Instance.ShowMenu (MainMenu);
+			ShowMenu (MainMenu);
+			player.ResetPlayer ();
+			player.ResetAnimations();
+			PlayerCamera.Instance.ResetCamera();
 			break;
 
 		case GameState.EndLost:
-			MenuManager.Instance.ShowMenu(GameOverMenu);
+			ShowMenu(GameOverMenu);
 			break;
 
 		case GameState.EndWon:
-			MenuManager.Instance.ShowMenu(WonMenu);
+			ShowMenu(WonMenu);
 			UI.GetComponent<UIGameHUD>().ShowEndTime(gameTimer);
 			break;
 
 		case GameState.Map:
 			if(player.maps > 0)
 			{
+				ShowMenu (EmptyMenu);
 				player.decreaseMaps();
-				MenuManager.Instance.ShowMenu (EmptyMenu);
 				ToggleCameras ();
 				player.PauseAnimations ();
 				Invoke ("PlayerUnpause",3f);
@@ -153,11 +198,11 @@ public class GameManager : MonoBehaviour
 			break; 
 
 		case GameState.Settings:
-			MenuManager.Instance.ShowMenu(SettingsMenu);
+			ShowMenu(SettingsMenu);
 			break;
 
 		case GameState.Scores:
-			MenuManager.Instance.ShowMenu(ScoresMenu);
+			ShowMenu(ScoresMenu);
 			break;
 		}
 	}

@@ -34,9 +34,6 @@ public class Labyrinth : MonoBehaviour
 	GameObject triggersContainer;
 
 	GameObject mapCamera;
-	float mazeWidth;
-	float mazeHeight;
-
 
 	// local method, or use MazeGenerator.GridToRorld
 	Vector3 MazeToWorld(GridPosition cellPos)
@@ -55,20 +52,16 @@ public class Labyrinth : MonoBehaviour
 		GenerateMaze();
 		BuildWalls();
 		CreateGameObjects();
-		CreateMapCamera();
-		mazeHeight = maze.Height;
-		mazeWidth = maze.Width;
 	}
 
 	void Start ()
 	{
-		// set camera at start position
+		// set cameras at start position
 		float x = (((float)(maze.Width)/2-1)*4)+2;
 		float z = (((float)(maze.Height)/2-1)*4)-2;
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
-		Debug.Log ("width:" + mazeWidth + " height:" + mazeHeight);
-
-		
+		MapCamera.Instance.SetPosition (x, 5, z);
+		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
 	}
 
 	public void GenerateMaze()
@@ -96,13 +89,6 @@ public class Labyrinth : MonoBehaviour
 			triggersContainer = new GameObject("_Triggers");
 			triggersContainer.transform.parent = transform;
 		}
-	}
-
-	void CreateMapCamera()
-	{
-		mapCamera = (GameObject)GameObject.Instantiate(mapCameraPrefab, new Vector3(15,5,14), Quaternion.identity);
-		mapCamera.transform.parent = objectsContainer.transform;
-		mapCamera.transform.Rotate (new Vector3(90,0,0));
 	}
 
 	public void CreateGameObjects()

@@ -65,9 +65,15 @@ public class UIGameHUD : MonoBehaviour
 		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
-	public void OnClickRestartButton()
+	public void OnClickPlayNextButton()
 	{
-		Application.LoadLevel (Application.loadedLevel);
+		GameManager.Instance.AddLevel ();
+		GameManager.Instance.ChangeGameState (GameState.Start);
+	}
+
+	public void OnClickBackButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Menu);
 	}
 
 	public void OnClickScoresButton()
