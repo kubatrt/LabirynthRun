@@ -144,6 +144,7 @@ public class GameManager : MonoBehaviour
 			previousLevel = level;
 
 			ShowMenu (EmptyMenu);
+			UI.SetGameLevel(level);
 			cloudsAnimator.SetTrigger("Start");
 			player.ResetPlayer ();
 			player.ResetAnimations();
@@ -156,7 +157,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Run:
 			ShowMenu (HUD);
-			UI.GetComponent<UIGameHUD>().SetPlayerName();
+			UI.SetPlayerName(PlayerName);
 			Debug.Log("Set Player Name");
 			player.UnpauseAnimations ();
 			break;
@@ -179,7 +180,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.EndWon:
 			ShowMenu(WonMenu);
-			UI.GetComponent<UIGameHUD>().ShowEndTime(gameTimer);
+			UI.ShowEndTime(gameTimer);
 			break;
 
 		case GameState.Map:

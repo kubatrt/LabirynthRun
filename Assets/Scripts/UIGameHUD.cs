@@ -10,13 +10,13 @@ public class UIGameHUD : MonoBehaviour
 	public Text endTimeText;
 	public Text enterPlayerNameText;
 	public Text playerNameText;
+	public Text gameLevelText;
 
 	PlayerMecanimController player;
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-	//	playerNameText.text = GameManager.Instance.PlayerName;
 	}
 	
 	void Update () 
@@ -34,9 +34,15 @@ public class UIGameHUD : MonoBehaviour
 		endTimeText.text = string.Format(" {0:F2} ", time);
 	}
 
-	public void SetPlayerName()
+	public void SetPlayerName(string PlayerName)
 	{
-		playerNameText.text = enterPlayerNameText.text;
+		PlayerName = enterPlayerNameText.text;
+		playerNameText.text = PlayerName;
+	}
+
+	public void SetGameLevel(int level)
+	{
+		gameLevelText.text = level.ToString ();
 	}
 
 	#region UI controls
