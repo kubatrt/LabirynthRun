@@ -14,10 +14,26 @@ public class MazeGenerator : MonoBehaviour
 	public bool Wrap = false;
 
 	public Vector2 startPosition;
-	Vector2 finishPosition;
 
 	Grid<MazeCell> maze;
 
+	private MazeCellExits GetRandomExit(MazeCellExits validExits)
+	{
+		List<MazeCellExits> exits = new List<MazeCellExits>();
+		if ((validExits & MazeCellExits.North) 	== MazeCellExits.North) 
+			exits.Add(MazeCellExits.North);
+		if ((validExits & MazeCellExits.South) 	== MazeCellExits.South) 
+			exits.Add(MazeCellExits.South);
+		if ((validExits & MazeCellExits.East) 	== MazeCellExits.East) 	
+			exits.Add(MazeCellExits.East);
+		if ((validExits & MazeCellExits.West) 	== MazeCellExits.West) 	
+			exits.Add(MazeCellExits.West);
+		
+		int rand = (int)(UnityEngine.Random.value * exits.Count);
+		if (rand == exits.Count) rand--;
+		
+		return exits[rand];
+	}
 
 	public void Generate()
 	{
@@ -103,7 +119,6 @@ public class MazeGenerator : MonoBehaviour
 				if(cell.TotalExits == 1)
 					cell.IsDeadEnd = true;
 
-
 				cellPos = visitedCells.Pop();
 			}
 			//Debug.Log (String.Format("ITER. #{2} distance {0} visited: {1}", distance, visitedCells.Count, cellIndex));
@@ -114,36 +129,17 @@ public class MazeGenerator : MonoBehaviour
 		foreach(MazeCell cell in maze.CellsGrid)
 			cell.NormalizedDistance = (float)cell.CrawlDistance / (float)maxDistance;
 
-		// find first cell find maximum distance, make it finish
+		// find maximum distance, make it finish
 		foreach(MazeCell cell in maze.CellsGrid) {
 			if(cell.CrawlDistance == maxDistance) {
 				cell.IsFinishCell = true;
-				finishPosition = new Vector2(cell.Position.x, cell.Position.y);	// debug
+				Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
+				                         maxDistance, cell.Position.x, cell.Position.y, maze.Area ));
 				break;
 			}
 		}
-
-		Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
-		                         maxDistance, finishPosition.x, finishPosition.y, maze.Area ));
 	}
 
-	MazeCellExits GetRandomExit(MazeCellExits validExits)
-	{
-		List<MazeCellExits> exits = new List<MazeCellExits>();
-		if ((validExits & MazeCellExits.North) 	== MazeCellExits.North) 
-			exits.Add(MazeCellExits.North);
-		if ((validExits & MazeCellExits.South) 	== MazeCellExits.South) 
-			exits.Add(MazeCellExits.South);
-		if ((validExits & MazeCellExits.East) 	== MazeCellExits.East) 	
-			exits.Add(MazeCellExits.East);
-		if ((validExits & MazeCellExits.West) 	== MazeCellExits.West) 	
-			exits.Add(MazeCellExits.West);
-		
-		int rand = (int)(UnityEngine.Random.value * exits.Count);
-		if (rand == exits.Count) rand--;
-		
-		return exits[rand];
-	}
 
 	public List<MazeCell> GetCells()
 	{

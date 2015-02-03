@@ -44,12 +44,12 @@ public class Labyrinth : MonoBehaviour
 
 	void Awake () 
 	{
-		// if maze already exists, do not generate it again
-		if(Application.isEditor)
-			if(transform.GetComponentsInChildren<Transform>().Length != 1)
-				return;
-		
-		GenerateMaze();
+		maze = GetComponent<MazeGenerator>();
+
+		if(transform.GetComponentsInChildren<Transform>().Length != 1)
+			return;
+
+		CreateMaze();
 		BuildWalls();
 		CreateGameObjects();
 	}
@@ -64,10 +64,10 @@ public class Labyrinth : MonoBehaviour
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
 	}
 
-	public void GenerateMaze()
+	public void CreateMaze()
 	{
-		debugObjectCount = 0;
 		maze = GetComponent<MazeGenerator>();
+		debugObjectCount = 0;
 		maze.Generate();
 		cells = maze.GetCells();
 		CreateContainers();

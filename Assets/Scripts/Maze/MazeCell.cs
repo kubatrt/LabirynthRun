@@ -30,7 +30,6 @@ public class MazeCell : IGridCell
 	// A normalized weighting, indicates the cell's distance from the origin cell in relation to the rest of the maze.
 	public float NormalizedDistance = 0f;
 
-
 	// Enum flags for mark available exits
 	public MazeCellExits Exits = MazeCellExits.None;
 
@@ -119,7 +118,6 @@ public class MazeCell : IGridCell
 			return result;
 		}
 	}
-
 	
 	#endregion
 	
