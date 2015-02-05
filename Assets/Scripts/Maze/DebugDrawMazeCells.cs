@@ -23,9 +23,6 @@ public class DebugDrawMazeCells : MonoBehaviour
 	// Draw the debug line.
 	void OnDrawGizmos()
 	{
-		if(cells.Capacity == 0)
-			return;
-
 		Vector3 frame = new Vector3(0.5f, 0.2f, 0.5f);
 		Vector3 scale = new Vector3(0.45f, 0.15f, 0.45f);
 		

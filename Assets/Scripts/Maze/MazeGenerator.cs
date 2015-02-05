@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-
+[ExecuteInEditMode()]
 //----------------------------------------------------------------------------------------------------------------------
 public class MazeGenerator : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class MazeGenerator : MonoBehaviour
 
 	public Vector2 startPosition;
 
-	Grid<MazeCell> maze;
+	private Grid<MazeCell> maze;
 
 	private MazeCellExits GetRandomExit(MazeCellExits validExits)
 	{
@@ -30,7 +30,8 @@ public class MazeGenerator : MonoBehaviour
 			exits.Add(MazeCellExits.West);
 		
 		int rand = (int)(UnityEngine.Random.value * exits.Count);
-		if (rand == exits.Count) rand--;
+		if (rand == exits.Count) 
+			rand--;
 		
 		return exits[rand];
 	}
@@ -116,6 +117,7 @@ public class MazeGenerator : MonoBehaviour
 
 				distance--;
 
+				// set dead end
 				if(cell.TotalExits == 1)
 					cell.IsDeadEnd = true;
 
