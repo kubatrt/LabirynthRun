@@ -17,6 +17,7 @@ public enum MazeCellExits
 
 
 //----------------------------------------------------------------------------------------------------------------------
+[Serializable]
 public class MazeCell : IGridCell
 {
 	public bool IsStartCell = false;
