@@ -103,23 +103,18 @@ public class Labyrinth : MonoBehaviour
 					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f),Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;
 
-				// TODO: refator
-
-				Vector3 rotationRight = new Vector3(0,90f,0);
-				Vector3 rotationLeft = new Vector3(0,-90f,0);
-				Vector3 rotationBack = new Vector3(0,180f,0);
 
 				if(cell.ExitEast)
 				{
-					newObject.transform.Rotate(rotationRight);
+					newObject.transform.Rotate(new Vector3(0,90f,0));
 				}
 				else if(cell.ExitWest)
 				{
-					newObject.transform.Rotate(rotationLeft);
+					newObject.transform.Rotate(new Vector3(0,-90f,0));
 				}
 				else if(cell.ExitNorth)
 				{
-					newObject.transform.Rotate(rotationBack);
+					newObject.transform.Rotate(new Vector3(0,180f,0));
 				}
 
 			}

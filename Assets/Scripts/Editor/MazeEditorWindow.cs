@@ -6,13 +6,14 @@ using UnityEngine;
 using UnityEditor;
 
 
-/* LEVEL FILE FORMAT
- * name
- * width
- * height
- * numOfCells
- * cells[0...numOfCell] : cell
- * cell {
+/***************************
+ * 	LEVEL FILE FORMAT
+	name
+	width
+	height
+	numOfCells
+	cells[0...numOfCell] : cell
+	cell {
  	bool IsStartCell
 	bool IsFinishCell
  	bool IsDeadEnd
@@ -30,7 +31,7 @@ using UnityEditor;
  	IGrid east;
  	IGrid west;
  }
-*/
+*****************************/
 
 public class MazeLevelHeader
 {
@@ -42,15 +43,20 @@ public class MazeLevelHeader
 
 public class MazeEditorWindow : EditorWindow 
 {
-	private static string mazeName;
-	private static int mazeWidth, mazeHeight = 0;
+	//private static string mazeName;
+	//private static int mazeWidth, mazeHeight = 0;
 	private static string[] levelFiles;
+
+	private Vector2 scrollPosition;
+
+	static MazeEditorWindow staticWindow;
 
 	[MenuItem ("Maze/MazeEditor")]
 	static void Initialize() 
 	{
-		MazeEditorWindow window = (MazeEditorWindow)EditorWindow.GetWindow (typeof (MazeEditorWindow));
-		window.Focus();
+		// MazeEditorWindow window 
+		MazeEditorWindow staticWindow  = (MazeEditorWindow)EditorWindow.GetWindow (typeof (MazeEditorWindow));
+		staticWindow.Focus();
 		GetLevelFiles(out levelFiles);
 	}
 
@@ -70,19 +76,52 @@ public class MazeEditorWindow : EditorWindow
 		bw.Write(cell.South.Index);
 		bw.Write(cell.East.Index);
 		bw.Write(cell.West.Index);
-		Debug.Log(string.Format ("# BW.Write( {0} {1}", cell.Index, cell.Exits));
+		Debug.Log(string.Format ("# WriteCell( {0} {1}", cell.Index, cell.Exits));
 	}
 
-	static void SaveLevel(string fileName, string levelName, int width, int height, List<MazeCell> cells)
+	class CellRelation
+	{
+		int NorthIndex;
+		int SouthIndex;
+		int EastIndex;
+		int WestIndex;
+	}
+
+	static void ReadCell(BinaryReader br, out MazeCell cell)
+	{
+		cell = new MazeCell();
+		cell.IsStartCell = br.ReadBoolean();
+		cell.IsFinishCell = br.ReadBoolean ();
+		cell.IsDeadEnd = br.ReadBoolean();
+		cell.Visitted = br.ReadBoolean();
+		cell.CrawlDistance = br.ReadInt32();
+		cell.NormalizedDistance = br.ReadInt32();
+		cell.Exits = (MazeCellExits)br.ReadInt32();
+		cell.Position.x = br.ReadInt32();
+		cell.Position.y = br.ReadInt32();
+		// build relations
+		int NorthIndex = br.ReadInt32();
+		int SouthIndex = br.ReadInt32();
+		int EastIndex = br.ReadInt32();
+		int WestIndex = br.ReadInt32();
+	}
+
+	static void BuildRelations(out List<MazeCell> cells)
+	{
+		cells = new List<MazeCell>();
+	}
+
+	static void SaveLevel(string fileName, string mazeName, int mazeWidth, int mazeHeight, List<MazeCell> cells)
 	{
 		try
 		{			
 			FileStream fout = new FileStream(fileName, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
 			BinaryWriter bw = new BinaryWriter(fout);
 
-			bw.Write(levelName);
-			bw.Write(width);
-			bw.Write(height);
+			// header
+			bw.Write(mazeName);
+			bw.Write(mazeWidth);
+			bw.Write(mazeHeight);
 			bw.Write(cells.Count);
 
 			int n=0;
@@ -100,11 +139,10 @@ public class MazeEditorWindow : EditorWindow
 		}
 	}
 
-	static void LoadLevel(string fileName, out List<MazeCell> cells)
+	static void LoadLevel(string fileName, out string mazeName, out int mazeHeight, out int mazeWidth, out List<MazeCell> cells)
 	{
 		cells = new List<MazeCell>();
-		string name;
-		int width, height;
+		mazeName = ""; mazeWidth = 0; mazeHeight = 0;
 
 		try
 		{
@@ -112,6 +150,15 @@ public class MazeEditorWindow : EditorWindow
 			BinaryReader br = new BinaryReader(fin);
 			br.BaseStream.Seek(0, SeekOrigin.Begin);
 
+			mazeName = br.ReadString();
+			mazeWidth = br.ReadInt32();
+			mazeHeight = br.ReadInt32();
+			int numOfCells = br.ReadInt32();
+
+			for(int i=0; i < numOfCells; ++i)
+			{
+				MazeCell cell;
+			}
 			// read data...
 			// ReadString() ReadInt32() ReadBoolean() ReadSingle()
 
@@ -128,12 +175,12 @@ public class MazeEditorWindow : EditorWindow
 	{
 		string projectPath = Application.dataPath + "/Levels";
 		files = System.IO.Directory.GetFiles(projectPath);
-		Debug.Log(projectPath);
+		Debug.Log("GetLevelFiles: " + projectPath);
 	}
 
-	private Vector2 scrollPosition;
-	string[] filesArray = new string[5] { "Level1 : first one : 6 : 6", "Level2", "Level3", "Level4", "Level5" } ;
 
+	//string[] filesArray = new string[] { "Level example 1", "Level example 2", "Level example 3", "Level example 4", "Level example 5" };
+	string mazeName;
 	void OnGUI () 
 	{
 		GUILayout.Label ("Maze settings", EditorStyles.boldLabel);
@@ -143,12 +190,12 @@ public class MazeEditorWindow : EditorWindow
 		GUILayout.Button("Load");
 
 		scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-		foreach( string filestr in filesArray )
+		foreach( string filestr in levelFiles )
 		{
 			EditorGUILayout.BeginHorizontal();
 
 			GUILayout.Label(filestr, EditorStyles.boldLabel);
-			GUILayout.Button("Load");
+			GUILayout.Button("Load",  GUILayout.Width(48));
 
 			EditorGUILayout.EndHorizontal();
 			//string fg = EditorGUILayout.ObjectField( filestr, go, typeof( GameObject ) );
