@@ -43,6 +43,11 @@ public class GameManager : MonoBehaviour
 	public int level;
 	int previousLevel;
 
+	public int MazeWidth;
+	public int MazeHeight;
+	public MazeGenerator Maze;
+	public Labyrinth lab;
+
 	public NewMenu CurrentMenu;
 	public NewMenu MainMenu;
 	public NewMenu HUD;
@@ -58,7 +63,6 @@ public class GameManager : MonoBehaviour
 
 	public Animator cloudsAnimator;
 
-
 	void Awake() 
 	{
 		if(Instance != null && Instance != this) // && Instance != this
@@ -70,7 +74,8 @@ public class GameManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 		gameObject.name = gameObject.name + "Instance";
 
-		Debug.Log ("GameManager.Awake()" + this.gameObject.name + ", Instance: " + Instance.gameObject.name);
+		Debug.Log ("GameManager.Awake()");
+		SetReferences ();
 	}
 
 	void Start () 
@@ -100,6 +105,46 @@ public class GameManager : MonoBehaviour
 			AddLevel();
 			RestartGame();
 		}
+	}
+
+	public void SetReferences()
+	{
+		// menu references
+		CurrentMenu = GameObject.FindGameObjectWithTag ("MainMenu").GetComponent<NewMenu> ();
+		MainMenu = GameObject.FindGameObjectWithTag ("MainMenu").GetComponent<NewMenu> ();
+		HUD = GameObject.FindGameObjectWithTag ("HUD").GetComponent<NewMenu> ();
+		PauseMenu = GameObject.FindGameObjectWithTag ("PauseMenu").GetComponent<NewMenu> ();
+		EmptyMenu = GameObject.FindGameObjectWithTag ("EmptyMenu").GetComponent<NewMenu> ();
+		GameOverMenu = GameObject.FindGameObjectWithTag ("GameOverMenu").GetComponent<NewMenu> ();
+		WonMenu = GameObject.FindGameObjectWithTag ("WonMenu").GetComponent<NewMenu> ();
+		SettingsMenu = GameObject.FindGameObjectWithTag ("SettingsMenu").GetComponent<NewMenu> ();
+		ScoresMenu = GameObject.FindGameObjectWithTag ("ScoresMenu").GetComponent<NewMenu> ();
+		
+		// ui reference
+		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
+		
+		// clouds animator reference
+		cloudsAnimator =  GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
+		
+		// camera's references
+		playerCamera = Camera.main.camera;
+		mapCamera = GameObject.FindGameObjectWithTag ("MapCamera").camera;
+
+		// player
+		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+
+		Debug.Log ("Set References");
+	}
+
+	void RebuildLabyrinth(int width, int height)
+	{
+		MazeWidth = Maze.Width = width;
+		MazeHeight = Maze.Height = height;
+		PlayerCamera.Instance.UnPinCamereaFromPlayer ();
+		lab.SetCamerasAtStart();
+		lab.CreateMaze();
+		lab.BuildWalls();
+		lab.CreateGameObjects();
 	}
 
 	#region GamePlay Functions
@@ -140,6 +185,23 @@ public class GameManager : MonoBehaviour
 		level++; 
 	}
 
+	public void PlayNextLevel()
+	{
+		level++;
+		if(level > 1 && level <=5)
+		{
+			MazeWidth++;
+			MazeHeight++;
+			PlayerCamera.Instance.UnPinCamereaFromPlayer();
+			Application.LoadLevel(Application.loadedLevel);
+			SetReferences();
+			player.ResetPlayer();
+			player.ResetAnimations();
+			ChangeGameState(GameState.Start);
+		}
+		SetReferences ();
+	}
+
 	#endregion
 
 	void ShowMenu(NewMenu menu)
@@ -159,36 +221,14 @@ public class GameManager : MonoBehaviour
 		switch(state)
 		{
 		case GameState.Start:
-			/* creating level */
-			if(level != previousLevel)
-			{
-				// generate new maze
-				switch(level)
-				{
-				case 1: 
-					// maze dimensions 6x6 
-					break;
-				case 2:
-					// maze dimensions 7x7 
-					break;
-				case 3: 
-					break;
-					// maze dimensions 7x8 
-				case 4:
-					break;
-					// maze dimensions 8x7 
-				case 5: 
-					break;
-					// maze dimensions 8x8 
-				}
-			}
-			previousLevel = level;
-
 			ShowMenu (EmptyMenu);
 			UI.SetGameLevel(level);
 			cloudsAnimator.SetTrigger("Start");
-			player.ResetPlayer ();
-			player.ResetAnimations();
+			if(player != null)
+			{
+				player.ResetPlayer ();
+				player.ResetAnimations();
+			}
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;
 			Invoke ("PlayerCameraStart", 3);
@@ -220,6 +260,7 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.EndWon:
+			PlayerCamera.Instance.UnPinCamereaFromPlayer();
 			ShowMenu(WonMenu);
 			UI.ShowEndTime(gameTimer);
 			break;

@@ -8,8 +8,8 @@ using System.Collections.Generic;
 //----------------------------------------------------------------------------------------------------------------------
 public class MazeGenerator : MonoBehaviour
 {
-	public int Width = 8;
-	public int Height = 8;
+	public int Width;
+	public int Height;
 	public int Seed = 3141592;
 	public bool Wrap = false;
 
@@ -34,6 +34,17 @@ public class MazeGenerator : MonoBehaviour
 			rand--;
 		
 		return exits[rand];
+	}
+
+	void Awake()
+	{
+		if(GameManager.Instance != null)
+		{
+			Width = GameManager.Instance.MazeWidth;
+			Height = GameManager.Instance.MazeHeight;
+			Debug.Log("WH CHANGED");
+		}
+		Debug.Log ("WH NPOT CHANGED");
 	}
 
 	public void Generate()
