@@ -81,6 +81,12 @@ public class PlayerCamera : MonoBehaviour
 		transform.parent = playerTransform;
 	}
 
+	public void UnPinCamereaFromPlayer()
+	{
+		transform.parent = null;
+		Debug.Log ("Un pin camera!");
+	}
+
 	#region Coroutines
 	IEnumerator LerpPosition(Vector3 from, Vector3 to, float exTime)
 	{

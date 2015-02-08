@@ -7,6 +7,8 @@ using System.Collections.Generic;
 //----------------------------------------------------------------------------------------------------------------------
 public class Labyrinth : MonoBehaviour 
 {
+	public PlayerMecanimController player;
+
 	public GameObject wallPrefab;
 	public GameObject wall2Prefab;
 	public GameObject deadEndPrefab;
@@ -48,7 +50,7 @@ public class Labyrinth : MonoBehaviour
 
 		if(transform.GetComponentsInChildren<Transform>().Length != 1)
 			return;
-
+		
 		CreateMaze();
 		BuildWalls();
 		CreateGameObjects();
@@ -56,12 +58,22 @@ public class Labyrinth : MonoBehaviour
 
 	void Start ()
 	{
+		SetCamerasAtStart ();
+	}
+
+	public void SetCamerasAtStart()
+	{
 		// set cameras at start position
-		float x = (((float)(maze.Width)/2-1)*4)+2;
-		float z = (((float)(maze.Height)/2-1)*4)-2;
+		float x = (((float)(GameManager.Instance.MazeWidth)/2-1)*4)+2;
+		float z = (((float)(GameManager.Instance.MazeHeight)/2-1)*4)-2;
+
+		//float x = (((float)(maze.Width)/2-1)*4)+2;
+		//float z = (((float)(maze.Height)/2-1)*4)-2;
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
 		MapCamera.Instance.SetPosition (x, 5, z);
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
+		Debug.Log ("Cameras Set Position:" + maze.Width + maze.Height);
+		Debug.Log ("Cameras Set Position:" + x + "," + z);
 	}
 
 	public void CreateMaze()
@@ -116,7 +128,6 @@ public class Labyrinth : MonoBehaviour
 				{
 					newObject.transform.Rotate(new Vector3(0,180f,0));
 				}
-
 			}
 			else if(cell.IsFinishCell) 
 			{
