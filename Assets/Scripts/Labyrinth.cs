@@ -43,7 +43,6 @@ public class Labyrinth : MonoBehaviour
 		return new Vector3((float)cellPos.x * offset, wallHeight, (float)cellPos.y * offset);
 	}
 
-
 	void Awake () 
 	{
 		maze = GetComponent<MazeGenerator>();
@@ -53,6 +52,7 @@ public class Labyrinth : MonoBehaviour
 		
 		CreateMaze();
 		BuildWalls();
+		CreatePlayer ();
 		CreateGameObjects();
 		Debug.Log ("Labyrinth.Awake()");
 	}
@@ -60,6 +60,7 @@ public class Labyrinth : MonoBehaviour
 	void Start ()
 	{
 		SetCamerasAtStart ();
+		Debug.Log ("Labyrinth.Start()");
 	}
 
 	public void SetCamerasAtStart()
@@ -70,11 +71,13 @@ public class Labyrinth : MonoBehaviour
 
 		//float x = (((float)(maze.Width)/2-1)*4)+2;
 		//float z = (((float)(maze.Height)/2-1)*4)-2;
+		Debug.Log ("Cameras Set Position:" + maze.Width + maze.Height);
+		Debug.Log ("Cameras Set Position:" + x + "," + z);
+
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
 		MapCamera.Instance.SetPosition (x, 5, z);
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
-		
-		Debug.Log ("Labyrinth.Start()");
+
 		Debug.Log ("Cameras Set Position:" + maze.Width + maze.Height);
 		Debug.Log ("Cameras Set Position:" + x + "," + z);
 	}
@@ -107,12 +110,41 @@ public class Labyrinth : MonoBehaviour
 		}
 	}
 
+	public void CreatePlayer()
+	{
+		foreach(MazeCell cell in cells) 
+		{
+			if(cell.IsStartCell) 
+			{
+				// create player and set rotation
+				GameObject newObject = (GameObject)GameObject.Instantiate(
+					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f),Quaternion.identity);
+				newObject.transform.parent = transform;
+				
+				/*
+				if(cell.ExitEast)
+				{
+					newObject.transform.Rotate(new Vector3(0,90f,0));
+				}
+				else if(cell.ExitWest)
+				{
+					newObject.transform.Rotate(new Vector3(0,-90f,0));
+				}
+				else if(cell.ExitNorth)
+				{
+					newObject.transform.Rotate(new Vector3(0,180f,0));
+				}*/
+
+			}
+		}
+	}
+
 	public void CreateGameObjects()
 	{
 		int triggersCounter = 0;
 		foreach(MazeCell cell in cells) 
 		{
-			if(cell.IsStartCell) 
+			/*if(cell.IsStartCell) 
 			{
 				// create player and set rotation
 				GameObject newObject = (GameObject)GameObject.Instantiate(
@@ -132,8 +164,8 @@ public class Labyrinth : MonoBehaviour
 				{
 					newObject.transform.Rotate(new Vector3(0,180f,0));
 				}
-			}
-			else if(cell.IsFinishCell) 
+			}*/
+			if(cell.IsFinishCell) 
 			{
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					finishPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), finishPrefab.transform.rotation);

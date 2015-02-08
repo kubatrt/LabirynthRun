@@ -142,6 +142,11 @@ public class GameManager : MonoBehaviour
 		MazeHeight = Maze.Height = height;
 		PlayerCamera.Instance.UnPinCamereaFromPlayer ();
 		lab.SetCamerasAtStart();
+		// clear
+		GameObject walls = GameObject.Find("_Walls"); DestroyImmediate(walls);
+		GameObject objects = GameObject.Find ("_Objects"); DestroyImmediate(objects);
+		GameObject triggers = GameObject.Find("_Triggers"); DestroyImmediate(triggers);
+		// build
 		lab.CreateMaze();
 		lab.BuildWalls();
 		lab.CreateGameObjects();
@@ -149,29 +154,35 @@ public class GameManager : MonoBehaviour
 
 	#region GamePlay Functions
 
-	private void NewGame() {
+	private void NewGame() 
+	{
 
 	}
 
-	private void RestartGame() {
+	private void RestartGame() 
+	{
 		Debug.Log ("##### RESTART GAME #####");
 		ChangeGameState(GameState.Start);
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 
-	private void PlayerStart() { 
+	private void PlayerStart() 
+	{ 
 		player.StartPlayer (); 
 	}
 
-	private void PlayerCameraStart() { 
+	private void PlayerCameraStart() 
+	{ 
 		PlayerCamera.Instance.StartCamera (); 
 	}
 
-	private void GameStateRun(){ 
+	private void GameStateRun()
+	{ 
 		ChangeGameState (GameState.Run); 
 	}
 
-	private void PlayerUnpause(){ 
+	private void PlayerUnpause()
+	{ 
 		player.UnpauseAnimations (); 
 	}
 	
@@ -181,8 +192,34 @@ public class GameManager : MonoBehaviour
 		mapCamera.enabled = !mapCamera.enabled;
 	}
 
-	public void AddLevel() { 
+	public void AddLevel() 
+	{ 
 		level++; 
+	}
+
+	public void NextLevel()
+	{
+		level++;
+		switch (level) 
+		{
+		case 1:
+			RebuildLabyrinth(7,7);
+			break;
+		case 2:
+			RebuildLabyrinth(8,8);
+			break;
+		case 3:
+			RebuildLabyrinth(8,8);
+			break;
+		case 4:
+			RebuildLabyrinth(8,8);
+			break;
+		case 5:
+			RebuildLabyrinth(8,8);
+			ChangeGameState(GameState.Menu);
+			break;
+
+		}
 	}
 
 	public void PlayNextLevel()
@@ -222,12 +259,14 @@ public class GameManager : MonoBehaviour
 		{
 		case GameState.Start:
 			ShowMenu (EmptyMenu);
-			UI.SetGameLevel(level);
+			UI.SetGameLevel(level + 1);
 			cloudsAnimator.SetTrigger("Start");
 			if(player != null)
 			{
 				player.ResetPlayer ();
 				player.ResetAnimations();
+				player.SetRotation();
+				Debug.Log("Player has been reseted");
 			}
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;

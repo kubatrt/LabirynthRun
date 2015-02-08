@@ -28,6 +28,7 @@ public class PlayerMecanimController : MonoBehaviour
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
 	Animator 	animator;
+	bool IsGoodRotated;
 
 	float AnimNormSpeed;
 	
@@ -92,6 +93,30 @@ public class PlayerMecanimController : MonoBehaviour
 		isAlive = true;
 
 		RunPlayer ();
+	}
+
+	public void SetRotation()
+	{
+		Debug.Log (" Player Rot set0");
+		while(IsGoodRotated == false)
+		{
+			Debug.Log (" Player Rot set1");
+			Ray ray;
+			ray = new Ray(transform.position, transform.forward);
+			if(Physics.Raycast(ray,2f))
+			{
+				Debug.Log (" Player Rot set2");
+				transform.Rotate(new Vector3(0,90f,0));
+				IsGoodRotated = false;
+			}
+			else
+			{
+				Debug.Log (" Player Rot set3");
+				IsGoodRotated = true;
+			}
+		}
+		IsGoodRotated = false;
+		Debug.Log (" Player Rot set4");
 	}
 
 	public void ResetPlayer() // on game over

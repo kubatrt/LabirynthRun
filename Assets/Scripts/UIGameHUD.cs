@@ -73,7 +73,7 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickPlayNextButton()
 	{
-		GameManager.Instance.PlayNextLevel ();
+		GameManager.Instance.NextLevel ();
 		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
