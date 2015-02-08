@@ -202,6 +202,9 @@ public class GameManager : MonoBehaviour
 		level++;
 		switch (level) 
 		{
+		case 0:
+			RebuildLabyrinth(6,6);
+			break;
 		case 1:
 			RebuildLabyrinth(7,7);
 			break;
@@ -218,7 +221,6 @@ public class GameManager : MonoBehaviour
 			RebuildLabyrinth(8,8);
 			ChangeGameState(GameState.Menu);
 			break;
-
 		}
 	}
 
@@ -288,6 +290,7 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.Menu:
+			level = 0;
 			ShowMenu (MainMenu);
 			player.ResetPlayer ();
 			player.ResetAnimations();

@@ -120,21 +120,6 @@ public class Labyrinth : MonoBehaviour
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f),Quaternion.identity);
 				newObject.transform.parent = transform;
-				
-				/*
-				if(cell.ExitEast)
-				{
-					newObject.transform.Rotate(new Vector3(0,90f,0));
-				}
-				else if(cell.ExitWest)
-				{
-					newObject.transform.Rotate(new Vector3(0,-90f,0));
-				}
-				else if(cell.ExitNorth)
-				{
-					newObject.transform.Rotate(new Vector3(0,180f,0));
-				}*/
-
 			}
 		}
 	}
