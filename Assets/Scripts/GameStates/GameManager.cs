@@ -19,7 +19,7 @@ public enum GameState
 public class GameManager : MonoBehaviour 
 {
 
-	public GameState state = GameState.Menu;
+	public GameState state;
 	// Singleton with GameObject instance
 	static GameManager instance;
 	public static GameManager Instance { 
@@ -61,21 +61,32 @@ public class GameManager : MonoBehaviour
 
 	void Awake() 
 	{
-		if(Instance != null && Instance != this)
+		if(Instance != null && Instance != this) // && Instance != this
 		{
 			Destroy(gameObject);
+			Debug.Log ("Destroy duplicate!");
 		}
 		Instance = this;
-		//DontDestroyOnLoad(gameObject);
-		Debug.Log ("GameManager.Awake()");
+		DontDestroyOnLoad(gameObject);
+		gameObject.name = gameObject.name + "Instance";
+
+		Debug.Log ("GameManager.Awake()" + this.gameObject.name + ", Instance: " + Instance.gameObject.name);
 	}
 
 	void Start () 
 	{
-		Debug.Log ("GameManager.Start()");
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		ChangeGameState (GameState.Menu);
-		level = 1;
+		if(cloudsAnimator == null) GameObject.Find ("Clouds").GetComponent<Animator>();
+
+		ChangeGameState(GameState.Menu);
+
+		Debug.Log ("GameManager.Start()");
+	}
+
+	void OnLevelWasLoaded(int lvl) {
+
+
+		Debug.Log ("OnSceneWasLoaded:" + lvl);
 	}
 
 	void Update()
@@ -84,13 +95,40 @@ public class GameManager : MonoBehaviour
 		{
 			gameTimer += Time.deltaTime;
 		}
+
+		if(Input.GetKey(KeyCode.Escape)) {
+			AddLevel();
+			RestartGame();
+		}
 	}
 
 	#region GamePlay Functions
-	private void PlayerStart() { player.StartPlayer (); }
-	private void PlayerCameraStart() { PlayerCamera.Instance.StartCamera (); }
-	private void GameStateRun(){ ChangeGameState (GameState.Run); }
-	private void PlayerUnpause(){ player.UnpauseAnimations (); }
+
+	private void NewGame() {
+
+	}
+
+	private void RestartGame() {
+		Debug.Log ("##### RESTART GAME #####");
+		ChangeGameState(GameState.Start);
+		Application.LoadLevel(Application.loadedLevelName);
+	}
+
+	private void PlayerStart() { 
+		player.StartPlayer (); 
+	}
+
+	private void PlayerCameraStart() { 
+		PlayerCamera.Instance.StartCamera (); 
+	}
+
+	private void GameStateRun(){ 
+		ChangeGameState (GameState.Run); 
+	}
+
+	private void PlayerUnpause(){ 
+		player.UnpauseAnimations (); 
+	}
 	
 	public void ToggleCameras()
 	{
@@ -98,7 +136,10 @@ public class GameManager : MonoBehaviour
 		mapCamera.enabled = !mapCamera.enabled;
 	}
 
-	public void AddLevel() { level++; }
+	public void AddLevel() { 
+		level++; 
+	}
+
 	#endregion
 
 	void ShowMenu(NewMenu menu)

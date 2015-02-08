@@ -73,8 +73,7 @@ public class QuickTimeEvent : MonoBehaviour
 
 	void SetupButtons()
 	{
-		Debug.Log (string.Format ("# SetupButtons L: {0} R: {1} F: {2}", 
-		                          directions.Left, directions.Right, directions.Forward));
+		//Debug.Log(string.Format("# SetupButtons L: {0} R: {1} F: {2}", directions.Left, directions.Right, directions.Forward));
 		ResetButtons();
 
 		if(directions.Left) {

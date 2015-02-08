@@ -135,8 +135,8 @@ public class MazeGenerator : MonoBehaviour
 		foreach(MazeCell cell in maze.CellsGrid) {
 			if(cell.CrawlDistance == maxDistance) {
 				cell.IsFinishCell = true;
-				Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
-				                         maxDistance, cell.Position.x, cell.Position.y, maze.Area ));
+				//Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
+				//                         maxDistance, cell.Position.x, cell.Position.y, maze.Area ));
 				break;
 			}
 		}

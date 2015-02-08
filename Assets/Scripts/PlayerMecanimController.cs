@@ -38,6 +38,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator = GetComponent<Animator> ();
 		qte = GameObject.FindWithTag("QTE").GetComponent<QuickTimeEvent>();
 		qte.player = this;
+		Debug.Log ("Player.Awake()");
 	}
 
 	void Start () 
@@ -54,6 +55,7 @@ public class PlayerMecanimController : MonoBehaviour
 		ResetAnimations ();
 
 		qte.gameObject.SetActive(false);
+		Debug.Log ("Player.Start()");
 	}
 	
 	void Update () 

@@ -52,6 +52,7 @@ public class Labyrinth : MonoBehaviour
 		CreateMaze();
 		BuildWalls();
 		CreateGameObjects();
+		Debug.Log ("Labyrinth.Awake()");
 	}
 
 	void Start ()
@@ -62,6 +63,7 @@ public class Labyrinth : MonoBehaviour
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
 		MapCamera.Instance.SetPosition (x, 5, z);
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
+		Debug.Log ("Labyrinth.Start()");
 	}
 
 	public void CreateMaze()
@@ -71,6 +73,7 @@ public class Labyrinth : MonoBehaviour
 		maze.Generate();
 		cells = maze.GetCells();
 		CreateContainers();
+		Debug.Log ("Labyrinth.CreateMaze()");
 	}
 
 	void CreateContainers()
@@ -191,7 +194,7 @@ public class Labyrinth : MonoBehaviour
 			if(!cell.ExitEast || cell.Position.x == maze.Width - 1 ) wallsWorldPositions.Add(middleRight);
 			if(!cell.ExitWest || cell.Position.x == 0 ) wallsWorldPositions.Add(middleLeft);
 		}
-		Debug.Log ("### Generation walls positions completed:" + wallsWorldPositions.Count + " Duplicates:" + duplicates);
+		//Debug.Log ("## Generation walls positions completed:" + wallsWorldPositions.Count + " Duplicates:" + duplicates);
 		
 		List<Vector3> wallsList = new List<Vector3>();
 		foreach(Vector3 pos in wallsWorldPositions) {
@@ -222,7 +225,7 @@ public class Labyrinth : MonoBehaviour
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
 		
-		Debug.Log ("## Total walls objects: " + debugObjectCount);
+		//Debug.Log ("### Total walls objects: " + debugObjectCount);
 	}
 
 	#region Generating walls data
