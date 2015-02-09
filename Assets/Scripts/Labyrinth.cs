@@ -66,20 +66,12 @@ public class Labyrinth : MonoBehaviour
 	public void SetCamerasAtStart()
 	{
 		// set cameras at start position
-		float x = (((float)(GameManager.Instance.MazeWidth)/2-1)*4)+2;
-		float z = (((float)(GameManager.Instance.MazeHeight)/2-1)*4)-2;
-
-		//float x = (((float)(maze.Width)/2-1)*4)+2;
-		//float z = (((float)(maze.Height)/2-1)*4)-2;
-		Debug.Log ("Cameras Set Position:" + maze.Width + maze.Height);
-		Debug.Log ("Cameras Set Position:" + x + "," + z);
-
+		float x = (((float)(maze.Width)/2-1)*4)+2;
+		float z = (((float)(maze.Height)/2-1)*4)-2;
+		PlayerCamera.Instance.SetStartUpPosition(x,x*4,z);
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
 		MapCamera.Instance.SetPosition (x, 5, z);
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
-
-		Debug.Log ("Cameras Set Position:" + maze.Width + maze.Height);
-		Debug.Log ("Cameras Set Position:" + x + "," + z);
 	}
 
 	public void CreateMaze()

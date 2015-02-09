@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
 
 	public void Start()
 	{
-		startupPosition = transform.position;
+		//startupPosition = transform.position;
 		startupRotation = transform.rotation;
 	}
 
@@ -41,6 +41,11 @@ public class PlayerCamera : MonoBehaviour
 		float s = player.normalSpeed / player.speed;
 		float fov = normalFov * s;
 		camera.fieldOfView = Mathf.Clamp(fov, slowFov, runFov);
+	}
+
+	public void SetStartUpPosition(float x, float y, float z)
+	{
+		startupPosition = new Vector3 (x, y, z);
 	}
 
 	public void SetPosition(float x, float y, float z)
