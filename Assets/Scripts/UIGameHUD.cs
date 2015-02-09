@@ -73,13 +73,18 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickPlayNextButton()
 	{
-		GameManager.Instance.NextLevel ();
+		GameManager.Instance.AddLevel ();
 		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
 	public void OnClickBackButton()
 	{
 		GameManager.Instance.ChangeGameState (GameState.Menu);
+	}
+
+	public void OnClickLevelsButton()
+	{
+		GameManager.Instance.ChangeGameState (GameState.Levels);
 	}
 
 	public void OnClickScoresButton()
@@ -95,6 +100,12 @@ public class UIGameHUD : MonoBehaviour
 	public void OnClickQuitButton()
 	{
 		Application.LoadLevel (Application.loadedLevel);
+	}
+
+	public void OnClickLvlButton(int level)
+	{
+		GameManager.Instance.level = level - 2;
+		OnClickPlayNextButton ();
 	}
 	#endregion
 }

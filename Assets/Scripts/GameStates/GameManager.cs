@@ -7,6 +7,7 @@ public enum GameState
 	Menu,
 	Settings,
 	Scores,
+	Levels,
 	Start,
 	Run,
 	Pause,
@@ -57,6 +58,7 @@ public class GameManager : MonoBehaviour
 	public NewMenu WonMenu;
 	public NewMenu SettingsMenu;
 	public NewMenu ScoresMenu;
+	public NewMenu LevelsMenu;
 
 	public Camera playerCamera;
 	public Camera mapCamera;
@@ -102,6 +104,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		if(Input.GetKey(KeyCode.Escape)) {
+
 			AddLevel();
 			RestartGame();
 		}
@@ -119,6 +122,7 @@ public class GameManager : MonoBehaviour
 		WonMenu = GameObject.FindGameObjectWithTag ("WonMenu").GetComponent<NewMenu> ();
 		SettingsMenu = GameObject.FindGameObjectWithTag ("SettingsMenu").GetComponent<NewMenu> ();
 		ScoresMenu = GameObject.FindGameObjectWithTag ("ScoresMenu").GetComponent<NewMenu> ();
+		LevelsMenu = GameObject.FindGameObjectWithTag ("LevelsMenu").GetComponent<NewMenu> ();
 		
 		// ui reference
 		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
@@ -138,6 +142,7 @@ public class GameManager : MonoBehaviour
 
 	void RebuildLabyrinth(int width, int height)
 	{
+		// change dimensions and positions of cameras
 		MazeWidth = Maze.Width = width;
 		MazeHeight = Maze.Height = height;
 		PlayerCamera.Instance.UnPinCamereaFromPlayer ();
@@ -192,39 +197,34 @@ public class GameManager : MonoBehaviour
 		mapCamera.enabled = !mapCamera.enabled;
 	}
 
-	public void AddLevel() 
-	{ 
-		level++; 
-	}
-
-	public void NextLevel()
+	public void AddLevel()
 	{
 		level++;
+	}
+
+	void CheckLvlAndRebuild()
+	{
 		switch (level) 
 		{
-		case 0:
-			RebuildLabyrinth(6,6);
-			break;
-		case 1:
+		case 1:		// LVL 2 7x7
 			RebuildLabyrinth(7,7);
 			break;
-		case 2:
+		case 2:		// LVL 3 8x8
 			RebuildLabyrinth(8,8);
 			break;
-		case 3:
-			RebuildLabyrinth(8,8);
+		case 3:		// LVL 4 9x9
+			RebuildLabyrinth(9,9);
 			break;
-		case 4:
-			RebuildLabyrinth(8,8);
+		case 4:		// LVL 5 10x10
+			RebuildLabyrinth(10,10);
 			break;
 		case 5:
-			RebuildLabyrinth(8,8);
 			ChangeGameState(GameState.Menu);
 			break;
 		}
 	}
 
-	public void PlayNextLevel()
+	/*public void PlayNextLevel()
 	{
 		level++;
 		if(level > 1 && level <=5)
@@ -239,7 +239,7 @@ public class GameManager : MonoBehaviour
 			ChangeGameState(GameState.Start);
 		}
 		SetReferences ();
-	}
+	}*/
 
 	#endregion
 
@@ -260,6 +260,8 @@ public class GameManager : MonoBehaviour
 		switch(state)
 		{
 		case GameState.Start:
+			CheckLvlAndRebuild();
+
 			ShowMenu (EmptyMenu);
 			UI.SetGameLevel(level + 1);
 			cloudsAnimator.SetTrigger("Start");
@@ -290,8 +292,9 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.Menu:
-			level = 0;
 			ShowMenu (MainMenu);
+			RebuildLabyrinth(6,6);
+			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();
 			PlayerCamera.Instance.ResetCamera();
@@ -305,6 +308,7 @@ public class GameManager : MonoBehaviour
 			PlayerCamera.Instance.UnPinCamereaFromPlayer();
 			ShowMenu(WonMenu);
 			UI.ShowEndTime(gameTimer);
+			UI.SetGameLevel(level + 1);
 			break;
 
 		case GameState.Map:
@@ -321,6 +325,10 @@ public class GameManager : MonoBehaviour
 			else
 				ChangeGameState(GameState.Run);
 			break; 
+
+		case GameState.Levels:
+			ShowMenu(LevelsMenu);
+			break;
 
 		case GameState.Settings:
 			ShowMenu(SettingsMenu);
