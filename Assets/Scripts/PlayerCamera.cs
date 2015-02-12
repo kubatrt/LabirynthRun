@@ -33,6 +33,20 @@ public class PlayerCamera : MonoBehaviour
 		startupRotation = transform.rotation;
 	}
 
+	public void FollowThePlayer()
+	{
+		playerTransform = player.transform;
+		Vector3 runGamePosition = playerTransform.position 
+			+ (playerTransform.forward * -2)
+				+ (playerTransform.up * 2.5f);
+		transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.1f);
+		Vector3 runGameRotation = 
+			new Vector3 (playerTransform.eulerAngles.x + 30,
+			             playerTransform.eulerAngles.y,
+			             playerTransform.eulerAngles.z);
+		transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.1f);
+	}
+
 	public void AdjustFovToPlayerSpeed()
 	{
 		if(player == null) 
@@ -41,6 +55,21 @@ public class PlayerCamera : MonoBehaviour
 		float s = player.normalSpeed / player.speed;
 		float fov = normalFov * s;
 		camera.fieldOfView = Mathf.Clamp(fov, slowFov, runFov);
+	}
+
+	public void SlowDownFov()
+	{
+		StartCoroutine (LerpFov(camera.fieldOfView, slowFov,0.5f));
+	}
+
+	public void SpeedUpFov()
+	{
+		StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
+	}
+
+	public void NormalizeFov()
+	{
+		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
 
 	public void SetStartUpPosition(float x, float y, float z)
@@ -78,7 +107,7 @@ public class PlayerCamera : MonoBehaviour
 			             playerTransform.eulerAngles.y,
 			             playerTransform.eulerAngles.z);
 		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, cameraCoroutineTime));
-		Invoke ("PinCameraToPlayer", cameraCoroutineTime);
+		//Invoke ("PinCameraToPlayer", cameraCoroutineTime);
 	}
 
 	void PinCameraToPlayer()
@@ -122,6 +151,21 @@ public class PlayerCamera : MonoBehaviour
 			dTime = Time.time - startTime;
 		}
 		transform.eulerAngles = to;
+	}
+
+	IEnumerator LerpFov(float a, float b, float exTime)
+	{
+		float startTime = Time.time;
+		Vector3 A = Vector3.zero; A.x = a;
+		Vector3 B = Vector3.zero; B.x = b;
+		float n = 1 / exTime;
+		
+		while(Time.time - startTime <= exTime)
+		{
+			camera.fieldOfView = Vector3.Lerp(A, B, (Time.time - startTime)*n).x;
+			yield return null;
+		}
+		camera.fieldOfView = B.x;
 	}
 	#endregion
 }

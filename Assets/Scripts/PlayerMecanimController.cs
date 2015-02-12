@@ -64,6 +64,7 @@ public class PlayerMecanimController : MonoBehaviour
 		if(isAlive && GameManager.Instance.state == GameState.Run) 
 		{
 			Move();
+			PlayerCamera.Instance.FollowThePlayer();
 			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
 		}
 	}
@@ -295,12 +296,14 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		StartCoroutine( LerpSpeed(speed, minSpeed, 0.3f));
 		SetSlowDownAnim(true);
+		PlayerCamera.Instance.SlowDownFov ();
 	}
 	
 	public void AccelerateMovement()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 		SetSlowDownAnim(false);
+		PlayerCamera.Instance.NormalizeFov ();
 	}
 	
 	public void BreakSlowAndGo()
@@ -308,11 +311,13 @@ public class PlayerMecanimController : MonoBehaviour
 		StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
+		PlayerCamera.Instance.NormalizeFov ();
 	}
 
 	void BackToNormalSpeed()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
+		PlayerCamera.Instance.NormalizeFov ();
 	}
 
 	public void RunPlayer()
@@ -333,6 +338,7 @@ public class PlayerMecanimController : MonoBehaviour
 		{
 			Debug.Log ("im accelerating....!!!!");
 			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));
+			PlayerCamera.Instance.SpeedUpFov();
 			Invoke ("BackToNormalSpeed", road/runSpeed);
 			Debug.Log ("Time:" + road/runSpeed);
 		}
