@@ -13,8 +13,8 @@ public class PlayerCamera : MonoBehaviour
 	Quaternion startupRotation;
 
 	// TODO:
-	public float slowFov = 50f;
-	public float normalFov = 60f;
+	public float slowFov = 60f;
+	public float normalFov = 65f;
 	public float runFov = 70f;
 
 	public PlayerMecanimController player;
@@ -39,12 +39,13 @@ public class PlayerCamera : MonoBehaviour
 		Vector3 runGamePosition = playerTransform.position 
 			+ (playerTransform.forward * -2)
 				+ (playerTransform.up * 2.5f);
-		transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.1f);
+		transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.25f);
 		Vector3 runGameRotation = 
 			new Vector3 (playerTransform.eulerAngles.x + 30,
 			             playerTransform.eulerAngles.y,
 			             playerTransform.eulerAngles.z);
-		transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.1f);
+	
+		transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.25f);
 	}
 
 	public void AdjustFovToPlayerSpeed()
@@ -91,6 +92,20 @@ public class PlayerCamera : MonoBehaviour
 	{
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
+	}
+
+	public void RestartCamera() 		// on player ded
+	{
+		playerTransform = player.transform;
+		Vector3 runGamePosition = playerTransform.position 
+			+ (playerTransform.forward * -2)
+				+ (playerTransform.up * 2.5f);
+		Vector3 runGameRotation = 
+			new Vector3 (playerTransform.eulerAngles.x + 30,
+			             playerTransform.eulerAngles.y,
+			             playerTransform.eulerAngles.z);
+		transform.position = runGamePosition;
+		transform.eulerAngles = runGameRotation;
 	}
 
 	public void StartCamera()

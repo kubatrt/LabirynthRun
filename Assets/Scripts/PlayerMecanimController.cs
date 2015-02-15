@@ -65,6 +65,7 @@ public class PlayerMecanimController : MonoBehaviour
 		{
 			Move();
 			PlayerCamera.Instance.FollowThePlayer();
+			AlignPlayer();
 			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
 		}
 	}
@@ -120,11 +121,25 @@ public class PlayerMecanimController : MonoBehaviour
 		Debug.Log (" Player Rot set4");
 	}
 
+	public void AlignPlayer()
+	{
+		if(transform.eulerAngles.y > -0.5f && transform.eulerAngles.y < 0.5f)
+			transform.eulerAngles = new Vector3(0,0,0);
+		if(transform.eulerAngles.y > 89.5f && transform.eulerAngles.y < 90.5f)
+			transform.eulerAngles = new Vector3(0,90,0);
+		if(transform.eulerAngles.y > 179.5f && transform.eulerAngles.y < 180.5f)
+			transform.eulerAngles = new Vector3(0,180,0);
+		if(transform.eulerAngles.y > 269.5f && transform.eulerAngles.y < 270.5f)
+			transform.eulerAngles = new Vector3(0,270,0);
+	}
+
 	public void ResetPlayer() // on game over
 	{
 		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
+		SetRotation ();
+		PlayerCamera.Instance.RestartCamera ();
 		ResetAnimations();
 		lives = 3;
 		maps = 3;
@@ -140,6 +155,8 @@ public class PlayerMecanimController : MonoBehaviour
 		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
+		SetRotation ();
+		PlayerCamera.Instance.RestartCamera ();
 		ResetAnimations();
 		maps = 3;
 		Invoke("StartPlayer", 1f);
@@ -148,6 +165,8 @@ public class PlayerMecanimController : MonoBehaviour
 	#region Crossroads
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
 	{
+		AlignPlayer ();
+
 		angle = 0f;
 
 		switch (crossingType) 
