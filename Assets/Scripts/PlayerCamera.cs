@@ -39,13 +39,15 @@ public class PlayerCamera : MonoBehaviour
 		Vector3 runGamePosition = playerTransform.position 
 			+ (playerTransform.forward * -2)
 				+ (playerTransform.up * 2.5f);
-		transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.25f);
+		//transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.25f);
+		StartCoroutine (LerpPosition(transform.position, runGamePosition, 0.25f));
 		Vector3 runGameRotation = 
 			new Vector3 (playerTransform.eulerAngles.x + 30,
 			             playerTransform.eulerAngles.y,
 			             playerTransform.eulerAngles.z);
 	
-		transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.25f);
+		//transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.25f);
+		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, 0.25f));
 	}
 
 	public void AdjustFovToPlayerSpeed()
