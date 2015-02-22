@@ -64,7 +64,8 @@ public class PlayerMecanimController : MonoBehaviour
 		if(isAlive && GameManager.Instance.state == GameState.Run) 
 		{
 			Move();
-			PlayerCamera.Instance.FollowThePlayer();
+			//PlayerCamera.Instance.FollowThePlayer();
+			PlayerCamera.Instance.SmoothFollow();
 			AlignPlayer();
 			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
 		}

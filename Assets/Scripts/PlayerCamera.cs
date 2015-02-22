@@ -22,6 +22,11 @@ public class PlayerCamera : MonoBehaviour
 
 	public float cameraCoroutineTime = 3f;
 
+	public float speed;
+	public float dampTime;
+	private Vector3 velocity = Vector3.zero;
+	private float yVelocity = 0.0F;
+
 	void Awake()
 	{
 		Instance = this;
@@ -31,6 +36,27 @@ public class PlayerCamera : MonoBehaviour
 	{
 		//startupPosition = transform.position;
 		startupRotation = transform.rotation;
+
+		speed = 1;
+		dampTime = 0.2f;
+	}
+
+	public void SmoothFollow()
+	{
+		Transform target = player.transform;
+		if(target)
+		{
+			Vector3 targetPoint = target.position + (target.forward * -2) +  (target.up * 2.5f);
+			Vector3 point = camera.WorldToViewportPoint(targetPoint);
+			Vector3 deltaPos = targetPoint - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.5f));
+			Vector3 destinationPos = transform.position + deltaPos;
+			Vector3 newPosition =   Vector3.SmoothDamp(transform.position, destinationPos, ref velocity, dampTime);
+			transform.position = newPosition;
+
+			float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, target.eulerAngles.y, ref yVelocity, dampTime);
+			transform.eulerAngles = new Vector3(transform.eulerAngles.x, yAngle, transform.eulerAngles.z);
+
+		}
 	}
 
 	public void FollowThePlayer()
@@ -62,17 +88,17 @@ public class PlayerCamera : MonoBehaviour
 
 	public void SlowDownFov()
 	{
-		//StartCoroutine (LerpFov(camera.fieldOfView, slowFov,0.5f));
+		StartCoroutine (LerpFov(camera.fieldOfView, slowFov,0.5f));
 	}
 
 	public void SpeedUpFov()
 	{
-		//StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
+		StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
 	}
 
 	public void NormalizeFov()
 	{
-		//StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
+		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
 
 	public void SetStartUpPosition(float x, float y, float z)
