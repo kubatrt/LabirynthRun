@@ -62,17 +62,17 @@ public class PlayerCamera : MonoBehaviour
 
 	public void SlowDownFov()
 	{
-		StartCoroutine (LerpFov(camera.fieldOfView, slowFov,0.5f));
+		//StartCoroutine (LerpFov(camera.fieldOfView, slowFov,0.5f));
 	}
 
 	public void SpeedUpFov()
 	{
-		StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
+		//StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
 	}
 
 	public void NormalizeFov()
 	{
-		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
+		//StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
 
 	public void SetStartUpPosition(float x, float y, float z)
