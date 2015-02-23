@@ -12,6 +12,17 @@ public class UIGameHUD : MonoBehaviour
 	public Text playerNameText;
 	public Text gameLevelText;
 
+    public NewMenu CurrentMenu;
+    public NewMenu MainMenu;
+    public NewMenu HUD;
+    public NewMenu PauseMenu;
+    public NewMenu EmptyMenu;
+    public NewMenu GameOverMenu;
+    public NewMenu WonMenu;
+    public NewMenu SettingsMenu;
+    public NewMenu ScoresMenu;
+    public NewMenu LevelsMenu;
+
 	PlayerMecanimController player;
 
 	void Start () 
@@ -28,6 +39,16 @@ public class UIGameHUD : MonoBehaviour
 		playerLivesText.text = player.lives.ToString();
 		timeText.text = string.Format(" {0:F2} ", GameManager.Instance.gameTimer);
 	}
+
+    void ShowMenu(NewMenu menu)
+    {
+        if (CurrentMenu != null)
+            CurrentMenu.IsOpen = false;
+
+        CurrentMenu = menu;
+        CurrentMenu.IsOpen = true;
+    }
+
 
 	public void ShowEndTime(float time)
 	{
@@ -74,7 +95,6 @@ public class UIGameHUD : MonoBehaviour
 	public void OnClickPlayNextButton()
 	{
 		GameManager.Instance.AddLevel ();
-		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
 	public void OnClickBackButton()
@@ -99,7 +119,7 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickQuitButton()
 	{
-		Application.LoadLevel (Application.loadedLevel);
+        Application.Quit();
 	}
 
 	public void OnClickLvlButton(int level)
@@ -108,4 +128,60 @@ public class UIGameHUD : MonoBehaviour
 		OnClickPlayNextButton ();
 	}
 	#endregion
+    
+    #region UIGameState
+    public void UIStartState()
+    {
+        ShowMenu(EmptyMenu);
+        SetGameLevel(GameManager.Instance.level + 1);   
+    }
+
+    public void UIRunState()
+    {
+        ShowMenu(HUD);
+        SetPlayerName(GameManager.Instance.PlayerName);
+    }
+
+    public void UIPauseState()
+    {
+        ShowMenu(PauseMenu);
+    }
+
+    public void UIMenuState()
+    {
+        ShowMenu(MainMenu);
+    }
+
+    public void UIEndLostState()
+    {
+        ShowMenu(GameOverMenu);
+    }
+
+    public void UIEndWonState()
+    {
+        ShowMenu(WonMenu);
+        ShowEndTime(GameManager.Instance.gameTimer);
+        SetGameLevel(GameManager.Instance.level + 1);
+    }
+
+    public void UIMapState()
+    {
+        ShowMenu(EmptyMenu);
+    }
+
+    public void UILevelsState()
+    {
+        ShowMenu(LevelsMenu);
+    }
+
+    public void UISettingsState()
+    {
+        ShowMenu(SettingsMenu);
+    }
+
+    public void UIScoresState()
+    {
+        ShowMenu(ScoresMenu);
+    }
+    #endregion
 }

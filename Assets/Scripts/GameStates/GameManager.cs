@@ -43,22 +43,12 @@ public class GameManager : MonoBehaviour
 
 	public int level;
 	int previousLevel;
+    int maxLevel = 5;
 
 	public int MazeWidth;
 	public int MazeHeight;
 	public MazeGenerator Maze;
 	public Labyrinth lab;
-
-	public NewMenu CurrentMenu;
-	public NewMenu MainMenu;
-	public NewMenu HUD;
-	public NewMenu PauseMenu;
-	public NewMenu EmptyMenu;
-	public NewMenu GameOverMenu;
-	public NewMenu WonMenu;
-	public NewMenu SettingsMenu;
-	public NewMenu ScoresMenu;
-	public NewMenu LevelsMenu;
 
 	public Camera playerCamera;
 	public Camera mapCamera;
@@ -112,18 +102,6 @@ public class GameManager : MonoBehaviour
 
 	public void SetReferences()
 	{
-		// menu references
-		CurrentMenu = GameObject.FindGameObjectWithTag ("MainMenu").GetComponent<NewMenu> ();
-		MainMenu = GameObject.FindGameObjectWithTag ("MainMenu").GetComponent<NewMenu> ();
-		HUD = GameObject.FindGameObjectWithTag ("HUD").GetComponent<NewMenu> ();
-		PauseMenu = GameObject.FindGameObjectWithTag ("PauseMenu").GetComponent<NewMenu> ();
-		EmptyMenu = GameObject.FindGameObjectWithTag ("EmptyMenu").GetComponent<NewMenu> ();
-		GameOverMenu = GameObject.FindGameObjectWithTag ("GameOverMenu").GetComponent<NewMenu> ();
-		WonMenu = GameObject.FindGameObjectWithTag ("WonMenu").GetComponent<NewMenu> ();
-		SettingsMenu = GameObject.FindGameObjectWithTag ("SettingsMenu").GetComponent<NewMenu> ();
-		ScoresMenu = GameObject.FindGameObjectWithTag ("ScoresMenu").GetComponent<NewMenu> ();
-		LevelsMenu = GameObject.FindGameObjectWithTag ("LevelsMenu").GetComponent<NewMenu> ();
-		
 		// ui reference
 		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
 		
@@ -145,7 +123,6 @@ public class GameManager : MonoBehaviour
 		// change dimensions and positions of cameras
 		MazeWidth = Maze.Width = width;
 		MazeHeight = Maze.Height = height;
-		PlayerCamera.Instance.UnPinCamereaFromPlayer ();
 		lab.SetCamerasAtStart();
 		// clear
 		GameObject walls = GameObject.Find("_Walls"); DestroyImmediate(walls);
@@ -200,6 +177,14 @@ public class GameManager : MonoBehaviour
 	public void AddLevel()
 	{
 		level++;
+        if(level < maxLevel)
+        {
+            ChangeGameState(GameState.Start);
+        }
+        else
+        {
+            ChangeGameState(GameState.Menu);
+        }
 	}
 
 	void CheckLvlAndRebuild()
@@ -218,39 +203,9 @@ public class GameManager : MonoBehaviour
 		case 4:		// LVL 5 10x10
 			RebuildLabyrinth(10,10);
 			break;
-		case 5:
-			ChangeGameState(GameState.Menu);
-			break;
 		}
 	}
-
-	/*public void PlayNextLevel()
-	{
-		level++;
-		if(level > 1 && level <=5)
-		{
-			MazeWidth++;
-			MazeHeight++;
-			PlayerCamera.Instance.UnPinCamereaFromPlayer();
-			Application.LoadLevel(Application.loadedLevel);
-			SetReferences();
-			player.ResetPlayer();
-			player.ResetAnimations();
-			ChangeGameState(GameState.Start);
-		}
-		SetReferences ();
-	}*/
-
 	#endregion
-
-	void ShowMenu(NewMenu menu)
-	{
-		if(CurrentMenu != null)
-			CurrentMenu.IsOpen = false;
-		
-		CurrentMenu = menu;
-		CurrentMenu.IsOpen = true;
-	}
 
 	// game state manager
 	public void ChangeGameState(GameState gameState)
@@ -262,8 +217,7 @@ public class GameManager : MonoBehaviour
 		case GameState.Start:
 			CheckLvlAndRebuild();
 
-			ShowMenu (EmptyMenu);
-			UI.SetGameLevel(level + 1);
+            UI.UIStartState();
 			cloudsAnimator.SetTrigger("Start");
 			if(player != null)
 			{
@@ -280,19 +234,17 @@ public class GameManager : MonoBehaviour
 			break; 
 
 		case GameState.Run:
-			ShowMenu (HUD);
-			UI.SetPlayerName(PlayerName);
-			Debug.Log("Set Player Name");
+            UI.UIRunState();
 			player.UnpauseAnimations ();
 			break;
 
 		case GameState.Pause:
-			ShowMenu (PauseMenu);
+            UI.UIPauseState();
 			player.PauseAnimations ();
 			break;
 
 		case GameState.Menu:
-			ShowMenu (MainMenu);
+            UI.UIMenuState();
 			RebuildLabyrinth(6,6);
 			level = 0;
 			player.ResetPlayer ();
@@ -301,20 +253,17 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.EndLost:
-			ShowMenu(GameOverMenu);
+            UI.UIEndLostState();
 			break;
 
 		case GameState.EndWon:
-			PlayerCamera.Instance.UnPinCamereaFromPlayer();
-			ShowMenu(WonMenu);
-			UI.ShowEndTime(gameTimer);
-			UI.SetGameLevel(level + 1);
+            UI.UIEndWonState();
 			break;
 
 		case GameState.Map:
 			if(player.maps > 0)
 			{
-				ShowMenu (EmptyMenu);
+                UI.UIMapState();
 				player.decreaseMaps();
 				ToggleCameras ();
 				player.PauseAnimations ();
@@ -327,15 +276,15 @@ public class GameManager : MonoBehaviour
 			break; 
 
 		case GameState.Levels:
-			ShowMenu(LevelsMenu);
+            UI.UILevelsState();
 			break;
 
 		case GameState.Settings:
-			ShowMenu(SettingsMenu);
+            UI.UISettingsState();
 			break;
 
 		case GameState.Scores:
-			ShowMenu(ScoresMenu);
+            UI.UIScoresState();
 			break;
 		}
 	}

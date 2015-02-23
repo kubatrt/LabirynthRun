@@ -22,7 +22,6 @@ public class PlayerCamera : MonoBehaviour
 
 	public float cameraCoroutineTime = 3f;
 
-	public float speed;
 	public float dampTime;
 	private Vector3 velocity = Vector3.zero;
 	private float yVelocity = 0.0F;
@@ -36,9 +35,8 @@ public class PlayerCamera : MonoBehaviour
 	{
 		//startupPosition = transform.position;
 		startupRotation = transform.rotation;
-
-		speed = 1;
-		dampTime = 0.2f;
+		
+		dampTime = 0.3f;
 	}
 
 	public void SmoothFollow()
@@ -46,34 +44,14 @@ public class PlayerCamera : MonoBehaviour
 		Transform target = player.transform;
 		if(target)
 		{
-			Vector3 targetPoint = target.position + (target.forward * -2) +  (target.up * 2.5f);
-			Vector3 point = camera.WorldToViewportPoint(targetPoint);
-			Vector3 deltaPos = targetPoint - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.5f));
-			Vector3 destinationPos = transform.position + deltaPos;
-			Vector3 newPosition =   Vector3.SmoothDamp(transform.position, destinationPos, ref velocity, dampTime);
+			Vector3 targetPos = target.position + (target.forward * -2) +  (target.up * 2.5f);
+			Vector3 newPosition =   Vector3.SmoothDamp(transform.position, targetPos, ref velocity, dampTime);
 			transform.position = newPosition;
 
 			float yAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, target.eulerAngles.y, ref yVelocity, dampTime);
-			transform.eulerAngles = new Vector3(transform.eulerAngles.x, yAngle, transform.eulerAngles.z);
-
+			Vector3 newRotation = new Vector3(transform.eulerAngles.x, yAngle, transform.eulerAngles.z);
+			transform.eulerAngles = newRotation;
 		}
-	}
-
-	public void FollowThePlayer()
-	{
-		playerTransform = player.transform;
-		Vector3 runGamePosition = playerTransform.position 
-			+ (playerTransform.forward * -2)
-				+ (playerTransform.up * 2.5f);
-		//transform.position = Vector3.Lerp (transform.position, runGamePosition, 0.25f);
-		StartCoroutine (LerpPosition(transform.position, runGamePosition, 0.25f));
-		Vector3 runGameRotation = 
-			new Vector3 (playerTransform.eulerAngles.x + 30,
-			             playerTransform.eulerAngles.y,
-			             playerTransform.eulerAngles.z);
-	
-		//transform.eulerAngles = Vector3.Lerp (transform.eulerAngles, runGameRotation, 0.25f);
-		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, 0.25f));
 	}
 
 	public void AdjustFovToPlayerSpeed()
@@ -150,7 +128,6 @@ public class PlayerCamera : MonoBehaviour
 			             playerTransform.eulerAngles.y,
 			             playerTransform.eulerAngles.z);
 		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, cameraCoroutineTime));
-		//Invoke ("PinCameraToPlayer", cameraCoroutineTime);
 	}
 
 	void PinCameraToPlayer()
