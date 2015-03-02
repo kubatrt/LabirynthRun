@@ -42,8 +42,9 @@ public class GameManager : MonoBehaviour
 	public float gameTimer;
 
 	public int level;
-	int previousLevel;
+	public int previousLevel;
     int maxLevel = 5;
+    public int score;
 
 	public int MazeWidth;
 	public int MazeHeight;
@@ -76,6 +77,8 @@ public class GameManager : MonoBehaviour
 		if(cloudsAnimator == null) GameObject.Find ("Clouds").GetComponent<Animator>();
 
 		ChangeGameState(GameState.Menu);
+        score = 0;
+        level = previousLevel = 0;
 
 		Debug.Log ("GameManager.Start()");
 	}
@@ -174,8 +177,19 @@ public class GameManager : MonoBehaviour
 		mapCamera.enabled = !mapCamera.enabled;
 	}
 
+    public void AddScore(int number)
+    {
+        score += number;
+    }
+
+    void SetScoreAtEnd()
+    {
+        score += (int)(1000 / gameTimer);
+    }
+
 	public void AddLevel()
 	{
+        previousLevel = level;
 		level++;
         if(level < maxLevel)
         {
@@ -189,21 +203,24 @@ public class GameManager : MonoBehaviour
 
 	void CheckLvlAndRebuild()
 	{
-		switch (level) 
-		{
-		case 1:		// LVL 2 7x7
-			RebuildLabyrinth(7,7);
-			break;
-		case 2:		// LVL 3 8x8
-			RebuildLabyrinth(8,8);
-			break;
-		case 3:		// LVL 4 9x9
-			RebuildLabyrinth(9,9);
-			break;
-		case 4:		// LVL 5 10x10
-			RebuildLabyrinth(10,10);
-			break;
-		}
+        if (previousLevel != level)
+        {
+            switch (level)
+            {
+                case 1:		// LVL 2 7x7
+                    RebuildLabyrinth(7, 7);
+                    break;
+                case 2:		// LVL 3 8x8
+                    RebuildLabyrinth(8, 8);
+                    break;
+                case 3:		// LVL 4 9x9
+                    RebuildLabyrinth(9, 9);
+                    break;
+                case 4:		// LVL 5 10x10
+                    RebuildLabyrinth(10, 10);
+                    break;
+            }
+        }
 	}
 	#endregion
 
@@ -228,6 +245,7 @@ public class GameManager : MonoBehaviour
 			}
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;
+            score = 0;
 			Invoke ("PlayerCameraStart", 3);
 			Invoke ("PlayerStart", 6);
 			Invoke ("GameStateRun", 6); 
@@ -257,6 +275,7 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.EndWon:
+            SetScoreAtEnd();
             UI.UIEndWonState();
 			break;
 

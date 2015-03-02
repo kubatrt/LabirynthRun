@@ -354,7 +354,7 @@ public class PlayerMecanimController : MonoBehaviour
 		}
 		Debug.Log ("Distance:" + dist + "Road:" + road);
 
-		if(road > 1f)
+		if(road > 2f)
 		{
 			Debug.Log ("im accelerating....!!!!");
 			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));

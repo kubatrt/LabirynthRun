@@ -11,6 +11,8 @@ public class UIGameHUD : MonoBehaviour
 	public Text enterPlayerNameText;
 	public Text playerNameText;
 	public Text gameLevelText;
+    public Text gameLevelTextEnd;
+    public Text gameScoreTextEnd;
 
     public NewMenu CurrentMenu;
     public NewMenu MainMenu;
@@ -61,9 +63,10 @@ public class UIGameHUD : MonoBehaviour
 		playerNameText.text = PlayerName;
 	}
 
-	public void SetGameLevel(int level)
+	public void SetTextNumber(Text text, int number)
 	{
-		gameLevelText.text = level.ToString ();
+		//gameLevelText.text = level.ToString ();
+        text.text = number.ToString();
 	}
 
 	#region UI controls
@@ -126,6 +129,7 @@ public class UIGameHUD : MonoBehaviour
 	{
 		GameManager.Instance.level = level - 2;
 		OnClickPlayNextButton ();
+        GameManager.Instance.previousLevel = GameManager.Instance.level;
 	}
 	#endregion
     
@@ -133,7 +137,7 @@ public class UIGameHUD : MonoBehaviour
     public void UIStartState()
     {
         ShowMenu(EmptyMenu);
-        SetGameLevel(GameManager.Instance.level + 1);   
+        SetTextNumber(gameLevelText, GameManager.Instance.level + 1);   
     }
 
     public void UIRunState()
@@ -161,7 +165,8 @@ public class UIGameHUD : MonoBehaviour
     {
         ShowMenu(WonMenu);
         ShowEndTime(GameManager.Instance.gameTimer);
-        SetGameLevel(GameManager.Instance.level + 1);
+        SetTextNumber(gameLevelTextEnd, GameManager.Instance.level + 1);
+        SetTextNumber(gameScoreTextEnd, GameManager.Instance.score);
     }
 
     public void UIMapState()

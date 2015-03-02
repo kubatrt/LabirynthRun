@@ -76,6 +76,7 @@ public class PlayerCamera : MonoBehaviour
 
 	public void NormalizeFov()
 	{
+        StopCoroutine("LerpFov");
 		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
 
