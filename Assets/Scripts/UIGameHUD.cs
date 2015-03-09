@@ -131,6 +131,20 @@ public class UIGameHUD : MonoBehaviour
 		OnClickPlayNextButton ();
         GameManager.Instance.previousLevel = GameManager.Instance.level;
 	}
+
+    public void PointerDownSpeedButton()
+    {
+        player.SpeedUpOn();
+        PlayerCamera.Instance.SpeedUpFov();
+        PlayerCamera.Instance.SetBlur(true);
+    }
+
+    public void PointerUpSpeedButton()
+    {
+        player.SpeedUpOff();
+        PlayerCamera.Instance.NormalizeFov();
+        PlayerCamera.Instance.SetBlur(false);
+    }
 	#endregion
     
     #region UIGameState

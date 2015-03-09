@@ -26,9 +26,12 @@ public class PlayerCamera : MonoBehaviour
 	private Vector3 velocity = Vector3.zero;
 	private float yVelocity = 0.0F;
 
+    MotionBlur mBlur;
+
 	void Awake()
 	{
 		Instance = this;
+        mBlur = camera.GetComponent<MotionBlur>();
 	}
 
 	public void Start()
@@ -37,6 +40,8 @@ public class PlayerCamera : MonoBehaviour
 		startupRotation = transform.rotation;
 		
 		dampTime = 0.3f;
+
+        mBlur.enabled = false;
 	}
 
 	public void SmoothFollow()
@@ -79,6 +84,11 @@ public class PlayerCamera : MonoBehaviour
         StopCoroutine("LerpFov");
 		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
+
+    public void SetBlur(bool choice)
+    {
+        //mBlur.enabled = choice;
+    }
 
 	public void SetStartUpPosition(float x, float y, float z)
 	{

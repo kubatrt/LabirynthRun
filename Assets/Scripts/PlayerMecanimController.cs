@@ -58,18 +58,16 @@ public class PlayerMecanimController : MonoBehaviour
 		qte.gameObject.SetActive(false);
 		Debug.Log ("Player.Start()");
 	}
-	
-	void Update () 
-	{
-		if(isAlive && GameManager.Instance.state == GameState.Run) 
-		{
-			Move();
-			//PlayerCamera.Instance.FollowThePlayer();
-			PlayerCamera.Instance.SmoothFollow();
-			AlignPlayer();
-			//PlayerCamera.Instance.AdjustFovToPlayerSpeed();
-		}
-	}
+
+    void Update()
+    {
+        if (isAlive && GameManager.Instance.state == GameState.Run)
+        {
+            Move();
+            PlayerCamera.Instance.SmoothFollow();
+            AlignPlayer();
+        }
+    }
 
 	void OnCollisionEnter(Collision col)
 	{
@@ -286,6 +284,7 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetBool("Ded", false);
 		animator.SetBool("SlowDown", false);
 		animator.SetBool ("Celebrate", false);
+        animator.SetBool("SpeedUp", false);
 	}
 
 	public void AnimEvent_DeadEnd()
@@ -303,6 +302,11 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		animator.enabled = true;
 	}
+
+    void SetSpeedUpAnimation(bool choice)
+    {
+        animator.SetBool("SpeedUp", choice);
+    }
 	#endregion
 
 	#region Player Actions
@@ -334,11 +338,27 @@ public class PlayerMecanimController : MonoBehaviour
 		PlayerCamera.Instance.NormalizeFov ();
 	}
 
-	void BackToNormalSpeed()
+	public void BackToNormalSpeed()
 	{
+        StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 		PlayerCamera.Instance.NormalizeFov ();
 	}
+
+    public void SpeedUpOn()
+    {
+        //speed = normalSpeed*2;
+        StartCoroutine(LerpSpeed(speed, normalSpeed * 2, 0.1f));
+        SetSpeedUpAnimation(true);
+    }
+
+    public void SpeedUpOff()
+    {
+       // speed = normalSpeed;
+        StopCoroutine("LerpSpeed");
+        StartCoroutine(LerpSpeed(speed, normalSpeed, 0.1f));
+        SetSpeedUpAnimation(false);
+    }
 
 	public void RunPlayer()
 	{
@@ -353,7 +373,7 @@ public class PlayerMecanimController : MonoBehaviour
 			road = dist -3;
 		}
 		Debug.Log ("Distance:" + dist + "Road:" + road);
-
+        /*
 		if(road > 2f)
 		{
 			Debug.Log ("im accelerating....!!!!");
@@ -361,7 +381,7 @@ public class PlayerMecanimController : MonoBehaviour
 			PlayerCamera.Instance.SpeedUpFov();
 			Invoke ("BackToNormalSpeed", road/runSpeed);
 			Debug.Log ("Time:" + road/runSpeed);
-		}
+		}*/
 	}
 	#endregion
 
