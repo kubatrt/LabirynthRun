@@ -98,26 +98,26 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void SetRotation()
 	{
-		Debug.Log (" Player Rot set0");
+		//Debug.Log (" Player Rot set0");
 		while(IsGoodRotated == false)
 		{
-			Debug.Log (" Player Rot set1");
+			//Debug.Log (" Player Rot set1");
 			Ray ray;
 			ray = new Ray(transform.position, transform.forward);
 			if(Physics.Raycast(ray,2f))
 			{
-				Debug.Log (" Player Rot set2");
+				//Debug.Log (" Player Rot set2");
 				transform.Rotate(new Vector3(0,90f,0));
 				IsGoodRotated = false;
 			}
 			else
 			{
-				Debug.Log (" Player Rot set3");
+				//Debug.Log (" Player Rot set3");
 				IsGoodRotated = true;
 			}
 		}
 		IsGoodRotated = false;
-		Debug.Log (" Player Rot set4");
+		//Debug.Log (" Player Rot set4");
 	}
 
 	public void AlignPlayer()
@@ -362,19 +362,31 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void RunPlayer()
 	{
-		float dist = 0;
+		const float farDistance = 3f;
 		float road = 0;
+
 		RaycastHit hit;
 		Ray ray = new Ray(transform.position, transform.forward);
-
 		if (Physics.Raycast(ray, out hit))
 		{
-			dist = Vector3.Distance(transform.position,hit.point);
-			road = dist -3;
+			road = hit.distance - farDistance;
 		}
-		Debug.Log ("Distance:" + dist + "Road:" + road);
+		Debug.Log ("RunPlayer() Distance:" + hit.distance + "Road:" + road);
+
+
+		const float roadThreshold = 2f;
+		if(hit.distance > roadThreshold)
+		{
+			Debug.Log ("im accelerating....!!!!");
+			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));
+			PlayerCamera.Instance.SpeedUpFov();
+			Invoke ("BackToNormalSpeed", road/runSpeed);
+			Debug.Log ("Time:" + road/runSpeed);
+		}
+
         /*
-		if(road > 2f)
+		const float roadThreshold = 2f;
+		if(road > roadThreshold)
 		{
 			Debug.Log ("im accelerating....!!!!");
 			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));

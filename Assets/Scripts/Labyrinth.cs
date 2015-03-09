@@ -17,13 +17,14 @@ public class Labyrinth : MonoBehaviour
 	public GameObject playerPrefab;
 	public GameObject mapCameraPrefab;
 	public GameObject debugPrefab;
+	public GameObject groundPrefab;
 
 	// default values for prefab settings ... do not touch!
-	public float size = 1f;	// prefab size
-	public float distance = 2f; // world distance between walls after scaling
-	public float scale = 2f;
-	public float offset = 4f;	// distance between centers of cells * offset = distance between cells
-	public float wallHeight = 0f;
+	public float size = 1f;			// prefab size
+	public float distance = 2f; 	// world distance between walls after scaling
+	public float scale = 2f;		// scale of instantiated walls objects
+	public float offset = 4f;		// distance between centers of cells * offset = distance between cells
+	public float wallHeight = 1.5f;
 
 	int debugObjectCount;
 
@@ -34,6 +35,7 @@ public class Labyrinth : MonoBehaviour
 	GameObject wallContainer;
 	GameObject objectsContainer;
 	GameObject triggersContainer;
+	GameObject groundContainer;
 
 	GameObject mapCamera;
 
@@ -47,13 +49,17 @@ public class Labyrinth : MonoBehaviour
 	{
 		maze = GetComponent<MazeGenerator>();
 
+		// return if maze already exists
 		if(transform.GetComponentsInChildren<Transform>().Length != 1)
 			return;
 		
 		CreateMaze();
 		BuildWalls();
+		CreateGround();
 		CreatePlayer ();
 		CreateGameObjects();
+		CreateGround();
+
 		Debug.Log ("Labyrinth.Awake()");
 	}
 
@@ -100,6 +106,28 @@ public class Labyrinth : MonoBehaviour
 			triggersContainer = new GameObject("_Triggers");
 			triggersContainer.transform.parent = transform;
 		}
+		if(GameObject.Find ("_Ground") == null) {
+			groundContainer = new GameObject("_Ground");
+			groundContainer.transform.parent = transform;
+		}
+	}
+
+	public void ClearMaze()
+	{
+		if(Application.isEditor) {
+			if(wallContainer != null) DestroyImmediate(wallContainer);
+			if(objectsContainer != null) DestroyImmediate(objectsContainer);
+			if(triggersContainer != null) DestroyImmediate(triggersContainer);
+			if(groundContainer != null) DestroyImmediate(groundContainer);
+		}
+		else
+		{
+			if(wallContainer != null) Destroy(wallContainer);
+			if(objectsContainer != null) Destroy(objectsContainer);
+			if(triggersContainer != null) Destroy(triggersContainer);
+			if(groundContainer != null) Destroy(groundContainer);
+		}
+
 	}
 
 	public void CreatePlayer()
@@ -156,7 +184,6 @@ public class Labyrinth : MonoBehaviour
 			}*/
 			else if(cell.TotalExits > 2) 
 			{
-			
 				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.MoreWays;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
@@ -167,7 +194,6 @@ public class Labyrinth : MonoBehaviour
 			else if((cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) || 
 			        (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) 
 			{
-			
 				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.OneWay;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
@@ -187,7 +213,6 @@ public class Labyrinth : MonoBehaviour
 	public void BuildWalls()
 	{
 		wallsWorldPositions.Clear();
-		int duplicates = 0;	// debug only
 
 		// Step I. Generate basic data, all corners and middles in cells
 		foreach(MazeCell cell in cells) 
@@ -204,10 +229,10 @@ public class Labyrinth : MonoBehaviour
 			Vector3 bottomRight 		= new Vector3(centroid.x + scale, centroid.y, centroid.z + scale);
 			
 			// hashSet provides 'no duplicates'
-			if(!wallsWorldPositions.Add(topLeft)) duplicates++;
-			if(!wallsWorldPositions.Add(topRight)) duplicates++;
-			if(!wallsWorldPositions.Add(bottomLeft)) duplicates++;
-			if(!wallsWorldPositions.Add(bottomRight)) duplicates++;
+			wallsWorldPositions.Add(topLeft);
+			wallsWorldPositions.Add(topRight);
+			wallsWorldPositions.Add(bottomLeft);
+			wallsWorldPositions.Add(bottomRight);
 			
 			// if there is no exit, build wall
 			if(!cell.ExitNorth || cell.Position.y == 0 ) wallsWorldPositions.Add(topMiddleCenter); 
@@ -215,7 +240,7 @@ public class Labyrinth : MonoBehaviour
 			if(!cell.ExitEast || cell.Position.x == maze.Width - 1 ) wallsWorldPositions.Add(middleRight);
 			if(!cell.ExitWest || cell.Position.x == 0 ) wallsWorldPositions.Add(middleLeft);
 		}
-		//Debug.Log ("## Generation walls positions completed:" + wallsWorldPositions.Count + " Duplicates:" + duplicates);
+		//Debug.Log ("## Generation walls positions completed:" + wallsWorldPositions.Count);
 		
 		List<Vector3> wallsList = new List<Vector3>();
 		foreach(Vector3 pos in wallsWorldPositions) {
@@ -245,8 +270,19 @@ public class Labyrinth : MonoBehaviour
 			List<Vector3> newVerticalLine= GenerateWallsBetweenVertically(verticalLine);
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
-		
+
 		//Debug.Log ("### Total walls objects: " + debugObjectCount);
+	}
+
+	public void CreateGround()
+	{
+		Debug.Log ("Create ground");
+		foreach(MazeCell cell in cells) {
+			GameObject groundTile = (GameObject) Instantiate(groundPrefab, 
+			                                                 MazeGenerator.GridToWorld( cell.Position, offset, 0), 
+			                                                 groundPrefab.transform.rotation);
+			groundTile.transform.parent = groundContainer.transform;
+		}
 	}
 
 	#region Generating walls data
@@ -319,25 +355,4 @@ public class Labyrinth : MonoBehaviour
 	}
 
 	#endregion
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-public class SortVector3ByX : IComparer<Vector3>
-{
-	public int Compare( Vector3 a, Vector3 b)
-	{
-		if(a.x > b.x) return 1;
-		else if (a.x < b.x) return -1;
-		else return 0;
-	}
-}
-
-public class SortVector3ByZ : IComparer<Vector3>
-{
-	public int Compare( Vector3 a, Vector3 b)
-	{
-		if(a.z > b.z) return 1;
-		else if (a.z < b.z) return -1;
-		else return 0;
-	}
 }

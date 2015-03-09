@@ -30,12 +30,12 @@ public class LabyrinthEditor : Editor
 		labyrinth.CreateMaze();
 		labyrinth.BuildWalls();
 		labyrinth.CreateGameObjects();
+		labyrinth.CreateGround();
 	}
-	
+
 	private void ClearMaze()
 	{
-		GameObject walls = GameObject.Find("_Walls"); DestroyImmediate(walls);
-		GameObject objects = GameObject.Find ("_Objects"); DestroyImmediate(objects);
-		GameObject triggers = GameObject.Find("_Triggers"); DestroyImmediate(triggers);
+		Labyrinth labyrinth = (Labyrinth)target;
+		labyrinth.ClearMaze();
 	}
 }

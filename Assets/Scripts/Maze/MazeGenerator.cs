@@ -42,9 +42,9 @@ public class MazeGenerator : MonoBehaviour
 		{
 			Width = GameManager.Instance.MazeWidth;
 			Height = GameManager.Instance.MazeHeight;
-			Debug.Log("WH CHANGED");
+			Debug.Log("MazeGenerator.Awake size CHANGED");
 		}
-		Debug.Log ("WH NPOT CHANGED");
+		Debug.Log ("MazeGenerator.Awake size NOT CHANGED");
 	}
 
 	public void Generate()
@@ -150,7 +150,7 @@ public class MazeGenerator : MonoBehaviour
 				//                         maxDistance, cell.Position.x, cell.Position.y, maze.Area ));
 				break;
 			}
-		}
+		}	
 	}
 
 

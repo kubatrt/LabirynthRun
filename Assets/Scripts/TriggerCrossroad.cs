@@ -84,8 +84,7 @@ public class TriggerCrossroad : MonoBehaviour
 	{
 		if(other.gameObject.tag != "Player")
 			return;
-
-
+		
 		isLocked = false;
 
 		player.RunPlayer ();

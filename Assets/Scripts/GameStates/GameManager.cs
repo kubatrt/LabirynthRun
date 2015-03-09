@@ -123,18 +123,18 @@ public class GameManager : MonoBehaviour
 
 	void RebuildLabyrinth(int width, int height)
 	{
+		Debug.Log ("RebuildLabyrinth");
 		// change dimensions and positions of cameras
 		MazeWidth = Maze.Width = width;
 		MazeHeight = Maze.Height = height;
 		lab.SetCamerasAtStart();
 		// clear
-		GameObject walls = GameObject.Find("_Walls"); DestroyImmediate(walls);
-		GameObject objects = GameObject.Find ("_Objects"); DestroyImmediate(objects);
-		GameObject triggers = GameObject.Find("_Triggers"); DestroyImmediate(triggers);
+		lab.ClearMaze();
 		// build
 		lab.CreateMaze();
 		lab.BuildWalls();
 		lab.CreateGameObjects();
+		lab.CreateGround();
 	}
 
 	#region GamePlay Functions
