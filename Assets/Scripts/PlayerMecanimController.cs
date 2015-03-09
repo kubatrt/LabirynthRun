@@ -362,30 +362,34 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void RunPlayer()
 	{
-		const float farDistance = 3f;
 		float road = 0;
 
 		RaycastHit hit;
+		int wallsLayerMask = 1 << 9; 
 		Ray ray = new Ray(transform.position, transform.forward);
-		if (Physics.Raycast(ray, out hit))
+		if (Physics.Raycast(ray, out hit, 100f, wallsLayerMask))
 		{
-			road = hit.distance - farDistance;
+			road = hit.distance - 3f;
+			Debug.Log ("RunPlayer() (9) WALL:" + hit.distance + "Road:" + road + " hit: " + hit.collider.gameObject.name);
 		}
-		Debug.Log ("RunPlayer() Distance:" + hit.distance + "Road:" + road);
 
-
-		const float roadThreshold = 2f;
-		if(hit.distance > roadThreshold)
+		int triggersLayerMask = 1 << 10;
+		ray = new Ray(transform.position, transform.forward);
+		if (Physics.Raycast(ray, out hit, 100f, triggersLayerMask ))
 		{
-			Debug.Log ("im accelerating....!!!!");
-			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));
-			PlayerCamera.Instance.SpeedUpFov();
-			Invoke ("BackToNormalSpeed", road/runSpeed);
-			Debug.Log ("Time:" + road/runSpeed);
+			Debug.Log ("RunPlayer() (10) TRIGGER:" + hit.distance);
 		}
+
+		int trapsLayerMask = 1 << 11; 
+		ray = new Ray(transform.position, transform.forward);
+		if (Physics.Raycast(ray, out hit, 100f, trapsLayerMask ))
+		{
+			Debug.Log ("RunPlayer() (11) TRAP:" + hit.distance);
+		}
+
 
         /*
-		const float roadThreshold = 2f;
+		const float roadDistanceThreshold = 2f;
 		if(road > roadThreshold)
 		{
 			Debug.Log ("im accelerating....!!!!");
