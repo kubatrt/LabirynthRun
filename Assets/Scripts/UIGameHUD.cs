@@ -15,6 +15,7 @@ public class UIGameHUD : MonoBehaviour
     public Text gameScoreTextEnd;
 
     public NewMenu CurrentMenu;
+    NewMenu PreviousMenu;
     public NewMenu MainMenu;
     public NewMenu HUD;
     public NewMenu PauseMenu;
@@ -25,11 +26,15 @@ public class UIGameHUD : MonoBehaviour
     public NewMenu ScoresMenu;
     public NewMenu LevelsMenu;
 
+    bool SpeedUpIsReady;
+
 	PlayerMecanimController player;
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+
+        SpeedUpIsReady = true;
 	}
 	
 	void Update () 
@@ -45,9 +50,22 @@ public class UIGameHUD : MonoBehaviour
     void ShowMenu(NewMenu menu)
     {
         if (CurrentMenu != null)
+        {
             CurrentMenu.IsOpen = false;
+            PreviousMenu = CurrentMenu;
+        }
 
         CurrentMenu = menu;
+        CurrentMenu.IsOpen = true;
+    }
+
+    void ShowPreviousMenu()
+    {
+        if(CurrentMenu != null)
+        {
+            CurrentMenu.IsOpen = false;
+        }
+        CurrentMenu = PreviousMenu;
         CurrentMenu.IsOpen = true;
     }
 
@@ -102,8 +120,13 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickBackButton()
 	{
-		GameManager.Instance.ChangeGameState (GameState.Menu);
+        ShowPreviousMenu();
 	}
+
+    public void OnClickBackToMenuButton()
+    {
+        GameManager.Instance.ChangeGameState(GameState.Menu);
+    }
 
 	public void OnClickLevelsButton()
 	{
@@ -134,9 +157,14 @@ public class UIGameHUD : MonoBehaviour
 
     public void PointerDownSpeedButton()
     {
-        player.SpeedUpOn();
-        PlayerCamera.Instance.SpeedUpFov();
-        PlayerCamera.Instance.SetBlur(true);
+        if (SpeedUpIsReady)
+        {
+            player.SpeedUpOn();
+            PlayerCamera.Instance.SpeedUpFov();
+            PlayerCamera.Instance.SetBlur(true);
+            SpeedUpIsReady = false;
+            // start timer and after this set SppedUpIsReady on true
+        }
     }
 
     public void PointerUpSpeedButton()

@@ -348,16 +348,16 @@ public class PlayerMecanimController : MonoBehaviour
 
     public void SpeedUpOn()
     {
-        //speed = normalSpeed*2;
-        StartCoroutine(LerpSpeed(speed, normalSpeed * 2, 0.1f));
+        speed = normalSpeed*2;
+        //StartCoroutine(LerpSpeed(speed, normalSpeed * 2, 0.1f));
         SetSpeedUpAnimation(true);
     }
 
     public void SpeedUpOff()
     {
-       // speed = normalSpeed;
-        StopCoroutine("LerpSpeed");
-        StartCoroutine(LerpSpeed(speed, normalSpeed, 0.1f));
+        speed = normalSpeed;
+       // StopCoroutine("LerpSpeed");
+        //StartCoroutine(LerpSpeed(speed, normalSpeed, 0.1f));
         SetSpeedUpAnimation(false);
     }
 
