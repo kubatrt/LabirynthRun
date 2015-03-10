@@ -2,18 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
-public class DebugDrawMazeCells : MonoBehaviour
+[ExecuteInEditMode()]
+public class DebugDrawEditorMazeCells : MonoBehaviour
 {
 	[Range(0, 1)]
-	public float opacity = 1f;
+	public float opacity = 0f;
 
 	private List<MazeCell> cells = new List<MazeCell>();
-
-	void Start()
-	{
-		UpdateCells();
-	}
 
 	public void UpdateCells()
 	{
@@ -22,6 +17,8 @@ public class DebugDrawMazeCells : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
+		UpdateCells();
+
 		Vector3 frame = new Vector3(0.5f, 0.2f, 0.5f);
 		Vector3 scale = new Vector3(0.45f, 0.15f, 0.45f);
 

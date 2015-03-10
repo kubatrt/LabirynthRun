@@ -10,7 +10,6 @@ public class LabyrinthEditor : Editor
 
 	public override void OnInspectorGUI()
 	{
-		//Labyrinth labyrinth = (Labyrinth)target;
 		DrawDefaultInspector();
 
 		if(GUILayout.Button("Create maze"))
@@ -27,7 +26,7 @@ public class LabyrinthEditor : Editor
 		if(labyrinth.transform.GetComponentsInChildren<Transform>().Length != 1)
 			return;
 		
-		labyrinth.CreateMaze();
+		labyrinth.CreateMaze();	// generate new data
 		labyrinth.BuildWalls();
 		labyrinth.CreateGameObjects();
 		labyrinth.CreateGround();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 
 //----------------------------------------------------------------------------------------------------------------------
+[Serializable]
 public class GridPosition
 {
 	public int x;

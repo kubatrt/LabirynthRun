@@ -14,7 +14,7 @@ public class MazeGenerator : MonoBehaviour
 	public bool Wrap = false;
 	public Vector2 startPosition;
 
-	private Grid<MazeCell> maze;
+	public Grid<MazeCell> maze;
 
 
 	void Awake()
@@ -118,6 +118,8 @@ public class MazeGenerator : MonoBehaviour
 				break;
 			}
 		}	
+
+		Debug.Log ("MazeGenerator.Generate()");
 	}
 
 	private MazeCellExits GetRandomExit(MazeCellExits validExits)
@@ -156,49 +158,6 @@ public class MazeGenerator : MonoBehaviour
 			validExits = validExits | MazeCellExits.East;
 		}
 		return validExits;
-	}
-
-	public void FindSolution()
-	{
-		/*List<GridPosition> solution = new List<GridPosition>();
-		if(maze == null)
-			return;
-
-		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
-		
-		int distance = 0;
-		int maxDistance = 0;
-		int cellIndex = 0;
-		
-		// starting position
-		GridPosition cellPos = maze.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
-		visitedCells.Push(cellPos);
-
-		bool endReached = false;
-
-		while(!endReached)
-		{
-			MazeCell cell = maze.GetCellAt(cellPos);
-			MazeCellExits exits = GetValidExits(cellPos);
-			//MazeCellExits goExit = MazeCellExits.None;
-
-			if((exits & MazeCellExits.North) == MazeCellExits.North) {
-				cellPos = new GridPosition(cellPos.x, cellPos.y - 1);
-			} 
-			else if ((exits & MazeCellExits.West) == MazeCellExits.West)
-			{
-				cellPos = new GridPosition(cellPos.x - 1, cellPos.y);
-			}
-			else if ((exits & MazeCellExits.East) == MazeCellExits.East)
-			{
-				cellPos = new GridPosition(cellPos.x + 1, cellPos.y);
-			}
-			else if ((exits & MazeCellExits.South) == MazeCellExits.South)
-			{
-				cellPos = new GridPosition(cellPos.x, cellPos.y + 1);
-			}
-		}
-		*/
 	}
 
 	public List<MazeCell> GetCells()
