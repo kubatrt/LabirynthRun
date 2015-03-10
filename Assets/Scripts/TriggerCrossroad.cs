@@ -2,35 +2,13 @@
 using UnityEngine;
 using System.Collections;
 
-public enum TriggerCrossing
-{
-	OneWay,
-	MoreWays
-};
-
-public class MoveDirections
-{
-	public bool Left 	{get; set; }
-	public bool Right 	{get; set; }
-	public bool Forward { get; set; }
-	public bool Back 	{ get; set; }
-	
-	public MoveDirections()
-	{
-		Left = false;
-		Right = false;
-		Forward = false;
-		Back = false;
-	}
-};
 
 public class TriggerCrossroad : MonoBehaviour 
 {
-	
 	public TriggerCrossing crossingType;
 
 	PlayerMecanimController player;
-	float collisionTolerance = 0.15f;
+
 	bool isLocked;
 
 
@@ -66,7 +44,8 @@ public class TriggerCrossroad : MonoBehaviour
 
 		float distance = Vector3.Distance(triggerPos, playerPos);
 		distance = Mathf.Abs(distance);
-		
+
+		const float collisionTolerance = 0.15f;
 		// when player is on middle of crossing, go out
 		// TODO: needs do be done better
 		if(!isLocked && distance >= 0 && distance < collisionTolerance)
@@ -74,7 +53,6 @@ public class TriggerCrossroad : MonoBehaviour
 			isLocked = true;
 			player.MoveOverCrossroad(triggerPos, crossingType);
 			Debug.Log ("# Leaving trigger # ");
-
 		}
 		
 		//Debug.Log ("# " + gameObject.name + " Dist: " + distance + " # Pos: " + triggerPos + " PlayerPos: " + playerPos);
@@ -86,7 +64,6 @@ public class TriggerCrossroad : MonoBehaviour
 			return;
 		
 		isLocked = false;
-
 		player.RunPlayer ();
 	}
 	

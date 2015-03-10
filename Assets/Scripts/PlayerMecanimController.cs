@@ -200,6 +200,7 @@ public class PlayerMecanimController : MonoBehaviour
 			Invoke ("ToggleMoving", (rotationTime + 0.05f));
 		}
 
+		// leaving... it was more than 1 way crossroad?
 		if(crossingType == TriggerCrossing.MoreWays) {
 			AccelerateMovement();
 			EndQTE();

@@ -2,7 +2,12 @@
 using UnityEngine.UI;
 using System.Collections;
 
-
+public enum QTEType
+{
+	ChooseRoad,
+	SingleTap,
+	Gesture
+}
 
 public class QuickTimeEvent : MonoBehaviour 
 {

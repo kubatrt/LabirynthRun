@@ -7,7 +7,7 @@ using System.Collections.Generic;
 //----------------------------------------------------------------------------------------------------------------------
 public class Labyrinth : MonoBehaviour 
 {
-	public PlayerMecanimController player;
+	//public PlayerMecanimController player;
 
 	public GameObject wallPrefab;
 	public GameObject wall2Prefab;
@@ -267,7 +267,7 @@ public class Labyrinth : MonoBehaviour
 		{
 			verticalLine = GetVerticalPositions((int)x);
 			verticalLine.Sort(new SortVector3ByZ());
-			List<Vector3> newVerticalLine= GenerateWallsBetweenVertically(verticalLine);
+			List<Vector3> newVerticalLine = GenerateWallsBetweenVertically(verticalLine);
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
 
@@ -278,10 +278,12 @@ public class Labyrinth : MonoBehaviour
 	{
 		Debug.Log ("Create ground");
 		foreach(MazeCell cell in cells) {
-			GameObject groundTile = (GameObject) Instantiate(groundPrefab, 
-			                                                 MazeGenerator.GridToWorld( cell.Position, offset, 0), 
-			                                                 groundPrefab.transform.rotation);
-			groundTile.transform.parent = groundContainer.transform;
+			if(cell.HasGround) {
+				GameObject groundTile = 
+					(GameObject) Instantiate(groundPrefab, MazeGenerator.GridToWorld( cell.Position, offset, 0), 
+				                             groundPrefab.transform.rotation);
+				groundTile.transform.parent = groundContainer.transform;
+			}
 		}
 	}
 

@@ -12,29 +12,10 @@ public class MazeGenerator : MonoBehaviour
 	public int Height;
 	public int Seed = 3141592;
 	public bool Wrap = false;
-
 	public Vector2 startPosition;
 
 	private Grid<MazeCell> maze;
 
-	private MazeCellExits GetRandomExit(MazeCellExits validExits)
-	{
-		List<MazeCellExits> exits = new List<MazeCellExits>();
-		if ((validExits & MazeCellExits.North) 	== MazeCellExits.North) 
-			exits.Add(MazeCellExits.North);
-		if ((validExits & MazeCellExits.South) 	== MazeCellExits.South) 
-			exits.Add(MazeCellExits.South);
-		if ((validExits & MazeCellExits.East) 	== MazeCellExits.East) 	
-			exits.Add(MazeCellExits.East);
-		if ((validExits & MazeCellExits.West) 	== MazeCellExits.West) 	
-			exits.Add(MazeCellExits.West);
-		
-		int rand = (int)(UnityEngine.Random.value * exits.Count);
-		if (rand == exits.Count) 
-			rand--;
-		
-		return exits[rand];
-	}
 
 	void Awake()
 	{
@@ -68,25 +49,11 @@ public class MazeGenerator : MonoBehaviour
 		while(visitedCells.Count > 0)
 		{
 			MazeCell cell = maze.GetCellAt(cellPos);
-			cell.Visitted = true;
+			cell.IsVisitted = true;
 			cell.CrawlDistance = distance;
 
 			// check valid exits
-			MazeCellExits validExits = MazeCellExits.None;
-			// pozycje != 0 i jest nieodwiedzona
-			if((Wrap ||cellPos.y != 0) && !maze.GetCellAt(cellPos.x, cellPos.y - 1).Visitted) {
-				validExits = validExits | MazeCellExits.North;
-			}
-			if((Wrap || cellPos.y != Height - 1) && !maze.GetCellAt(cellPos.x, cellPos.y + 1).Visitted) {
-				validExits = validExits | MazeCellExits.South;
-			}
-			if((Wrap || cellPos.x != 0) && !maze.GetCellAt(cellPos.x - 1, cellPos.y).Visitted) { 
-				validExits = validExits | MazeCellExits.West; 
-			}
-			if((Wrap || cellPos.x != Width - 1) && !maze.GetCellAt(cellPos.x + 1, cellPos.y).Visitted) {
-				validExits = validExits | MazeCellExits.East;
-			}
-
+			MazeCellExits validExits = GetValidExits(cellPos);
 
 			if(validExits != MazeCellExits.None)
 			{
@@ -153,6 +120,86 @@ public class MazeGenerator : MonoBehaviour
 		}	
 	}
 
+	private MazeCellExits GetRandomExit(MazeCellExits validExits)
+	{
+		List<MazeCellExits> exits = new List<MazeCellExits>();
+		if ((validExits & MazeCellExits.North) 	== MazeCellExits.North) 
+			exits.Add(MazeCellExits.North);
+		if ((validExits & MazeCellExits.South) 	== MazeCellExits.South) 
+			exits.Add(MazeCellExits.South);
+		if ((validExits & MazeCellExits.East) 	== MazeCellExits.East) 	
+			exits.Add(MazeCellExits.East);
+		if ((validExits & MazeCellExits.West) 	== MazeCellExits.West) 	
+			exits.Add(MazeCellExits.West);
+		
+		int rand = (int)(UnityEngine.Random.value * exits.Count);
+		if (rand == exits.Count) 
+			rand--;
+		
+		return exits[rand];
+	}
+
+	private MazeCellExits GetValidExits(GridPosition cellPos)
+	{
+		MazeCellExits validExits = MazeCellExits.None;
+
+		if((Wrap ||cellPos.y != 0) && !maze.GetCellAt(cellPos.x, cellPos.y - 1).IsVisitted) {
+			validExits = validExits | MazeCellExits.North;
+		}
+		if((Wrap || cellPos.y != Height - 1) && !maze.GetCellAt(cellPos.x, cellPos.y + 1).IsVisitted) {
+			validExits = validExits | MazeCellExits.South;
+		}
+		if((Wrap || cellPos.x != 0) && !maze.GetCellAt(cellPos.x - 1, cellPos.y).IsVisitted) { 
+			validExits = validExits | MazeCellExits.West; 
+		}
+		if((Wrap || cellPos.x != Width - 1) && !maze.GetCellAt(cellPos.x + 1, cellPos.y).IsVisitted) {
+			validExits = validExits | MazeCellExits.East;
+		}
+		return validExits;
+	}
+
+	public void FindSolution()
+	{
+		/*List<GridPosition> solution = new List<GridPosition>();
+		if(maze == null)
+			return;
+
+		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
+		
+		int distance = 0;
+		int maxDistance = 0;
+		int cellIndex = 0;
+		
+		// starting position
+		GridPosition cellPos = maze.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
+		visitedCells.Push(cellPos);
+
+		bool endReached = false;
+
+		while(!endReached)
+		{
+			MazeCell cell = maze.GetCellAt(cellPos);
+			MazeCellExits exits = GetValidExits(cellPos);
+			//MazeCellExits goExit = MazeCellExits.None;
+
+			if((exits & MazeCellExits.North) == MazeCellExits.North) {
+				cellPos = new GridPosition(cellPos.x, cellPos.y - 1);
+			} 
+			else if ((exits & MazeCellExits.West) == MazeCellExits.West)
+			{
+				cellPos = new GridPosition(cellPos.x - 1, cellPos.y);
+			}
+			else if ((exits & MazeCellExits.East) == MazeCellExits.East)
+			{
+				cellPos = new GridPosition(cellPos.x + 1, cellPos.y);
+			}
+			else if ((exits & MazeCellExits.South) == MazeCellExits.South)
+			{
+				cellPos = new GridPosition(cellPos.x, cellPos.y + 1);
+			}
+		}
+		*/
+	}
 
 	public List<MazeCell> GetCells()
 	{

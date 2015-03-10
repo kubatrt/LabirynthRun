@@ -65,7 +65,7 @@ public class MazeEditorWindow : EditorWindow
 		bw.Write(cell.IsStartCell);
 		bw.Write(cell.IsFinishCell);
 		bw.Write(cell.IsDeadEnd);
-		bw.Write(cell.Visitted);
+		bw.Write(cell.IsVisitted);
 		bw.Write(cell.CrawlDistance);
 		bw.Write(cell.NormalizedDistance);
 		bw.Write((int)cell.Exits);
@@ -93,7 +93,7 @@ public class MazeEditorWindow : EditorWindow
 		cell.IsStartCell = br.ReadBoolean();
 		cell.IsFinishCell = br.ReadBoolean ();
 		cell.IsDeadEnd = br.ReadBoolean();
-		cell.Visitted = br.ReadBoolean();
+		cell.IsVisitted = br.ReadBoolean();
 		cell.CrawlDistance = br.ReadInt32();
 		cell.NormalizedDistance = br.ReadInt32();
 		cell.Exits = (MazeCellExits)br.ReadInt32();

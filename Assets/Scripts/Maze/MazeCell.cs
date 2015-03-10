@@ -23,7 +23,8 @@ public class MazeCell : IGridCell
 	public bool IsStartCell = false;
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;
-	public bool Visitted = false;	
+	public bool IsVisitted = false;	
+	public bool HasGround = true;
 
 	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
 	public int CrawlDistance = 0;

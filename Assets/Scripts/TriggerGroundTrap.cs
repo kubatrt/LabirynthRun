@@ -1,15 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TriggerGroundTrap : MonoBehaviour {
+public class TriggerGroundTrap : MonoBehaviour 
+{
+	PlayerMecanimController player;
+	
+	void Start()
+	{
+		player = GameObject.FindObjectOfType<PlayerMecanimController>();
+	}
 
-	// Use this for initialization
-	void Start () {
-	
+	void OnTriggerEnter(Collider other)
+	{
+		if(other.gameObject.tag != "Player")
+			return;
+		
+		//Quaternion playerRotation = player.gameObject.transform.rotation; 
+		//transform.rotation = playerRotation;
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	void OnTriggerStay(Collider other)
+	{
+		if(other.gameObject.tag != "Player")
+			return;
 	}
+
+	void OnTriggerExit(Collider other)
+	{
+		if(other.gameObject.tag != "Player")
+			return;
+
+		player.RunPlayer ();
+	}
+
 }

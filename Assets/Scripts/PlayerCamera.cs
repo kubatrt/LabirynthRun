@@ -131,7 +131,7 @@ public class PlayerCamera : MonoBehaviour
 		Vector3 runGamePosition = playerTransform.position 
 			+ (playerTransform.forward * -2)
 			+ (playerTransform.up * 2.5f);
-		Debug.Log ("runGamePosition: " + runGamePosition);
+		Debug.Log ("StartCamera() runGamePosition: " + runGamePosition);
 		StartCoroutine (LerpPosition(transform.position, runGamePosition, cameraCoroutineTime));
 
 		Vector3 runGameRotation = 
