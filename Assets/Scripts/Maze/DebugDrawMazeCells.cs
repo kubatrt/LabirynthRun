@@ -25,7 +25,7 @@ public class DebugDrawMazeCells : MonoBehaviour
 	{
 		Vector3 frame = new Vector3(0.5f, 0.2f, 0.5f);
 		Vector3 scale = new Vector3(0.45f, 0.15f, 0.45f);
-		
+
 		foreach (MazeCell cell in cells)
 		{
 			Vector3 centroid = new Vector3(cell.Position.x, 0f, cell.Position.y);
