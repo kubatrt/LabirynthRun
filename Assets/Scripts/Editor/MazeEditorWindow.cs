@@ -102,10 +102,10 @@ public class MazeEditorWindow : EditorWindow
 		cell.Position.y = br.ReadInt32();
 
 		// build relations
-		int NorthIndex = br.ReadInt32();
+		/*int NorthIndex = br.ReadInt32();
 		int SouthIndex = br.ReadInt32();
 		int EastIndex = br.ReadInt32();
-		int WestIndex = br.ReadInt32();
+		int WestIndex = br.ReadInt32();*/
 	}
 
 	static void BuildRelations(out List<MazeCell> cells)
@@ -164,7 +164,7 @@ public class MazeEditorWindow : EditorWindow
 
 			for(int i=0; i < numOfCells; ++i)
 			{
-				MazeCell cell;
+				//MazeCell cell;
 			}
 
 			// read data...
@@ -239,5 +239,7 @@ public class MazeEditorWindow : EditorWindow
 			levelFiles.AddRange(files);
 			Debug.Log("GetLevelFiles: " + projectPath);
 		}
+		GUILayout.Space (5);
+		GUILayout.Label ("Selected object: " + objectName);
 	}
 }

@@ -6,12 +6,12 @@ using System.Collections;
 public class EditorCell : MonoBehaviour 
 {
 	private MazeCell cell;
-	private MazeGenerator	mazeGenerator;
+	//private MazeGenerator	mazeGenerator;
 	public bool IsSelected { set; get; }
 	
 	void Start () 
 	{
-		mazeGenerator = GameObject.FindObjectOfType<MazeGenerator>();
+		//mazeGenerator = GameObject.FindObjectOfType<MazeGenerator>();
 	}
 
 	public void SetCell(MazeCell cellRef)
@@ -25,7 +25,8 @@ public class EditorCell : MonoBehaviour
 	}
 
 	public void ApplyChanges() 
-	{
+	{	
+		// set material TODO: change
 		if(cell.IsStartCell)
 			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellStart");
 		else if(cell.IsFinishCell)
