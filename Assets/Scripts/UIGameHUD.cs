@@ -27,6 +27,7 @@ public class UIGameHUD : MonoBehaviour
     public NewMenu LevelsMenu;
 
     bool SpeedUpIsReady;
+    bool SpeedUpIsPushed;
 
 	PlayerMecanimController player;
 
@@ -35,6 +36,7 @@ public class UIGameHUD : MonoBehaviour
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 
         SpeedUpIsReady = true;
+        SpeedUpIsPushed = false;
 	}
 	
 	void Update () 
@@ -157,18 +159,25 @@ public class UIGameHUD : MonoBehaviour
 
     public void PointerDownSpeedButton()
     {
+        SpeedUpIsPushed = true;
+        StopCoroutine("DelaySpeedUpReady");
         if (SpeedUpIsReady)
         {
-            player.SpeedUpOn();
+          
+            StartCoroutine(DelaySpeedUp(0.5f));
+            
+
+           /* player.SpeedUpOn();
             PlayerCamera.Instance.SpeedUpFov();
             PlayerCamera.Instance.SetBlur(true);
-            SpeedUpIsReady = false;
-            // start timer and after this set SppedUpIsReady on true
+            SpeedUpIsReady = false; */
+            StartCoroutine(DelaySpeedUpReady(2f));
         }
     }
 
     public void PointerUpSpeedButton()
     {
+        SpeedUpIsPushed = false;
         player.SpeedUpOff();
         PlayerCamera.Instance.NormalizeFov();
         PlayerCamera.Instance.SetBlur(false);
@@ -231,4 +240,23 @@ public class UIGameHUD : MonoBehaviour
         ShowMenu(ScoresMenu);
     }
     #endregion
+
+    IEnumerator DelaySpeedUpReady(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Debug.Log("End of delay");
+        SpeedUpIsReady = true;
+    }
+
+    IEnumerator DelaySpeedUp(float time)
+    {
+        if (SpeedUpIsPushed)
+        {
+            yield return new WaitForSeconds(time);
+            player.SpeedUpOn();
+            PlayerCamera.Instance.SpeedUpFov();
+            PlayerCamera.Instance.SetBlur(true);
+            SpeedUpIsReady = false;
+        }
+    }
 }

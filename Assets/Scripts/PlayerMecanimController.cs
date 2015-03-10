@@ -416,7 +416,7 @@ public class PlayerMecanimController : MonoBehaviour
 			yield return null;
 		}
 		transform.eulerAngles = to;
-	}
+	}   
 	
 	IEnumerator LerpSpeed(float a, float b, float exTime)
 	{
