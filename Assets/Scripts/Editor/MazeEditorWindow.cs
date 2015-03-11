@@ -6,60 +6,11 @@ using UnityEngine;
 using UnityEditor;
 
 
-/***************************
- * 	LEVEL FILE FORMAT
-	name
-	width
-	height
-	numOfCells
-	cells[0...numOfCell] : cell
-	cell {
- 	bool IsStartCell
-	bool IsFinishCell
- 	bool IsDeadEnd
- 	bool Visitted	
- 	int CrawlDistance;	
- 	float NormalizedDistance;
- 	int Exits; [enum
-
-	int index;
-	locationX; locationY;
-
- 	[relation]	
- 	IGrid north; : index
- 	IGrid south;
- 	IGrid east;
- 	IGrid west;
- }
-*****************************/
-
-public class MazeLevelHeader
-{
-	public string name;
-	public int width;
-	public int height;
-	public int numOfCells;
-}
-
 public class MazeEditorWindow : EditorWindow 
 {
-	class CellRelation
-	{
-		int NorthIndex;
-		int SouthIndex;
-		int EastIndex;
-		int WestIndex;
-	}
-
-	//private static string mazeName;
-	//private static int mazeWidth, mazeHeight = 0;
-	private static List<String> levelFiles = new List<String>();
-
-	private Vector2 scrollPosition;
-
 	static MazeEditorWindow staticWindow;
-
-	[MenuItem ("Maze/MazeEditor")]
+	
+	[MenuItem ("Tools/MazeEditor")]
 	static void Initialize() 
 	{
 		// MazeEditorWindow window 
@@ -67,6 +18,29 @@ public class MazeEditorWindow : EditorWindow
 		staticWindow.Focus();
 		//GetListLevelFiles(out levelFiles);
 	}
+
+
+	/*class CellRelation
+	{
+		int NorthIndex;
+		int SouthIndex;
+		int EastIndex;
+		int WestIndex;
+	}
+
+	class MazeLevelHeader
+	{
+		public string name;
+		public int width;
+		public int height;
+		public int numOfCells;
+	}*/
+
+	//private static string mazeName;
+	//private static int mazeWidth, mazeHeight = 0;
+	private static List<String> levelFiles = new List<String>();
+
+	private Vector2 scrollPosition;
 
 
 	static void WriteCell(BinaryWriter bw, MazeCell cell)
@@ -205,6 +179,7 @@ public class MazeEditorWindow : EditorWindow
 	}
 
 
+	readonly string levelsDir = Application.dataPath + "/Levels/";
 	string mazeName;
 
 	void OnGUI () 
@@ -212,8 +187,12 @@ public class MazeEditorWindow : EditorWindow
 		GUILayout.Label ("Maze settings", EditorStyles.boldLabel);
 		mazeName = EditorGUILayout.TextField ("Level name", mazeName);
 
-		GUILayout.Button("Save");
-		GUILayout.Button("Load");
+		if(GUILayout.Button("Save"))
+		{
+			MazeGenerator mazeGen = FindObjectOfType<MazeGenerator>();
+			mazeGen.SaveToFile(levelsDir + mazeName + ".maze");
+			RefreshFiles();
+		}
 
 		scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 		foreach(string file in levelFiles )
@@ -221,7 +200,17 @@ public class MazeEditorWindow : EditorWindow
 			EditorGUILayout.BeginHorizontal();
 
 			GUILayout.Label(System.IO.Path.GetFileName(file), EditorStyles.boldLabel);
-			GUILayout.Button("Load",  GUILayout.Width(48));
+			if(GUILayout.Button("Load",  GUILayout.Width(48)))
+			{
+				MazeGenerator maze = FindObjectOfType<MazeGenerator>();
+				maze.LoadFromFile(file);
+				// find MazeGeneratorInspector
+				MazeGeneratorInspector[] editors = (MazeGeneratorInspector[]) Resources.FindObjectsOfTypeAll(typeof(MazeGeneratorInspector));
+				if (editors.Length > 0)
+				{
+					editors[0].CreateEditorObjects(maze);
+				}
+			}
 
 			EditorGUILayout.EndHorizontal();
 			//string fg = EditorGUILayout.ObjectField( filestr, go, typeof( GameObject ) );
@@ -229,12 +218,47 @@ public class MazeEditorWindow : EditorWindow
 		EditorGUILayout.EndScrollView();
 
 		if(GUILayout.Button("Refresh")) {
-			string projectPath = Application.dataPath + "/Levels";
-			string[] files = System.IO.Directory.GetFiles(projectPath, "*.maze", SearchOption.TopDirectoryOnly);
-			levelFiles.AddRange(files);
-			Debug.Log("GetLevelFiles: " + projectPath);
+			RefreshFiles();
 		}
 		GUILayout.Space (5);
 		GUILayout.Label ("Selected object: " + objectName);
+		GUILayout.Space (5);
+	}
+
+	private void RefreshFiles()
+	{
+		levelFiles.Clear();
+		string projectPath = Application.dataPath + "/Levels/";
+		string[] files = System.IO.Directory.GetFiles(projectPath, "*.maze", SearchOption.TopDirectoryOnly);
+		levelFiles.AddRange(files);
+		Debug.Log("GetLevelFiles: " + projectPath);
 	}
 }
+
+/***************************
+ * 	LEVEL FILE FORMAT
+	name
+	width
+	height
+	numOfCells
+	cells[0...numOfCell] : cell
+	cell {
+ 	bool IsStartCell
+	bool IsFinishCell
+ 	bool IsDeadEnd
+ 	bool Visitted	
+ 	int CrawlDistance;	
+ 	float NormalizedDistance;
+ 	int Exits; [enum
+
+	int index;
+	locationX; locationY;
+
+ 	[relation]	
+ 	IGrid north; : index
+ 	IGrid south;
+ 	IGrid east;
+ 	IGrid west;
+ }
+*****************************/
+

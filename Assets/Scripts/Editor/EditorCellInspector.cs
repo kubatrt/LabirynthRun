@@ -11,13 +11,11 @@ public class EditorCellInspector : Editor
 		EditorCell cell = (EditorCell)target;
 		DrawDefaultInspector();
 
-		if(GUILayout.Button("Update changes")) {
-			if(cell != null)
-				cell.UpdateChanges();
-		}
 		if(GUILayout.Button("Apply changes")) {
-			if(cell != null)
+			if(cell != null) {
 				cell.ApplyChanges();
+				cell.UpdateChanges();
+			}
 		}
 		
 		EditorGUILayout.HelpBox("Editor cell window" , MessageType.Info);

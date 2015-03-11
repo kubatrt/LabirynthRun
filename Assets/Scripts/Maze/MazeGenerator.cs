@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System;
+using System.IO;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -181,9 +183,17 @@ public class MazeGenerator : MonoBehaviour
 		mazeGrid.CellsGrid[mazeGrid.GridToCellIndex(x, y)] = cell;
 	}
 
-	public void SetCellAtIndex(int index, MazeCell cell)
+	// FIXME: probably bug
+	public void SetCellAtIndex(int index, MazeCell newCell)
 	{
-		mazeGrid.CellsGrid [index] = cell;
+		/*int i;
+		foreach(MazeCell cell in mazeGrid.CellsGrid)
+		{
+			if(cell.Index == index)
+				i = cell.Index;
+		}*/
+
+		mazeGrid.CellsGrid [index] = newCell;
 	}
 
 	public MazeCell GetCellAt(int x, int y)
@@ -199,5 +209,41 @@ public class MazeGenerator : MonoBehaviour
 	public static Vector3 GridToWorld(GridPosition cellPos, float offset, float height)
 	{
 		return new Vector3((float)cellPos.x * offset, height, (float)cellPos.y * offset);
+	}
+
+	// TODO: size of saved/loaded maze might be diffrent
+	public void SaveToFile(string path)
+	{
+		Debug.Log ("SaveToFile:" + path);
+		using(FileStream fileStream = File.Create(path))
+		{
+			BinaryWriter bw = new BinaryWriter(fileStream);
+
+			bw.Write(mazeGrid.Area);
+
+			for(int i=0; i < mazeGrid.Area; ++i)
+			{
+				bw.Write( MCSerialization.SerializeToString( mazeGrid.CellsGrid[i] )); // (object)
+				//Debug.Log( mazeGrid.CellsGrid[i].ToString());
+			}
+		}
+		Debug.Log ("done:");
+	}
+	
+	public void LoadFromFile(string path)
+	{
+		mazeGrid = new Grid<MazeCell>(Width, Height);
+
+		using(FileStream fileStream = File.OpenRead(path))
+		{
+			BinaryReader br = new BinaryReader(fileStream);
+			int area = br.ReadInt32();
+
+			for(int i=0; i < area; ++i)
+			{
+				mazeGrid.CellsGrid[i] = (MazeCell) MCSerialization.DeserializeFromString( br.ReadString());
+				//Debug.Log(mazeGrid.CellsGrid[i].ToString());
+			}
+		}
 	}
 }

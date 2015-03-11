@@ -133,4 +133,5 @@ public class MazeCell : IGridCell
 		return String.Format ( "Cell({0} Location [{1},{2}] Exits [ N: {3} S: {4} E: {5} W: {6}]",
 		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest);
 	}
+	
 }

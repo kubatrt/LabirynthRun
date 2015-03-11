@@ -9,6 +9,28 @@ public class MazeGeneratorInspector : Editor
 	bool generated = false;
 	string tipMessage = "Custom Maze Generator script editor";
 
+	public void CreateEditorObjects(MazeGenerator maze)
+	{
+		if(generated){ 
+			Debug.LogWarning("Already generated!");
+			return;
+		}
+		GameObject editorContrainer = GameObject.Find ("_EDITOR");
+		
+		foreach (MazeCell cell in maze.GetCells()) {
+			Vector3 position = new Vector3 (cell.Position.x, 0f, cell.Position.y);
+			if (editorContrainer != null) {
+				GameObject editorCell = (GameObject)Instantiate (Resources.Load<GameObject> ("Editor/EditorCell"), position, Quaternion.identity);
+				editorCell.name = "EditorCell_" + cell.Index;
+				editorCell.transform.parent = editorContrainer.transform;
+				
+				EditorCell edCell = editorCell.GetComponent<EditorCell> ();
+				edCell.SetCell (cell);
+			}
+		}
+		generated = true;
+	}
+
 	public override void OnInspectorGUI()
 	{
 		MazeGenerator maze = (MazeGenerator)target;
@@ -21,22 +43,10 @@ public class MazeGeneratorInspector : Editor
 			}
 
 			maze.Generate ();
-			generated = true;
+
 			//maze.transform.GetComponent<DebugDrawMazeCells>().UpdateCells();
 
-			GameObject editorContrainer = GameObject.Find ("_EDITOR");
-
-			foreach (MazeCell cell in maze.GetCells()) {
-				Vector3 position = new Vector3 (cell.Position.x, 0f, cell.Position.y);
-				if (editorContrainer != null) {
-					GameObject editorCell = (GameObject)Instantiate (Resources.Load<GameObject> ("Editor/EditorCell"), position, Quaternion.identity);
-					editorCell.name = "EditorCell_" + cell.Index;
-					editorCell.transform.parent = editorContrainer.transform;
-
-					EditorCell edCell = editorCell.GetComponent<EditorCell> ();
-					edCell.SetCell (cell);
-				}
-			}
+			CreateEditorObjects(maze);
 
 			//maze.GetComponent<DebugDrawEditorMazeCells>().UpdateCells();
 			tipMessage = "New maze data generated!";
