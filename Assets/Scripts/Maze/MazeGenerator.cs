@@ -186,14 +186,16 @@ public class MazeGenerator : MonoBehaviour
 	// FIXME: probably bug
 	public void SetCellAtIndex(int index, MazeCell newCell)
 	{
-		/*int i;
+		int i = 0;
 		foreach(MazeCell cell in mazeGrid.CellsGrid)
 		{
 			if(cell.Index == index)
-				i = cell.Index;
-		}*/
+				break;
+			++i;
+		}
 
-		mazeGrid.CellsGrid [index] = newCell;
+		mazeGrid.CellsGrid [i] = newCell;
+		Debug.Log("Apply at mazeGrid.CellsGrid [" + i + "] index: " + index);
 	}
 
 	public MazeCell GetCellAt(int x, int y)
@@ -227,7 +229,6 @@ public class MazeGenerator : MonoBehaviour
 				//Debug.Log( mazeGrid.CellsGrid[i].ToString());
 			}
 		}
-		Debug.Log ("done:");
 	}
 	
 	public void LoadFromFile(string path)
