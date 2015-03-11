@@ -14,8 +14,7 @@ public class MazeGenerator : MonoBehaviour
 	public bool Wrap = false;
 	public Vector2 startPosition;
 
-	public Grid<MazeCell> maze;
-
+	public Grid<MazeCell> mazeGrid;
 
 	void Awake()
 	{
@@ -23,32 +22,36 @@ public class MazeGenerator : MonoBehaviour
 		{
 			Width = GameManager.Instance.MazeWidth;
 			Height = GameManager.Instance.MazeHeight;
-			Debug.Log("MazeGenerator.Awake size CHANGED");
+			Debug.Log("MazeGenerator.Awake GameManager size CHANGED");
 		}
-		Debug.Log ("MazeGenerator.Awake size NOT CHANGED");
+		Debug.Log ("MazeGenerator.Awake GameManager size NOT CHANGED");
 	}
 
 	public void Generate()
 	{
-		maze = new Grid<MazeCell>(Width, Height);
-		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
+		//if (mazeGrid != null)
+		//	Debug.LogWarning ("Maze already exists, data will be overwritten");
+
+		mazeGrid = new Grid<MazeCell>(Width, Height);
 
 		if(Seed != 0)
 			UnityEngine.Random.seed = Seed;
+
 
 		int distance = 0;
 		int maxDistance = 0;
 		int cellIndex = 0;
 
 		// starting position
-		GridPosition cellPos = maze.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
-		maze.GetCellAt(cellPos).IsStartCell = true;
+		Stack<GridPosition> visitedCells = new Stack<GridPosition>();
+		GridPosition cellPos = mazeGrid.WrapCoordinates((int)startPosition.x, (int)startPosition.y);
+		mazeGrid.GetCellAt(cellPos).IsStartCell = true;
 		visitedCells.Push(cellPos);
 
 		// iterate trough all cells
 		while(visitedCells.Count > 0)
 		{
-			MazeCell cell = maze.GetCellAt(cellPos);
+			MazeCell cell = mazeGrid.GetCellAt(cellPos);
 			cell.IsVisitted = true;
 			cell.CrawlDistance = distance;
 
@@ -83,7 +86,7 @@ public class MazeGenerator : MonoBehaviour
 				}
 
 				// exit back
-				cell = maze.GetCellAt(cellPos);
+				cell = mazeGrid.GetCellAt(cellPos);
 				cell.Exits = cell.Exits | exit;
 				// set index
 				cell.Index = ++cellIndex;
@@ -106,11 +109,11 @@ public class MazeGenerator : MonoBehaviour
 
 
 		// normalize distance
-		foreach(MazeCell cell in maze.CellsGrid)
+		foreach(MazeCell cell in mazeGrid.CellsGrid)
 			cell.NormalizedDistance = (float)cell.CrawlDistance / (float)maxDistance;
 
 		// find maximum distance, make it finish
-		foreach(MazeCell cell in maze.CellsGrid) {
+		foreach(MazeCell cell in mazeGrid.CellsGrid) {
 			if(cell.CrawlDistance == maxDistance) {
 				cell.IsFinishCell = true;
 				//Debug.Log( String.Format("# Maze.Generate(). MaxDistance: {0} Finish: [{1},{2}] Cells: {3}", 
@@ -145,16 +148,16 @@ public class MazeGenerator : MonoBehaviour
 	{
 		MazeCellExits validExits = MazeCellExits.None;
 
-		if((Wrap ||cellPos.y != 0) && !maze.GetCellAt(cellPos.x, cellPos.y - 1).IsVisitted) {
+		if((Wrap ||cellPos.y != 0) && !mazeGrid.GetCellAt(cellPos.x, cellPos.y - 1).IsVisitted) {
 			validExits = validExits | MazeCellExits.North;
 		}
-		if((Wrap || cellPos.y != Height - 1) && !maze.GetCellAt(cellPos.x, cellPos.y + 1).IsVisitted) {
+		if((Wrap || cellPos.y != Height - 1) && !mazeGrid.GetCellAt(cellPos.x, cellPos.y + 1).IsVisitted) {
 			validExits = validExits | MazeCellExits.South;
 		}
-		if((Wrap || cellPos.x != 0) && !maze.GetCellAt(cellPos.x - 1, cellPos.y).IsVisitted) { 
+		if((Wrap || cellPos.x != 0) && !mazeGrid.GetCellAt(cellPos.x - 1, cellPos.y).IsVisitted) { 
 			validExits = validExits | MazeCellExits.West; 
 		}
-		if((Wrap || cellPos.x != Width - 1) && !maze.GetCellAt(cellPos.x + 1, cellPos.y).IsVisitted) {
+		if((Wrap || cellPos.x != Width - 1) && !mazeGrid.GetCellAt(cellPos.x + 1, cellPos.y).IsVisitted) {
 			validExits = validExits | MazeCellExits.East;
 		}
 		return validExits;
@@ -167,20 +170,30 @@ public class MazeGenerator : MonoBehaviour
 		{
 			for(int y = 0; y < Height; y++)
 			{
-				cells.Add(maze.GetCellAt(x,y));
+				cells.Add(mazeGrid.GetCellAt(x,y));
 			}
 		}
 		return cells;
 	}
 
+	public void SetCellAt(int x, int y, MazeCell cell)
+	{
+		mazeGrid.CellsGrid[mazeGrid.GridToCellIndex(x, y)] = cell;
+	}
+
+	public void SetCellAtIndex(int index, MazeCell cell)
+	{
+		mazeGrid.CellsGrid [index] = cell;
+	}
+
 	public MazeCell GetCellAt(int x, int y)
 	{
-		return maze.GetCellAt(x, y);
+		return mazeGrid.GetCellAt(x, y);
 	}
 
 	public MazeCell GetCellAtIndex(int index)
 	{
-		return maze.GetCellAtIndex(index);
+		return mazeGrid.GetCellAtIndex(index);
 	}
 
 	public static Vector3 GridToWorld(GridPosition cellPos, float offset, float height)

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 
 [CustomEditor(typeof(Labyrinth))]
-public class LabyrinthEditor : Editor 
+public class LabyrinthInspector : Editor 
 {
 
 	public override void OnInspectorGUI()

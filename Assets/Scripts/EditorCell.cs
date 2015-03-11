@@ -2,16 +2,18 @@
 using UnityEditor;
 using System.Collections;
 
-[ExecuteInEditMode()]
+[ExecuteInEditMode(), CanEditMultipleObjects]
 public class EditorCell : MonoBehaviour 
 {
-	private MazeCell cell;
-	//private MazeGenerator	mazeGenerator;
+	public MazeCell cell;
+	private MazeGenerator	mazeGenerator;
 	public bool IsSelected { set; get; }
-	
+
+	public int index;
+
 	void Start () 
 	{
-		//mazeGenerator = GameObject.FindObjectOfType<MazeGenerator>();
+		mazeGenerator = GameObject.FindObjectOfType<MazeGenerator>();
 	}
 
 	public void SetCell(MazeCell cellRef)
@@ -21,22 +23,27 @@ public class EditorCell : MonoBehaviour
 		if(cell == null)
 			return;
 
-		ApplyChanges();
+		UpdateChanges();
 	}
 
 	public void ApplyChanges() 
 	{	
+		mazeGenerator.SetCellAtIndex (index, cell);
+	}
+
+	public void UpdateChanges()
+	{
+		index = cell.Index;
+		
 		// set material TODO: change
 		if(cell.IsStartCell)
 			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellStart");
 		else if(cell.IsFinishCell)
-			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellEnd");
+			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellFinish");
+		else if(cell.IsDeadEnd)
+			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellDeadEnd");
 		else
 			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCell");
-	}
-
-	void Update()
-	{
 
 	}
 

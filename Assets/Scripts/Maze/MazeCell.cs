@@ -6,6 +6,7 @@ using System.Collections;
 //----------------------------------------------------------------------------------------------------------------------
 // | turn ON bit  isBit = bits & BitToCheck
 // & check bit isBit = bits | BitToCheck
+[Flags]
 public enum MazeCellExits
 {
 	None  = 0,	// 0000
@@ -23,14 +24,18 @@ public class MazeCell : IGridCell
 	public bool IsStartCell = false;
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;
-	public bool IsVisitted = false;	
+	[HideInInspector] public bool IsVisitted = false;	
 	public bool HasGround = true;
+	// TODO:
+	// ground trap
+	// walls trap
+	// decorator
 
 	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
-	public int CrawlDistance = 0;
+	[HideInInspector] public int CrawlDistance = 0;
 	
 	// A normalized weighting, indicates the cell's distance from the origin cell in relation to the rest of the maze.
-	public float NormalizedDistance = 0f;
+	[HideInInspector] public float NormalizedDistance = 0f;
 
 	// Enum flags for mark available exits
 	public MazeCellExits Exits = MazeCellExits.None;

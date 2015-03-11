@@ -68,16 +68,16 @@ public class Grid<T> where T : IGridCell, new()
 		return CellsGrid[ GridToCellIndex(x, y)];
 	}
 	
-	public T GetCellAt(GridPosition loc)
+	public T GetCellAt(GridPosition pos)
 	{
-		return CellsGrid[ GridToCellIndex(loc.x, loc.y) ];
+		return CellsGrid[ GridToCellIndex(pos.x, pos.y) ];
 	}
 
 	public T GetCellAtIndex(int index)
 	{
 		return CellsGrid[index];
 	}
-	
+
 	public GridPosition WrapCoordinates(int x, int y)
 	{
 		x = x % Width;
@@ -85,7 +85,7 @@ public class Grid<T> where T : IGridCell, new()
 		return new GridPosition(x, y);
 	}
 	
-	void Initialize()
+	private void Initialize()
 	{
 		for(int x = 0; x < Width; x++)
 		{

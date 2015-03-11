@@ -179,18 +179,13 @@ public class MazeEditorWindow : EditorWindow
 
 	}
 
-
-	static void RefreshFileList()
-	{
-
-	}
-
 	string objectName;
 	string lastSelected;
 	bool repaint = false;
 
 	void Update()
 	{
+		// selected object on scene
 		if (Selection.activeGameObject && Selection.activeGameObject.name != lastSelected)
 		{
 			objectName = Selection.activeGameObject.name;
@@ -225,7 +220,7 @@ public class MazeEditorWindow : EditorWindow
 		{
 			EditorGUILayout.BeginHorizontal();
 
-			GUILayout.Label(file, EditorStyles.boldLabel);
+			GUILayout.Label(System.IO.Path.GetFileName(file), EditorStyles.boldLabel);
 			GUILayout.Button("Load",  GUILayout.Width(48));
 
 			EditorGUILayout.EndHorizontal();
@@ -235,7 +230,7 @@ public class MazeEditorWindow : EditorWindow
 
 		if(GUILayout.Button("Refresh")) {
 			string projectPath = Application.dataPath + "/Levels";
-			string[] files = System.IO.Directory.GetFiles(projectPath);
+			string[] files = System.IO.Directory.GetFiles(projectPath, "*.maze", SearchOption.TopDirectoryOnly);
 			levelFiles.AddRange(files);
 			Debug.Log("GetLevelFiles: " + projectPath);
 		}

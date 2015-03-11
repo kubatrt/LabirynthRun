@@ -83,9 +83,10 @@ public class Labyrinth : MonoBehaviour
 	public void CreateMaze()
 	{
 		maze = GetComponent<MazeGenerator>();
-		debugObjectCount = 0;
 		maze.Generate();
 		cells = maze.GetCells();
+
+		debugObjectCount = 0;
 		CreateContainers();
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
