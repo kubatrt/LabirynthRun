@@ -26,8 +26,8 @@ public class UIGameHUD : MonoBehaviour
     public NewMenu ScoresMenu;
     public NewMenu LevelsMenu;
 
-    bool SpeedUpIsReady;
     bool SpeedUpIsPushed;
+    float timer;
 
 	PlayerMecanimController player;
 
@@ -35,7 +35,6 @@ public class UIGameHUD : MonoBehaviour
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 
-        SpeedUpIsReady = true;
         SpeedUpIsPushed = false;
 	}
 	
@@ -160,27 +159,15 @@ public class UIGameHUD : MonoBehaviour
     public void PointerDownSpeedButton()
     {
         SpeedUpIsPushed = true;
-        StopCoroutine("DelaySpeedUpReady");
-        if (SpeedUpIsReady)
-        {
-          
-            StartCoroutine(DelaySpeedUp(0.5f));
-            
-
-           /* player.SpeedUpOn();
-            PlayerCamera.Instance.SpeedUpFov();
-            PlayerCamera.Instance.SetBlur(true);
-            SpeedUpIsReady = false; */
-            StartCoroutine(DelaySpeedUpReady(2f));
-        }
+        StartCoroutine(DelaySpeedUp(0.25f));
     }
 
     public void PointerUpSpeedButton()
     {
         SpeedUpIsPushed = false;
+        timer = 0;
         player.SpeedUpOff();
         PlayerCamera.Instance.NormalizeFov();
-        PlayerCamera.Instance.SetBlur(false);
     }
 	#endregion
     
@@ -241,22 +228,18 @@ public class UIGameHUD : MonoBehaviour
     }
     #endregion
 
-    IEnumerator DelaySpeedUpReady(float time)
-    {
-        yield return new WaitForSeconds(time);
-        Debug.Log("End of delay");
-        SpeedUpIsReady = true;
-    }
-
     IEnumerator DelaySpeedUp(float time)
     {
-        if (SpeedUpIsPushed)
+        while (SpeedUpIsPushed)
         {
-            yield return new WaitForSeconds(time);
-            player.SpeedUpOn();
-            PlayerCamera.Instance.SpeedUpFov();
-            PlayerCamera.Instance.SetBlur(true);
-            SpeedUpIsReady = false;
+            timer += Time.deltaTime;
+            if(timer > time)
+            {
+                player.SpeedUpOn();
+                PlayerCamera.Instance.SpeedUpFov();
+                Debug.Log("Time up");
+            }
+            yield return null;
         }
     }
 }
