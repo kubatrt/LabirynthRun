@@ -83,7 +83,10 @@ public class Labyrinth : MonoBehaviour
 	public void CreateMaze()
 	{
 		maze = GetComponent<MazeGenerator>();
-		maze.Generate();
+		//string mazeFile = Application.dataPath + "/Levels/maze88.maze";
+		//maze.Width = 8; maze.Height = 8;
+		//maze.LoadFromFile (mazeFile);
+		maze.Generate ();
 		cells = maze.GetCells();
 
 		debugObjectCount = 0;

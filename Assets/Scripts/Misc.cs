@@ -3,9 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public class ReadOnlyAttribute : PropertyAttribute
+{
+	
+}
+
+public class BitMaskAttribute : PropertyAttribute
+{
+	public System.Type propType;
+	public BitMaskAttribute(System.Type type)
+	{
+		propType = type;
+	}
+}
 /*
- * Miscellaneous utility classes.
+public class EnumExample : MonoBehaviour
+{
+	[BitMask(typeof(EMyEnum))]
+	public EMyEnum someMask;
+}
 */
+
 
 public class SortVector3ByX : IComparer<Vector3>
 {

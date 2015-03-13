@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.IO;
 using System.Text;
@@ -183,7 +183,6 @@ public class MazeGenerator : MonoBehaviour
 		mazeGrid.CellsGrid[mazeGrid.GridToCellIndex(x, y)] = cell;
 	}
 
-	// FIXME: probably bug
 	public void SetCellAtIndex(int index, MazeCell newCell)
 	{
 		int i = 0;
@@ -195,7 +194,7 @@ public class MazeGenerator : MonoBehaviour
 		}
 
 		mazeGrid.CellsGrid [i] = newCell;
-		Debug.Log("Apply at mazeGrid.CellsGrid [" + i + "] index: " + index);
+		Debug.Log("Apply at mazeGrid.CellsGrid [" + i + "] newCell: " + newCell.ToString());
 	}
 
 	public MazeCell GetCellAt(int x, int y)
@@ -246,5 +245,6 @@ public class MazeGenerator : MonoBehaviour
 				//Debug.Log(mazeGrid.CellsGrid[i].ToString());
 			}
 		}
+		Debug.Log ("LoadFromFile: " + path);
 	}
 }

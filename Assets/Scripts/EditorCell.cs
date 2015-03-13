@@ -2,14 +2,15 @@
 using UnityEditor;
 using System.Collections;
 
+
 [ExecuteInEditMode(), CanEditMultipleObjects]
 public class EditorCell : MonoBehaviour 
 {
 	public MazeCell cell;
-	private MazeGenerator	mazeGenerator;
-	public bool IsSelected { set; get; }
+	public int editorIndex;
 
-	public int index;
+
+	private MazeGenerator	mazeGenerator;
 
 	void Start () 
 	{
@@ -28,14 +29,14 @@ public class EditorCell : MonoBehaviour
 
 	public void ApplyChanges() 
 	{	
-		mazeGenerator.SetCellAtIndex (index, cell);
+		mazeGenerator.SetCellAtIndex (editorIndex, cell);
 	}
 
 	public void UpdateChanges()
 	{
-		index = cell.Index;
-		
-		// set material TODO: change
+		editorIndex = cell.Index;
+
+		// set material
 		if(cell.IsStartCell)
 			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellStart");
 		else if(cell.IsFinishCell)
@@ -49,19 +50,20 @@ public class EditorCell : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-		Gizmos.color = Color.yellow;
+
+		Gizmos.color = Color.yellow; // Eeast - x+1
 		if(cell.ExitEast)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.right * 0.5f);
 
-		Gizmos.color = Color.blue;
+		Gizmos.color = Color.blue; // Eeast - x-1
 		if(cell.ExitWest)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.left * 0.5f);
 
-		Gizmos.color = Color.green;
+		Gizmos.color = Color.green; // North - z+1
 		if(cell.ExitNorth)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.back * 0.5f);
 
-		Gizmos.color = Color.red;
+		Gizmos.color = Color.red; // North - z-1
 		if(cell.ExitSouth)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 0.5f);
 	}

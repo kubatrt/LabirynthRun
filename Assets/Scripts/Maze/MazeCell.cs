@@ -6,7 +6,7 @@ using System.Collections;
 //----------------------------------------------------------------------------------------------------------------------
 // | turn ON bit  isBit = bits & BitToCheck
 // & check bit isBit = bits | BitToCheck
-[Flags]
+//[Flags]
 public enum MazeCellExits
 {
 	None  = 0,	// 0000
@@ -15,6 +15,18 @@ public enum MazeCellExits
 	East  = 4,	// 0111
 	West  = 8	// 1111
 }
+
+/*
+public enum MazeCellExits
+{
+	Nothing  = 0,	
+	Everything = 0xFFFF,
+	North = 1,	
+	South = 2,	
+	East  = 4,	
+	West  = 8
+}
+*/
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -25,7 +37,7 @@ public class MazeCell : IGridCell
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;
 	[HideInInspector] public bool IsVisitted = false;	
-	public bool HasGround = true;
+	[HideInInspector] public bool HasGround = true;
 	// TODO:
 	// ground trap
 	// walls trap
@@ -38,7 +50,7 @@ public class MazeCell : IGridCell
 	[HideInInspector] public float NormalizedDistance = 0f;
 
 	// Enum flags for mark available exits
-	public MazeCellExits Exits = MazeCellExits.None;
+	[BitMask(typeof(MazeCellExits))] public MazeCellExits Exits = MazeCellExits.None;
 
 
 	#region Interface 
@@ -130,8 +142,8 @@ public class MazeCell : IGridCell
 	
 	public override string ToString ()
 	{
-		return String.Format ( "Cell({0} Location [{1},{2}] Exits [ N: {3} S: {4} E: {5} W: {6}]",
-		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest);
+		return String.Format ( "Cell({0} Location [{1},{2}] Exits [ N: {3} S: {4} E: {5} W: {6}][{7}]",
+		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest, Exits);
 	}
 	
 }
