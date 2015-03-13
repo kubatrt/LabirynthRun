@@ -16,19 +16,6 @@ public enum MazeCellExits
 	West  = 8	// 1111
 }
 
-/*
-public enum MazeCellExits
-{
-	Nothing  = 0,	
-	Everything = 0xFFFF,
-	North = 1,	
-	South = 2,	
-	East  = 4,	
-	West  = 8
-}
-*/
-
-
 //----------------------------------------------------------------------------------------------------------------------
 [Serializable]
 public class MazeCell : IGridCell
@@ -142,8 +129,8 @@ public class MazeCell : IGridCell
 	
 	public override string ToString ()
 	{
-		return String.Format ( "Cell({0} Location [{1},{2}] Exits [ N: {3} S: {4} E: {5} W: {6}][{7}]",
-		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest, Exits);
+		return String.Format ( "Cell({0} Location [{1},{2}] Exits[{8}] [ N: {3} S: {4} E: {5} W: {6}][{7}]",
+		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest, Exits, TotalExits);
 	}
 	
 }
