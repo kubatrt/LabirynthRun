@@ -9,6 +9,16 @@ public class MazeGeneratorInspector : Editor
 	bool generated = false;
 	string tipMessage = "Custom Maze Generator script editor";
 
+	public void OnEnable()
+	{
+		Debug.Log ("MazeGenerator.Enable()");
+	}
+
+	public void OnDisable()
+	{
+		Debug.Log ("MazeGenerator.Disable()");	
+	}
+
 	public void CreateEditorObjects(MazeGenerator maze)
 	{
 		if(generated){ 
@@ -65,9 +75,9 @@ public class MazeGeneratorInspector : Editor
 		}
 
 		if (GUILayout.Button ("Run test")) {
-			Labyrinth lab = maze.gameObject.AddComponent<Labyrinth>();
-			lab.CreateGround();
-			lab.BuildWalls();
+			//Labyrinth lab = maze.gameObject.AddComponent<Labyrinth>();
+			//lab.CreateGround();
+			//lab.BuildWalls();
 		}
 
 		EditorGUILayout.HelpBox(tipMessage, MessageType.Info);

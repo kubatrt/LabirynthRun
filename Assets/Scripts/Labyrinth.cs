@@ -83,7 +83,10 @@ public class Labyrinth : MonoBehaviour
 	public void CreateMaze()
 	{
 		maze = GetComponent<MazeGenerator>();
-		maze.Generate();
+		string mazeFile = Application.dataPath + "/Levels/maze88.maze";
+		//maze.Width = 8; maze.Height = 8;
+		//maze.LoadFromFile (mazeFile);
+		maze.Generate ();
 		cells = maze.GetCells();
 
 		debugObjectCount = 0;
@@ -177,29 +180,23 @@ public class Labyrinth : MonoBehaviour
 					finishPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), finishPrefab.transform.rotation);
 				newObject.transform.parent = objectsContainer.transform;	
 			}
-			/*else if(cell.IsDeadEnd) 
-			{
-				GameObject newObject = (GameObject)GameObject.Instantiate(
-					deadEndPrefab, MazeGenerator.GridToWorld(cell.Position, offset, wallHeight), Quaternion.identity);
-				newObject.transform.parent = objectsContainer.transform;	
-			}*/
 			else if(cell.TotalExits > 2) 
 			{
-				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.MoreWays;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
 				newObject.transform.parent = triggersContainer.transform;
 				newObject.name = "TriggerCrossroad(MoreWays) " + triggersCounter++;
+				newObject.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.MoreWays;
 
 			}
 			else if((cell.ExitNorth && (cell.ExitWest || cell.ExitEast)) || 
-			        (cell.ExitSouth && (cell.ExitWest || cell.ExitEast))) 
+			        (cell.ExitSouth && (cell.ExitWest || cell.ExitEast)))
 			{
-				triggerPrefab.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.OneWay;
 				GameObject newObject = (GameObject)GameObject.Instantiate(
 					triggerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, triggerPrefab.transform.localScale.y/2f), Quaternion.identity);
 				newObject.transform.parent = triggersContainer.transform;
 				newObject.name = "TriggerCrossroad(OneWay) " + triggersCounter++;
+				newObject.GetComponent<TriggerCrossroad>().crossingType = TriggerCrossing.OneWay;
 
 			} 
 			/*if(cell.TotalExits > 2) // debug
