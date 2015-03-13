@@ -13,9 +13,9 @@ public class PlayerCamera : MonoBehaviour
 	Quaternion startupRotation;
 
 	// TODO:
-	public float slowFov = 60f;
+	public float slowFov = 55f;
 	public float normalFov = 65f;
-	public float runFov = 70f;
+	public float runFov = 75f;
 
 	public PlayerMecanimController player;
 	Transform playerTransform;
@@ -71,19 +71,14 @@ public class PlayerCamera : MonoBehaviour
 
 	public void SpeedUpFov()
 	{
-		StartCoroutine (LerpFov(camera.fieldOfView, runFov,0.5f));
+		StartCoroutine (LerpFov(camera.fieldOfView, runFov,1f));
 	}
 
 	public void NormalizeFov()
 	{
         StopCoroutine("LerpFov");
-		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
+		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,1f));
 	}
-
-    public void SetBlur(bool choice)
-    {
-        //mBlur.enabled = choice;
-    }
 
 	public void SetStartUpPosition(float x, float y, float z)
 	{
@@ -136,16 +131,10 @@ public class PlayerCamera : MonoBehaviour
 		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, cameraCoroutineTime));
 	}
 
-	void PinCameraToPlayer()
-	{
-		transform.parent = playerTransform;
-	}
-
-	public void UnPinCamereaFromPlayer()
-	{
-		transform.parent = null;
-		Debug.Log ("Un pin camera!");
-	}
+    void LevelEndCameraAnimation()
+    {
+        
+    }
 
 	#region Coroutines
 	IEnumerator LerpPosition(Vector3 from, Vector3 to, float exTime)
@@ -191,7 +180,6 @@ public class PlayerCamera : MonoBehaviour
 			camera.fieldOfView = Vector3.Lerp(A, B, (Time.time - startTime)*n).x;
 			yield return null;
 		}
-		camera.fieldOfView = B.x;
 	}
 	#endregion
 }

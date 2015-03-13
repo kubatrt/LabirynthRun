@@ -11,7 +11,7 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public float minSpeed = 0.5f;
 	public float normalSpeed = 5f;
-	public float runSpeed = 8f;
+	public float runSpeed = 9f;
 	public float speed;
 	public float angle;
 	public int failures;
@@ -47,6 +47,7 @@ public class PlayerMecanimController : MonoBehaviour
 		PlayerCamera.Instance.player = this;
 		minSpeed = 0.5f;
 		normalSpeed = 5;
+        runSpeed = 9f;
 		rotationTime  = 0.25f;
 		lives = 3;
 		maps = 3;
@@ -319,6 +320,7 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	public void SlowDownMovement()
 	{
+        SpeedUpOff();
 		StartCoroutine( LerpSpeed(speed, minSpeed, 0.3f));
 		SetSlowDownAnim(true);
 		PlayerCamera.Instance.SlowDownFov ();
@@ -348,16 +350,13 @@ public class PlayerMecanimController : MonoBehaviour
 
     public void SpeedUpOn()
     {
-        speed = normalSpeed*2;
-        //StartCoroutine(LerpSpeed(speed, normalSpeed * 2, 0.1f));
+        speed = runSpeed;
         SetSpeedUpAnimation(true);
     }
 
     public void SpeedUpOff()
     {
         speed = normalSpeed;
-       // StopCoroutine("LerpSpeed");
-        //StartCoroutine(LerpSpeed(speed, normalSpeed, 0.1f));
         SetSpeedUpAnimation(false);
     }
 
