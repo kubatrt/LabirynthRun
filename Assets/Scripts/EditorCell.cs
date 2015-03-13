@@ -51,18 +51,18 @@ public class EditorCell : MonoBehaviour
 	{
 		Gizmos.color = Color.yellow;
 		if(cell.ExitEast)
-			Gizmos.DrawLine(transform.position, transform.position + Vector3.right);
+			Gizmos.DrawLine(transform.position, transform.position + Vector3.right * 0.5f);
 
 		Gizmos.color = Color.blue;
 		if(cell.ExitWest)
-			Gizmos.DrawLine(transform.position, transform.position + Vector3.left);
+			Gizmos.DrawLine(transform.position, transform.position + Vector3.left * 0.5f);
 
 		Gizmos.color = Color.green;
 		if(cell.ExitNorth)
-			Gizmos.DrawLine(transform.position, transform.position + Vector3.back);
+			Gizmos.DrawLine(transform.position, transform.position + Vector3.back * 0.5f);
 
 		Gizmos.color = Color.red;
 		if(cell.ExitSouth)
-			Gizmos.DrawLine(transform.position, transform.position + Vector3.forward);
+			Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 0.5f);
 	}
 }
