@@ -220,7 +220,8 @@ public class MazeGenerator : MonoBehaviour
 		{
 			BinaryWriter bw = new BinaryWriter(fileStream);
 
-			bw.Write(mazeGrid.Area);
+			bw.Write(mazeGrid.Width);
+			bw.Write(mazeGrid.Height);
 
 			for(int i=0; i < mazeGrid.Area; ++i)
 			{
@@ -232,14 +233,16 @@ public class MazeGenerator : MonoBehaviour
 	
 	public void LoadFromFile(string path)
 	{
-		mazeGrid = new Grid<MazeCell>(Width, Height);
-
+		
 		using(FileStream fileStream = File.OpenRead(path))
 		{
 			BinaryReader br = new BinaryReader(fileStream);
-			int area = br.ReadInt32();
 
-			for(int i=0; i < area; ++i)
+			Width = br.ReadInt32 ();
+			Height = br.ReadInt32();
+			mazeGrid = new Grid<MazeCell>(Width, Height);
+
+			for(int i=0; i < mazeGrid.Area; ++i)
 			{
 				mazeGrid.CellsGrid[i] = (MazeCell) MCSerialization.DeserializeFromString( br.ReadString());
 				//Debug.Log(mazeGrid.CellsGrid[i].ToString());
