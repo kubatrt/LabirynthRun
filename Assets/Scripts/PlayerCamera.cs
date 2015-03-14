@@ -77,7 +77,7 @@ public class PlayerCamera : MonoBehaviour
 	public void NormalizeFov()
 	{
         StopCoroutine("LerpFov");
-		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,1f));
+		StartCoroutine (LerpFov(camera.fieldOfView, normalFov,0.5f));
 	}
 
 	public void SetStartUpPosition(float x, float y, float z)
@@ -131,9 +131,19 @@ public class PlayerCamera : MonoBehaviour
 		StartCoroutine (LerpRotation(transform.eulerAngles, runGameRotation, cameraCoroutineTime));
 	}
 
-    void LevelEndCameraAnimation()
+    public void LevelEndCameraAnimation()
     {
-        
+        playerTransform = player.transform;
+        Vector3 runGamePosition = playerTransform.position
+            + (playerTransform.forward * +2.5f)
+            + (playerTransform.up * 2.5f);
+        StartCoroutine(LerpPosition(transform.position, runGamePosition, 2f));
+
+        Vector3 runGameRotation =
+            new Vector3(playerTransform.eulerAngles.x + 40,
+                         playerTransform.eulerAngles.y + 180,
+                         playerTransform.eulerAngles.z);
+        StartCoroutine(LerpRotation(transform.eulerAngles, runGameRotation, 2f));
     }
 
 	#region Coroutines

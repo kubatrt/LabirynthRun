@@ -277,6 +277,8 @@ public class GameManager : MonoBehaviour
 		case GameState.EndWon:
             SetScoreAtEnd();
             UI.UIEndWonState();
+            PlayerCamera.Instance.LevelEndCameraAnimation();
+
 			break;
 
 		case GameState.Map:
