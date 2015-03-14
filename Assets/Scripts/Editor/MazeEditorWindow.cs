@@ -60,8 +60,8 @@ public class MazeEditorWindow : EditorWindow
 		GUILayout.Label ("Maze settings", EditorStyles.boldLabel);
 
 		// check if MazeGenerator is assigned
-		maze = (MazeGenerator) EditorGUILayout.ObjectField("MazeGenerator: ", maze, typeof(MazeGenerator));
-
+		//maze = (MazeGenerator) EditorGUILayout.ObjectField("MazeGenerator: ", maze, typeof(MazeGenerator));
+		maze = GameObject.FindObjectOfType<MazeGenerator>();
 		if(!maze) {
 			EditorGUILayout.HelpBox("Select MazeGenerator object to work with!", MessageType.Warning);
 			return;
@@ -80,8 +80,6 @@ public class MazeEditorWindow : EditorWindow
 		if(mazeGeneratorInspector == null) {
 			return;
 		}
-
-
 
 		if(GUILayout.Button("Save"))
 		{

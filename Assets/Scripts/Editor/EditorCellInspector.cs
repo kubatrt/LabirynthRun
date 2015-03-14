@@ -5,12 +5,11 @@ using System.Collections;
 [CustomEditor(typeof(EditorCell))]
 public class EditorCellInspector : Editor 
 {
-	public SerializedProperty enumTypeMask;
 	public SerializedProperty intIndex;
 
 	void OnEnable()
 	{
-		enumTypeMask = serializedObject.FindProperty ("cell.Exits");
+
 	}
 
 	public override void OnInspectorGUI()
@@ -26,8 +25,6 @@ public class EditorCellInspector : Editor
 		}
 		
 		EditorGUILayout.HelpBox("Editor cell window" , MessageType.Info);
-
-
 	}
 
 }

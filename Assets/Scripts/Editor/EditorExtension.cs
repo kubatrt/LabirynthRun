@@ -76,7 +76,7 @@ public class EnumBitMaskPropertyDrawer : PropertyDrawer
 	{
 		var typeAttr = attribute as BitMaskAttribute;
 		// Add the actual int value behind the field name
-		label.text = label.text + "("+prop.intValue+")";
+		label.text = string.Format("{0} [{1}]", label.text, prop.intValue);
 		prop.intValue = EditorExtension.DrawBitMaskField(position, prop.intValue, typeAttr.propType, label);
 	}
 }
