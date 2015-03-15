@@ -155,6 +155,7 @@ public class UIGameHUD : MonoBehaviour
     {
         SpeedUpIsPushed = true;
         StartCoroutine(DelaySpeedUp(0.25f));
+        PlayerCamera.Instance.SpeedUpFov();
     }
 
     public void PointerUpSpeedButton()
@@ -231,8 +232,6 @@ public class UIGameHUD : MonoBehaviour
             if(timer > time)
             {
                 player.SpeedUpOn();
-                PlayerCamera.Instance.SpeedUpFov();
-                Debug.Log("Time up");
             }
             yield return null;
         }
