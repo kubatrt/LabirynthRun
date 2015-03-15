@@ -194,7 +194,7 @@ public class MazeGenerator : MonoBehaviour
 		}
 
 		mazeGrid.CellsGrid [i] = newCell;
-		Debug.Log("Apply at mazeGrid.CellsGrid [" + i + "] newCell: " + newCell.ToString());
+		//Debug.Log("SetCellAtIndex [" + i + "] newCell: " + newCell.ToString());
 	}
 
 	public MazeCell GetCellAt(int x, int y)
@@ -212,10 +212,8 @@ public class MazeGenerator : MonoBehaviour
 		return new Vector3((float)cellPos.x * offset, height, (float)cellPos.y * offset);
 	}
 
-	// TODO: size of saved/loaded maze might be diffrent
 	public void SaveToFile(string path)
 	{
-		Debug.Log ("SaveToFile:" + path);
 		using(FileStream fileStream = File.Create(path))
 		{
 			BinaryWriter bw = new BinaryWriter(fileStream);
@@ -229,11 +227,11 @@ public class MazeGenerator : MonoBehaviour
 				//Debug.Log( mazeGrid.CellsGrid[i].ToString());
 			}
 		}
+		Debug.Log ("SaveToFile: " + path);
 	}
 	
 	public void LoadFromFile(string path)
 	{
-		
 		using(FileStream fileStream = File.OpenRead(path))
 		{
 			BinaryReader br = new BinaryReader(fileStream);

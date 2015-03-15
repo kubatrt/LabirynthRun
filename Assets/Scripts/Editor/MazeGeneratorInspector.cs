@@ -9,9 +9,13 @@ public class MazeGeneratorInspector : Editor
 	bool generated = false;
 	string tipMessage = "Custom Maze Generator script editor";
 
+	private List<EditorCell> editorCellsList = new List<EditorCell>();
+
+
 	public void OnEnable()
 	{
 		Debug.Log ("MazeGenerator.Enable()");
+
 	}
 
 	public void OnDisable()
@@ -26,16 +30,21 @@ public class MazeGeneratorInspector : Editor
 			return;
 		}
 		GameObject editorContrainer = GameObject.Find ("_EDITOR");
-		
-		foreach (MazeCell cell in maze.GetCells()) {
-			Vector3 position = new Vector3 (cell.Position.x, 0f, cell.Position.y);
-			if (editorContrainer != null) {
-				GameObject editorCell = (GameObject)Instantiate (Resources.Load<GameObject> ("Editor/EditorCell"), position, Quaternion.identity);
-				editorCell.name = "EditorCell_" + cell.Index;
-				editorCell.transform.parent = editorContrainer.transform;
-				
-				EditorCell edCell = editorCell.GetComponent<EditorCell> ();
-				edCell.SetCell (cell);
+
+		foreach (MazeCell cell in maze.GetCells()) 
+		{
+			if (editorContrainer != null) 
+			{
+				EditorCell edCellObject = (EditorCell)Instantiate (
+					Resources.Load<EditorCell> ("Editor/EditorCell"), 
+					MazeGenerator.GridToWorld(cell.Position, 1f, 0f), // new Vector3 (cell.Position.x, 0f, cell.Position.y), 
+					Quaternion.identity);
+
+				edCellObject.name = "EditorCell_" + cell.Index;
+				edCellObject.transform.parent = editorContrainer.transform;
+				edCellObject.SetCell (cell);
+
+				editorCellsList.Add (edCellObject);
 			}
 		}
 		generated = true;
@@ -46,38 +55,43 @@ public class MazeGeneratorInspector : Editor
 		MazeGenerator maze = (MazeGenerator)target;
 		DrawDefaultInspector ();
 
-		if (GUILayout.Button ("Generate editor maze")) {
+		if (GUILayout.Button ("Generate editor maze")) 
+		{
 			if (generated) {
 				tipMessage = "Maze already generated. First clear it.";
 				return;
 			}
 
 			maze.Generate ();
-
+			CreateEditorObjects(maze);
 			//maze.transform.GetComponent<DebugDrawMazeCells>().UpdateCells();
 
-			CreateEditorObjects(maze);
-
-			//maze.GetComponent<DebugDrawEditorMazeCells>().UpdateCells();
 			tipMessage = "New maze data generated!";
 			SceneView.RepaintAll ();
 		}
 
-		if (GUILayout.Button ("Clear editor maze")) {
+		if (GUILayout.Button ("Clear editor maze")) 
+		{
 			GameObject container = GameObject.Find ("_EDITOR");
-			for (int i = container.transform.childCount-1; i>=0; i--) {
+			for (int i = container.transform.childCount - 1; i >= 0; i--) 
+			{
 				DestroyImmediate (container.transform.GetChild (i).gameObject);
 			}
 
+			if(editorCellsList != null)
+				editorCellsList.Clear();
 			//maze.GetComponent<DebugDrawEditorMazeCells>().UpdateCells();
+
 			generated = false;
 			tipMessage = "Maze cleared. All objects destroyed.";
 		}
 
-		if (GUILayout.Button ("Run test")) {
-			//Labyrinth lab = maze.gameObject.AddComponent<Labyrinth>();
-			//lab.CreateGround();
-			//lab.BuildWalls();
+		if (GUILayout.Button ("Break all exits")) 
+		{
+			foreach(EditorCell edcell in editorCellsList)
+			{
+				edcell.BreakExits();
+			}
 		}
 
 		EditorGUILayout.HelpBox(tipMessage, MessageType.Info);

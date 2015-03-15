@@ -92,25 +92,25 @@ public class MazeCell : IGridCell
 	public bool ExitNorth
 	{
 		get { return (Exits & MazeCellExits.North) == MazeCellExits.North; }
-		set { Exits = Exits | MazeCellExits.North; }
+		set { Exits = Exits ^ MazeCellExits.North; }
 	}
 	
 	public bool ExitSouth
 	{
 		get { return (Exits & MazeCellExits.South) == MazeCellExits.South; }
-		set { Exits = Exits | MazeCellExits.South; }
+		set { Exits = Exits ^ MazeCellExits.South; }
 	}
 	
 	public bool ExitEast
 	{
 		get { return (Exits & MazeCellExits.East) == MazeCellExits.East; }
-		set { Exits = Exits | MazeCellExits.East; }
+		set { Exits = Exits ^ MazeCellExits.East; }
 	}
 	
 	public bool ExitWest
 	{
 		get { return (Exits & MazeCellExits.West) == MazeCellExits.West; }
-		set { Exits = Exits | MazeCellExits.West; }
+		set { Exits = Exits ^ MazeCellExits.West; }
 	}
 	
 	public int TotalExits

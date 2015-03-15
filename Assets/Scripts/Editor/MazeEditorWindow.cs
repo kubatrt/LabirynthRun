@@ -99,6 +99,7 @@ public class MazeEditorWindow : EditorWindow
 			{
 				maze.LoadFromFile(file);
 				mazeGeneratorInspector.CreateEditorObjects(maze);
+				mazeName = System.IO.Path.GetFileNameWithoutExtension(file);
 			}
 
 			EditorGUILayout.EndHorizontal();
