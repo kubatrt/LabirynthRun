@@ -17,14 +17,6 @@ public class BitMaskAttribute : PropertyAttribute
 		propType = type;
 	}
 }
-/*
-public class EnumExample : MonoBehaviour
-{
-	[BitMask(typeof(EMyEnum))]
-	public EMyEnum someMask;
-}
-*/
-
 
 public class SortVector3ByX : IComparer<Vector3>
 {
@@ -44,4 +36,30 @@ public class SortVector3ByZ : IComparer<Vector3>
 		else if (a.z < b.z) return -1;
 		else return 0;
 	}
+}
+
+public class SortScoreAsc : IComparer<ScoreEntry>
+{
+	public int Compare( ScoreEntry a, ScoreEntry b)
+	{
+		if(a.score <= b.score)
+			return 1;
+		else if(a.score > b.score)
+			return -1;
+		else
+			return 0;
+	}	
+}
+
+public class SortScoreDesc : IComparer<ScoreEntry>
+{
+	public int Compare( ScoreEntry a, ScoreEntry b)
+	{
+		if(a.score >= b.score)
+			return 1;
+		else if(a.score < b.score)
+			return -1;
+		else
+			return 0;
+	}	
 }
