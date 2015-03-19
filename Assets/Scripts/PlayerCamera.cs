@@ -155,12 +155,21 @@ public class PlayerCamera : MonoBehaviour
 		
 		while (dTime < exTime) 
 		{
-			transform.position = Vector3.Lerp(from, to, dTime*n);
-			yield return null;
-			dTime = Time.time - startTime;
+            if(GameManager.Instance.state != GameState.Pause)
+            {
+                transform.position = Vector3.Lerp(from, to, dTime * n);
+                yield return null;
+                dTime = Time.time - startTime;
+            }
+            else
+            {
+                yield return null;
+                startTime = Time.time - dTime;
+            }
 		}
 		Debug.Log ("In corutine: to = " + to + " position = " + transform.position);
 		transform.position = to;
+        GameManager.Instance.RunGame();
 	}
 	
 	IEnumerator LerpRotation(Vector3 from, Vector3 to, float exTime)
@@ -171,9 +180,17 @@ public class PlayerCamera : MonoBehaviour
 		
 		while (dTime <= exTime) 
 		{
-			transform.eulerAngles = Vector3.Lerp(from, to, (Time.time - startTime)*n);
-			yield return null;
-			dTime = Time.time - startTime;
+            if (GameManager.Instance.state != GameState.Pause)
+            {
+                transform.eulerAngles = Vector3.Lerp(from, to, (Time.time - startTime) * n);
+                yield return null;
+                dTime = Time.time - startTime;
+            }
+            else
+            {
+                yield return null;
+                startTime = Time.time - dTime;
+            }
 		}
 		transform.eulerAngles = to;
 	}

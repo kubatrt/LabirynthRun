@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 	float gameStartupTimer;
 	float gameTimeElapsed;
 	public float gameTimer;
+    float MapViewTime = 3;
 
 	public int level;
 	public int previousLevel;
@@ -151,19 +152,20 @@ public class GameManager : MonoBehaviour
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 
-	private void PlayerStart() 
-	{ 
-		player.StartPlayer (); 
-	}
+    public void RunGame()
+    {
+        ChangeGameState(GameState.Run);
+        player.StartPlayer();
+    }
+
+    private void GameStateRun()
+    {
+        ChangeGameState(GameState.Run);
+    }
 
 	private void PlayerCameraStart() 
 	{ 
 		PlayerCamera.Instance.StartCamera (); 
-	}
-
-	private void GameStateRun()
-	{ 
-		ChangeGameState (GameState.Run); 
 	}
 
 	private void PlayerUnpause()
@@ -246,9 +248,7 @@ public class GameManager : MonoBehaviour
 			PlayerCamera.Instance.ResetCamera();
 			gameTimer = 0;
             score = 0;
-			Invoke ("PlayerCameraStart", 3);
-			Invoke ("PlayerStart", 6);
-			Invoke ("GameStateRun", 6); 
+			Invoke ("PlayerCameraStart", MapViewTime);
 			break; 
 
 		case GameState.Run:
