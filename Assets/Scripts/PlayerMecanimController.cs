@@ -78,6 +78,7 @@ public class PlayerMecanimController : MonoBehaviour
 			isAlive = false;
 			transform.Translate(new Vector3(0,0,-0.25f));
 			SetDedAnim();
+            StopAllCoroutines();
 			if(lives>1)
 				lives--;
 			else 
