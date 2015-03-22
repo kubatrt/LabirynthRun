@@ -6,25 +6,24 @@ using System.Collections;
 public class EditorCellInspector : Editor 
 {
 	public SerializedProperty intIndex;
-	public static bool exitsChanged = false;
 
-	bool eastExitLastState;
-	bool westExitLastState ;
-	bool northExitLastState;
-	bool southExitLastState;
-	//bool exitsChanged = false;
+	private bool eastExitLastState;
+	private bool westExitLastState ;
+	private bool northExitLastState;
+	private bool southExitLastState;
+
 
 	void OnEnable()
 	{
 		EditorCell edCell = (EditorCell)target;
 		SetLastExitStates(edCell);
-		Debug.Log(edCell.name + "OnEnable");
+		//Debug.Log(edCell.name + "OnEnable");
 	}
 
 	void OnDisable()
 	{
-		EditorCell edCell = (EditorCell)target;
-		Debug.Log(edCell.name + "OnDisable");
+		//EditorCell edCell = (EditorCell)target;
+		//Debug.Log(edCell.name + "OnDisable");
 	}
 
 	void SetLastExitStates(EditorCell edCell)
@@ -65,8 +64,7 @@ public class EditorCellInspector : Editor
 			UpdateLastExitStates(edCell);
 			return;
 		}
-
-		// cehck and adjust all exits after gui change
+		
 		if (GUI.changed)
 		{
 			UpdateLastExitStates(edCell);
@@ -77,8 +75,7 @@ public class EditorCellInspector : Editor
 			"  S\n" +
 			"W + E\n" +
 			"  N\n" +
-			"Use [W][S][A][D] for quick cell exits editing\n" +
-			"[B] for 'Break all cell exits'", MessageType.Info);
+			"[W][S][A][D] for quick cell exits editing [B] for break exits", MessageType.Info);
 	}
 
 

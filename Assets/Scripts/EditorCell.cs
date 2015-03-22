@@ -7,8 +7,6 @@ using System.Collections;
 public class EditorCell : MonoBehaviour 
 {
 	public MazeCell cell;
-	public int editorIndex;
-
 
 	private MazeGenerator	mazeGenerator;
 
@@ -17,33 +15,9 @@ public class EditorCell : MonoBehaviour
 		mazeGenerator = GameObject.FindObjectOfType<MazeGenerator>();
 	}
 
-	public void SetCell(MazeCell cellRef)
-	{
-		cell = cellRef;
-	}
-
-	// TODO: depracted
-	public void ApplyPropertyChange() 
-	{	
-		//save changed index (should be not change)
-		//save boolean property changes
-		
-		mazeGenerator.SetCellAtIndex (cell.Index, cell);
-		Debug.Log ("Applied to: " + mazeGenerator.mazeGrid.GetCellAtIndex(editorIndex).ToString());
-	}
-
 	public void BreakExits()
 	{
 		cell.NoExits = true;
-		Debug.Log ("Break");
-	}
-
-	public void AdjustNeighbors()
-	{
-		AdjustEastExit();
-		AdjustWestExit();
-		AdjustSouthExit();
-		AdjustNorthExit();
 	}
 
 	public void AdjustEastExit()

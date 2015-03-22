@@ -74,7 +74,6 @@ public class MazeGeneratorInspector : Editor
 			generated = false;
 
 			DestroyImmediate(maze.gameObject.GetComponent<DebugDrawEditorMazeCells>());
-			
 			tipMessage = "Maze cleared. All objects destroyed.";
 		}
 
@@ -84,7 +83,6 @@ public class MazeGeneratorInspector : Editor
 			{
 				edcell.BreakExits();
 			}
-			Debug.Log ("Clear all: " + editorCellsList.Count);
 		}
 
 		EditorGUILayout.HelpBox(tipMessage, MessageType.Info);

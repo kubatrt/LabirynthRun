@@ -251,6 +251,9 @@ public class MazeGenerator : MonoBehaviour
 
 	public bool Validate()
 	{
+		// start - max 1 exit 
+		// finish - min 1 exit
+
 		bool startCell = false;
 		bool finishCell = false;
 		foreach(MazeCell cell in mazeGrid.CellsGrid) 
@@ -264,6 +267,7 @@ public class MazeGenerator : MonoBehaviour
 					startCell = true;
 			}
 
+			// deadEnds
 			if(cell.TotalExits == 1)
 				cell.IsDeadEnd = true;
 			else

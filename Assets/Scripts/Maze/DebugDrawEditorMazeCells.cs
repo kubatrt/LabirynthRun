@@ -21,14 +21,15 @@ public class DebugDrawEditorMazeCells : MonoBehaviour
 
 		Vector3 frame = new Vector3(0.5f, 0.2f, 0.5f);
 		Vector3 scale = new Vector3(0.45f, 0.15f, 0.45f);
+		float factor = 0.48f;
 
 		foreach (MazeCell cell in cells)
 		{
 			Vector3 centroid = new Vector3(cell.Position.x, 0f, cell.Position.y);
-			Vector3 topLeft = new Vector3(centroid.x - 0.5f, 0f, centroid.z - 0.5f);
-			Vector3 topRight = new Vector3(centroid.x + 0.5f, 0f, centroid.z - 0.5f);
-			Vector3 bottomLeft = new Vector3(centroid.x - 0.5f, 0f, centroid.z + 0.5f);
-			Vector3 bottomRight = new Vector3(centroid.x + 0.5f, 0f, centroid.z + 0.5f);
+			Vector3 topLeft = new Vector3(centroid.x - factor, 0f, centroid.z - factor);
+			Vector3 topRight = new Vector3(centroid.x + factor, 0f, centroid.z - factor);
+			Vector3 bottomLeft = new Vector3(centroid.x - factor, 0f, centroid.z + factor);
+			Vector3 bottomRight = new Vector3(centroid.x + factor, 0f, centroid.z + factor);
 			
 
 			if (cell.IsFinishCell)
