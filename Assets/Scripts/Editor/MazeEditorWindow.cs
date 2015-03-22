@@ -16,7 +16,7 @@ public class MazeEditorWindow : EditorWindow
 	[MenuItem ("Tools/Maze Editor Scene")]
 	static void LoadEditor()
 	{
-		EditorApplication.OpenScene( Application.dataPath + "/Scenes/MazeEditor.unity");
+		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Editor.unity");
 		Debug.Log ("Load editor");
 	}
 

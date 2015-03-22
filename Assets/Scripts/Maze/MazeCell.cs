@@ -28,11 +28,7 @@ public class MazeCell : IGridCell
 
 	public bool HasDecorator = false;
 	public bool IsTrap = false;
-
-	// TODO:
-	// ground trap
-	// walls trap
-	// decorator
+	// when changing old levels won't load
 
 	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
 	[HideInInspector] public int CrawlDistance = 0;

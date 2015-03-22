@@ -1,7 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Trap : MonoBehaviour {
+public enum TrapType
+{
+	Spikes,
+	Saw,
+	Hole
+}
+
+public class Trap : MonoBehaviour 
+{
 
 	// Use this for initialization
 	void Start () {
