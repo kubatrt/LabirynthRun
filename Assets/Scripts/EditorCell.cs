@@ -20,39 +20,22 @@ public class EditorCell : MonoBehaviour
 	public void SetCell(MazeCell cellRef)
 	{
 		cell = cellRef;
-
-		if(cell == null)
-			return;
-
-		UpdateMaterials();
 	}
 
-	public void ApplyChanges() 
+	// TODO: depracted
+	public void ApplyPropertyChange() 
 	{	
-		//seave boolean property changes
-		editorIndex = cell.Index;
-		mazeGenerator.SetCellAtIndex (editorIndex, cell);
+		//save changed index (should be not change)
+		//save boolean property changes
+		
+		mazeGenerator.SetCellAtIndex (cell.Index, cell);
 		Debug.Log ("Applied to: " + mazeGenerator.mazeGrid.GetCellAtIndex(editorIndex).ToString());
 	}
 
 	public void BreakExits()
 	{
 		cell.NoExits = true;
-		Debug.Log("BreakExits(): " + cell.ToString());
-	}
-
-
-	public void UpdateMaterials()
-	{
-		// set material
-		if(cell.IsStartCell)
-			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellStart");
-		else if(cell.IsFinishCell)
-			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellFinish");
-		else if(cell.IsDeadEnd)
-			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCellDeadEnd");
-		else
-			renderer.sharedMaterial = Resources.Load<Material>("Editor/EditorCell");
+		Debug.Log ("Break");
 	}
 
 	public void AdjustNeighbors()
@@ -61,23 +44,7 @@ public class EditorCell : MonoBehaviour
 		AdjustWestExit();
 		AdjustSouthExit();
 		AdjustNorthExit();
-
-		/*if(((MazeCell)cell.West).Position.x >= 0) {
-			if(cell.ExitWest) {
-				((MazeCell)cell.West).ExitEast = true;
-			} else {
-				((MazeCell)cell.West).ExitEast = false;
-			}
-			Debug.Log ("west");
-		}*/
 	}
-
-	/*
-		cell.North = GetCellAt(x, y +1);
-		cell.South = GetCellAt(x, y -1);
-		cell.East = GetCellAt(x + 1, y);
-		cell.West = GetCellAt(x - 1, y);
-	 */
 
 	public void AdjustEastExit()
 	{
@@ -104,7 +71,6 @@ public class EditorCell : MonoBehaviour
 			}
 		}
 	}
-	
 	
 	public void AdjustNorthExit()
 	{
@@ -133,20 +99,19 @@ public class EditorCell : MonoBehaviour
 
 	void OnDrawGizmos()
 	{
-
-		Gizmos.color = Color.yellow; // Eeast - x+1 // right
+		Gizmos.color = Color.red; // Eeast - x+1 // right
 		if(cell.ExitEast)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.right * 0.5f);
 
-		Gizmos.color = Color.blue; // Eeast - x-1 // left
+		Gizmos.color = Color.red; // Eeast - x-1 // left
 		if(cell.ExitWest)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.left * 0.5f);
 
-		Gizmos.color = Color.green; // North - z+1 / z-1 back
+		Gizmos.color = Color.blue; // North - z+1 / z-1 back / BUG!?
 		if(cell.ExitNorth)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.back * 0.5f);
 
-		Gizmos.color = Color.red; // North - z-1 / z+1 forward
+		Gizmos.color = Color.blue; // North - z-1 / z+1 forward
 		if(cell.ExitSouth)
 			Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 0.5f);
 	}

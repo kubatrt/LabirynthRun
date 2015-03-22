@@ -82,10 +82,10 @@ public class Labyrinth : MonoBehaviour
 
 	public void CreateMaze()
 	{
+		// For deployment builds additional files should be loaded from Application.persistentDataPath + filename
+		// LoadFromFile or Generate
 		maze = GetComponent<MazeGenerator>();
-		string mazeFile = Application.dataPath + "/Levels/level_88_01.maze";
-		
-		maze.LoadFromFile (mazeFile);
+		maze.LoadFromFile (Application.dataPath + "/Levels/level_88_01.maze");
 		//maze.Generate ();
 
 		cells = maze.GetCells();

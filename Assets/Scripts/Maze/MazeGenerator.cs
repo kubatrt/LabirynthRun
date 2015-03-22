@@ -223,7 +223,7 @@ public class MazeGenerator : MonoBehaviour
 
 			for(int i=0; i < mazeGrid.Area; ++i)
 			{
-				bw.Write( MCSerialization.SerializeToString( mazeGrid.CellsGrid[i] )); // (object)
+				bw.Write( MCSerialization.SerializeToString( mazeGrid.CellsGrid[i] ));
 				//Debug.Log( mazeGrid.CellsGrid[i].ToString());
 			}
 		}
@@ -247,5 +247,29 @@ public class MazeGenerator : MonoBehaviour
 			}
 		}
 		Debug.Log ("LoadFromFile: " + path);
+	}
+
+	public bool Validate()
+	{
+		bool startCell = false;
+		bool finishCell = false;
+		foreach(MazeCell cell in mazeGrid.CellsGrid) 
+		{
+			if(cell.IsFinishCell) {
+				if(cell.TotalExits > 0) 
+					finishCell = true; 
+			}
+			else if(cell.IsStartCell) {
+				if(cell.TotalExits == 1) 
+					startCell = true;
+			}
+
+			if(cell.TotalExits == 1)
+				cell.IsDeadEnd = true;
+			else
+				cell.IsDeadEnd = false;
+		}
+
+		return finishCell && startCell;
 	}
 }

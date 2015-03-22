@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 
-
+// Make Editor inspector field readonly
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
 public class ReadOnlyDrawer : PropertyDrawer
 {
@@ -69,6 +69,7 @@ public static class EditorExtension
 	}
 }
 
+// Use extension to draw bitmask field in editor inspector
 [CustomPropertyDrawer(typeof(BitMaskAttribute))]
 public class EnumBitMaskPropertyDrawer : PropertyDrawer
 {

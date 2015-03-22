@@ -33,22 +33,22 @@ public class DebugDrawEditorMazeCells : MonoBehaviour
 
 			if (cell.IsFinishCell)
 			{
-				Gizmos.color = new Color(0f,0f,1f, 1f);
+				Gizmos.color = new Color(0f,0f,1f, 0.25f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.IsStartCell)
 			{
-				Gizmos.color = new Color(0f,1f,0f, 1f);
+				Gizmos.color = new Color(1f,0f,0.5f, 0.25f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.IsDeadEnd)
 			{
-				Gizmos.color = new Color(1f,0f,0f, 0.5f);
+				Gizmos.color = new Color(1f,0f,0f, 0.25f);
 				Gizmos.DrawCube(centroid, scale);
 			}
 			else if (cell.TotalExits > 2)
 			{
-				Gizmos.color = Gizmos.color = new Color(1f,1f,0f, 0.25f);
+				Gizmos.color = Gizmos.color = new Color(1f,1f,0f, 0.15f * cell.TotalExits);
 				Gizmos.DrawCube (centroid, scale);
 			}
 

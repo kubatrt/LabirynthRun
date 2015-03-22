@@ -20,11 +20,15 @@ public enum MazeCellExits
 [Serializable]
 public class MazeCell : IGridCell
 {
+	[HideInInspector] public bool IsVisitted = false;	
+	[HideInInspector] public bool HasGround = true;
 	public bool IsStartCell = false;
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;
-	[HideInInspector] public bool IsVisitted = false;	
-	[HideInInspector] public bool HasGround = true;
+
+	public bool HasDecorator = false;
+	public bool IsTrap = false;
+
 	// TODO:
 	// ground trap
 	// walls trap

@@ -12,11 +12,19 @@ public class MazeEditorWindow : EditorWindow
 
 	static MazeEditorWindow staticWindow;
 
-	[MenuItem ("Tools/MazeEditor")]
+
+	[MenuItem ("Tools/Maze Editor Scene")]
+	static void LoadEditor()
+	{
+		EditorApplication.OpenScene( Application.dataPath + "/Scenes/MazeEditor.unity");
+		Debug.Log ("Load editor");
+	}
+
+	[MenuItem ("Tools/Maze Editor Window")]
 	static void Initialize() 
 	{
-		// MazeEditorWindow window 
 		MazeEditorWindow staticWindow  = (MazeEditorWindow)EditorWindow.GetWindow (typeof (MazeEditorWindow));
+		staticWindow.title = "Maze Editor";
 		staticWindow.Focus();
 		staticWindow.RefreshFilesList();
 	}
@@ -52,20 +60,19 @@ public class MazeEditorWindow : EditorWindow
 		}
 	}
 
-
-
-
 	void OnGUI () 
 	{
 		GUILayout.Label ("Maze settings", EditorStyles.boldLabel);
 
 		// check if MazeGenerator is assigned
-		//maze = (MazeGenerator) EditorGUILayout.ObjectField("MazeGenerator: ", maze, typeof(MazeGenerator));
 		maze = GameObject.FindObjectOfType<MazeGenerator>();
-		if(!maze) {
-			EditorGUILayout.HelpBox("Select MazeGenerator object to work with!", MessageType.Warning);
+		//maze = EditorGUILayout.ObjectField("MazeGenerator: ", maze, typeof(MazeGenerator)) as MazeGenerator;
+
+		if(maze == null) {
+			EditorGUILayout.HelpBox("Select MazeGenerator object!", MessageType.Warning);
 			return;
 		}
+
 		mazeName = EditorGUILayout.TextField ("Name: ", mazeName);
 		EditorGUILayout.LabelField("Size: " + maze.Width + " x "+ maze.Height );
 
@@ -84,6 +91,10 @@ public class MazeEditorWindow : EditorWindow
 		if(GUILayout.Button("Save"))
 		{
 			MazeGenerator mazeGen = FindObjectOfType<MazeGenerator>();
+			if(!mazeGen.Validate()) {	
+				Debug.LogWarning("Validation failed! Check IsStartCell have exact ONE exit. Check  IsFinishCell have at least ONE. Not saved.");
+				return;
+			}	
 			mazeGen.SaveToFile(LevelsDirectory + mazeName + ".maze");
 			RefreshFilesList();
 		}
@@ -100,6 +111,10 @@ public class MazeEditorWindow : EditorWindow
 				maze.LoadFromFile(file);
 				mazeGeneratorInspector.CreateEditorObjects(maze);
 				mazeName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+				// add gizmos
+				if(maze.gameObject.GetComponent<DebugDrawEditorMazeCells>() == null)
+					maze.gameObject.AddComponent<DebugDrawEditorMazeCells>();
 			}
 
 			EditorGUILayout.EndHorizontal();

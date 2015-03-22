@@ -6,45 +6,33 @@ using System.Collections.Generic;
 [CustomEditor(typeof(MazeGenerator))]
 public class MazeGeneratorInspector : Editor 
 {
-	bool generated = false;
-	string tipMessage = "Custom Maze Generator script editor";
-
-	private List<EditorCell> editorCellsList = new List<EditorCell>();
-
-
-	public void OnEnable()
-	{
-		Debug.Log ("MazeGenerator.Enable()");
-
-	}
-
-	public void OnDisable()
-	{
-		Debug.Log ("MazeGenerator.Disable()");	
-	}
+	private static List<EditorCell> editorCellsList = new List<EditorCell>();
+	private bool generated = false;
+	private string tipMessage = "Custom Maze Generator script editor";
+	private DebugDrawEditorMazeCells	debugGizmos;
 
 	public void CreateEditorObjects(MazeGenerator maze)
 	{
-		if(generated){ 
-			Debug.LogWarning("Already generated!");
+		if(generated) { 
+			Debug.LogWarning("CreateEditorObjects: already generated!");
 			return;
 		}
-		GameObject editorContrainer = GameObject.Find ("_EDITOR");
 
+		GameObject editorContrainer = GameObject.FindGameObjectWithTag ("MazeEditor");
 		foreach (MazeCell cell in maze.GetCells()) 
 		{
 			if (editorContrainer != null) 
 			{
 				EditorCell edCellObject = (EditorCell)Instantiate (
 					Resources.Load<EditorCell> ("Editor/EditorCell"), 
-					MazeGenerator.GridToWorld(cell.Position, 1f, 0f), // new Vector3 (cell.Position.x, 0f, cell.Position.y), 
+					MazeGenerator.GridToWorld(cell.Position, 1f, 0f),
 					Quaternion.identity);
 
-				edCellObject.name = "EditorCell_" + cell.Index;
+				edCellObject.name = "EdCell_" + cell.Index;
 				edCellObject.transform.parent = editorContrainer.transform;
-				edCellObject.SetCell (cell);
+				edCellObject.cell = cell;
 
-				editorCellsList.Add (edCellObject);
+				editorCellsList.Add(edCellObject);
 			}
 		}
 		generated = true;
@@ -53,9 +41,9 @@ public class MazeGeneratorInspector : Editor
 	public override void OnInspectorGUI()
 	{
 		MazeGenerator maze = (MazeGenerator)target;
-		DrawDefaultInspector ();
+		DrawDefaultInspector();
 
-		if (GUILayout.Button ("Generate editor maze")) 
+		if (GUILayout.Button ("Generate new maze")) 
 		{
 			if (generated) {
 				tipMessage = "Maze already generated. First clear it.";
@@ -64,15 +52,18 @@ public class MazeGeneratorInspector : Editor
 
 			maze.Generate ();
 			CreateEditorObjects(maze);
-			//maze.transform.GetComponent<DebugDrawMazeCells>().UpdateCells();
 
-			tipMessage = "New maze data generated!";
-			SceneView.RepaintAll ();
+			// add gizmos
+			if(maze.gameObject.GetComponent<DebugDrawEditorMazeCells>() == null)
+				maze.gameObject.AddComponent<DebugDrawEditorMazeCells>();
+
+			tipMessage =  string.Format ("New maze data {0}x{1} generated!", maze.Width, maze.Height);
+			SceneView.RepaintAll();
 		}
 
 		if (GUILayout.Button ("Clear editor maze")) 
 		{
-			GameObject container = GameObject.Find ("_EDITOR");
+			GameObject container = GameObject.FindGameObjectWithTag("MazeEditor");
 			for (int i = container.transform.childCount - 1; i >= 0; i--) 
 			{
 				DestroyImmediate (container.transform.GetChild (i).gameObject);
@@ -80,9 +71,10 @@ public class MazeGeneratorInspector : Editor
 
 			if(editorCellsList != null)
 				editorCellsList.Clear();
-			//maze.GetComponent<DebugDrawEditorMazeCells>().UpdateCells();
-
 			generated = false;
+
+			DestroyImmediate(maze.gameObject.GetComponent<DebugDrawEditorMazeCells>());
+			
 			tipMessage = "Maze cleared. All objects destroyed.";
 		}
 
@@ -92,6 +84,7 @@ public class MazeGeneratorInspector : Editor
 			{
 				edcell.BreakExits();
 			}
+			Debug.Log ("Clear all: " + editorCellsList.Count);
 		}
 
 		EditorGUILayout.HelpBox(tipMessage, MessageType.Info);
