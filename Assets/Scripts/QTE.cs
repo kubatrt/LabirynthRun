@@ -12,7 +12,12 @@ public class QTE : MonoBehaviour
 	protected PlayerMecanimController player;
 	protected float startTime;
 	protected float responseTime;
-	
+
+	protected void Start()
+	{
+		player = GameObject.FindObjectOfType<PlayerMecanimController>();
+	}
+
 	protected void OnEnable()
 	{
 		NoChoice = true;

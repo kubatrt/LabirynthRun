@@ -28,12 +28,6 @@ public class QTECrossroad : QTE
 		buttonUp.onClick.AddListener(OnClickButtonUp);
 	}
 
-	void Start() 
-	{
-		//if(player == null)
-		player = GameObject.FindObjectOfType<PlayerMecanimController>();
-	}
-
 	new void OnEnable()
 	{
 		base.OnEnable();
@@ -43,7 +37,6 @@ public class QTECrossroad : QTE
 		//sliderTimeLeft.minValue = 0f;
 		//sliderTimeLeft.value = TimeLimit;
 		circleFillTimeLeft.fillAmount = 1f;
-
 	}
 
 	new void OnDisable()

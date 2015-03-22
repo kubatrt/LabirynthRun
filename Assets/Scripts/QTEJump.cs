@@ -13,11 +13,7 @@ public class QTEJump : QTE
 		TimeLimit = 1.0f;
 		buttonJump = PanelUI.transform.FindChild("ButtonJump").GetComponent<Button>();
 	}
-	
-	void Start()
-	{
-		player = GameObject.FindObjectOfType<PlayerMecanimController>();
-	}
+
 
 	new void OnEnable()
 	{
