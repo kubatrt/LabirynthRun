@@ -21,7 +21,7 @@ public enum MazeCellExits
 public class MazeCell : IGridCell
 {
 	[HideInInspector] public bool IsVisitted = false;	
-	[HideInInspector] public bool HasGround = true;
+	public bool HasGround = true;
 	public bool IsStartCell = false;
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;

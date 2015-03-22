@@ -17,7 +17,6 @@ public class TriggerGroundTrap : MonoBehaviour
 		
 		//Quaternion playerRotation = player.gameObject.transform.rotation; 
 		//transform.rotation = playerRotation;
-
 	}
 
 	void OnTriggerStay(Collider other)

@@ -22,3 +22,8 @@ public sealed class MoveDirections
 		Back = false;
 	}
 };
+
+public class Trigger : MonoBehaviour 
+{
+
+}

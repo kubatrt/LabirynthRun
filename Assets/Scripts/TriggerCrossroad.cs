@@ -7,12 +7,10 @@ public class TriggerCrossroad : MonoBehaviour
 {
 	public TriggerCrossing crossingType;
 
-	PlayerMecanimController player;
+	private PlayerMecanimController player;
+	private bool isLocked;
 
-	bool isLocked;
 
-
-	
 	void Start()
 	{
 		isLocked = false;

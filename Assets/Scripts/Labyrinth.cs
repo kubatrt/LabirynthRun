@@ -275,7 +275,6 @@ public class Labyrinth : MonoBehaviour
 
 	public void CreateGround()
 	{
-		Debug.Log ("Create ground");
 		foreach(MazeCell cell in cells) {
 			if(cell.HasGround) {
 				GameObject groundTile = 

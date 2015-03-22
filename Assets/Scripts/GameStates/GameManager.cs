@@ -84,9 +84,8 @@ public class GameManager : MonoBehaviour
 		Debug.Log ("GameManager.Start()");
 	}
 
-	void OnLevelWasLoaded(int lvl) {
-
-
+	void OnLevelWasLoaded(int lvl) 
+	{
 		Debug.Log ("OnSceneWasLoaded:" + lvl);
 	}
 
@@ -282,7 +281,7 @@ public class GameManager : MonoBehaviour
 			break;
 
 		case GameState.Map:
-			if(player.maps > 0)
+			if(player.mapsUses > 0)
 			{
                 UI.UIMapState();
 				player.decreaseMaps();

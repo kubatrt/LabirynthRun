@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 
@@ -14,9 +14,12 @@ public class PlayerMecanimController : MonoBehaviour
 	public float runSpeed = 9f;
 	public float speed;
 	public float angle;
+
+	// TODO: Move to separate component: PlayerStats
 	public int failures;
 	public int lives;
-	public int maps;
+	public int mapsUses;
+	public int score;
 
 	//  timers
 	[SerializeField] float rotationTime;
@@ -29,16 +32,15 @@ public class PlayerMecanimController : MonoBehaviour
 	Quaternion 	startupRotation;
 	Animator 	animator;
 	bool IsGoodRotated;
-
 	float AnimNormSpeed;
 	
-	public QuickTimeEvent qte;
+	private QTECrossroad qte;
 
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
-		qte = GameObject.FindWithTag("QTE").GetComponent<QuickTimeEvent>();
-		qte.player = this;
+		qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
+
 		Debug.Log ("Player.Awake()");
 	}
 
@@ -50,7 +52,7 @@ public class PlayerMecanimController : MonoBehaviour
         runSpeed = 9f;
 		rotationTime  = 0.25f;
 		lives = 3;
-		maps = 3;
+		mapsUses = 3;
 		
 		startupPosition = transform.position;
 		startupRotation = transform.rotation;
@@ -143,12 +145,12 @@ public class PlayerMecanimController : MonoBehaviour
 		PlayerCamera.Instance.RestartCamera ();
 		ResetAnimations();
 		lives = 3;
-		maps = 3;
+		mapsUses = 3;
 	}
 
 	public void decreaseMaps()
 	{
-		maps--;
+		mapsUses--;
 	}
 
 	public void RestartPlayer() // every single ded
@@ -159,15 +161,28 @@ public class PlayerMecanimController : MonoBehaviour
 		SetRotation ();
 		PlayerCamera.Instance.RestartCamera ();
 		ResetAnimations();
-		maps = 3;
+		mapsUses = 3;
 		Invoke("StartPlayer", 1f);
 	}
 
+	void StartQTE(MoveDirections dirs)
+	{
+		qte.directions = dirs;
+		qte.gameObject.SetActive(true);
+	}
+	
+	void EndQTE()
+	{
+		if(qte.NoChoice)
+			failures++;
+		qte.gameObject.SetActive(false);
+	}
+
 	#region Crossroads
+
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
 	{
 		AlignPlayer ();
-
 		angle = 0f;
 
 		switch (crossingType) 
@@ -210,18 +225,6 @@ public class PlayerMecanimController : MonoBehaviour
 	}
 	#endregion
 
-	void StartQTE(MoveDirections dirs)
-	{
-		qte.directions = dirs;
-		qte.gameObject.SetActive(true);
-	}
-
-	void EndQTE()
-	{
-		if(qte.noChoice)
-			failures++;
-		qte.gameObject.SetActive(false);
-	}
 
 	#region Player Movements
 	void Move()
