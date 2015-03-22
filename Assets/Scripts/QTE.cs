@@ -13,12 +13,12 @@ public class QTE : MonoBehaviour
 	protected float startTime;
 	protected float responseTime;
 
-	protected void Start()
+	public virtual void Start()
 	{
 		player = GameObject.FindObjectOfType<PlayerMecanimController>();
 	}
 
-	protected void OnEnable()
+	public virtual void OnEnable()
 	{
 		NoChoice = true;
 		startTime = Time.time;
@@ -26,7 +26,7 @@ public class QTE : MonoBehaviour
 		PanelUI.SetActive(true);
 	}
 	
-	protected void OnDisable()
+	public virtual void OnDisable()
 	{
 		if(PanelUI != null)
 			PanelUI.SetActive(false);

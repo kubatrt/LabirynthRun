@@ -13,17 +13,6 @@ public class QTEJump : QTE
 		TimeLimit = 1.0f;
 		buttonJump = PanelUI.transform.FindChild("ButtonJump").GetComponent<Button>();
 	}
-
-
-	new void OnEnable()
-	{
-		base.OnEnable();
-	}
-
-	new void OnDisable()
-	{
-		base.OnDisable();
-	}
 	
 	void Update()
 	{

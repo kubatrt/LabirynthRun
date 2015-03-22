@@ -74,8 +74,8 @@ public class GameManager : MonoBehaviour
 
 	void Start () 
 	{
-		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		if(cloudsAnimator == null) GameObject.Find ("Clouds").GetComponent<Animator>();
+		//player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+		//if(cloudsAnimator == null) GameObject.Find ("Clouds").GetComponent<Animator>();
 
 		ChangeGameState(GameState.Menu);
         score = 0;

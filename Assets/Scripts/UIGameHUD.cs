@@ -151,6 +151,11 @@ public class UIGameHUD : MonoBehaviour
         GameManager.Instance.previousLevel = GameManager.Instance.level;
 	}
 
+	public void OnClickJumpButton()
+	{
+		player.SetJumpAnim ();
+	}
+
     public void PointerDownSpeedButton()
     {
         SpeedUpIsPushed = true;

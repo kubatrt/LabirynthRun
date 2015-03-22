@@ -260,6 +260,11 @@ public class PlayerMecanimController : MonoBehaviour
 	#endregion
 
 	#region Animations
+	public void SetJumpAnim()
+	{
+		animator.SetTrigger ("Jump");
+	}
+
 	public void SetMovingAnim() 
 	{ 
 		ResetAnimations();

@@ -28,7 +28,7 @@ public class QTECrossroad : QTE
 		buttonUp.onClick.AddListener(OnClickButtonUp);
 	}
 
-	new void OnEnable()
+	public override void OnEnable()
 	{
 		base.OnEnable();
 
@@ -39,10 +39,10 @@ public class QTECrossroad : QTE
 		circleFillTimeLeft.fillAmount = 1f;
 	}
 
-	new void OnDisable()
+	/*new void OnDisable()
 	{
 		base.OnDisable();
-	}
+	}*/
 	
 	void Update () 
 	{
