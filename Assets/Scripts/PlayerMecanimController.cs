@@ -66,8 +66,10 @@ public class PlayerMecanimController : MonoBehaviour
     {
         if (isAlive && GameManager.Instance.state == GameState.Run)
         {
-            Move();
-            PlayerCamera.Instance.SmoothFollow();
+			//if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+           	Move();
+            
+			PlayerCamera.Instance.SmoothFollow();
             AlignPlayer();
         }
     }
