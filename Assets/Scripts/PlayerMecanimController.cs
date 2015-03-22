@@ -225,7 +225,6 @@ public class PlayerMecanimController : MonoBehaviour
 	}
 	#endregion
 
-
 	#region Player Movements
 	void Move()
 	{
