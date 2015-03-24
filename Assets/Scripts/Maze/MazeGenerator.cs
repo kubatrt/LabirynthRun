@@ -20,13 +20,7 @@ public class MazeGenerator : MonoBehaviour
 
 	void Awake()
 	{
-		if(GameManager.Instance != null)
-		{
-			Width = GameManager.Instance.MazeWidth;
-			Height = GameManager.Instance.MazeHeight;
-			Debug.Log("MazeGenerator.Awake GameManager size CHANGED");
-		}
-		Debug.Log ("MazeGenerator.Awake GameManager size NOT CHANGED");
+		Debug.Log ("MazeGenerator.Awake");
 	}
 
 	public void Generate()

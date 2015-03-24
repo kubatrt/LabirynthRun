@@ -39,10 +39,6 @@ public class QTECrossroad : QTE
 		circleFillTimeLeft.fillAmount = 1f;
 	}
 
-	/*new void OnDisable()
-	{
-		base.OnDisable();
-	}*/
 	
 	void Update () 
 	{

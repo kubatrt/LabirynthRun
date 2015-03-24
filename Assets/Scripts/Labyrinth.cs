@@ -15,7 +15,6 @@ public class Labyrinth : MonoBehaviour
 	public GameObject triggerPrefab;
 	public GameObject finishPrefab;
 	public GameObject playerPrefab;
-	public GameObject mapCameraPrefab;
 	public GameObject debugPrefab;
 	public GameObject groundPrefab;
 
@@ -37,7 +36,6 @@ public class Labyrinth : MonoBehaviour
 	GameObject triggersContainer;
 	GameObject groundContainer;
 
-	GameObject mapCamera;
 
 	// local method, or use MazeGenerator.GridToRorld
 	Vector3 MazeToWorld(GridPosition cellPos)
@@ -53,19 +51,19 @@ public class Labyrinth : MonoBehaviour
 		if(transform.GetComponentsInChildren<Transform>().Length != 1)
 			return;
 		
-		CreateMaze();
-		BuildWalls();
-		CreateGround();
-		CreatePlayer ();
-		CreateGameObjects();
-		CreateGround();
+		//CreateMaze();
+		//BuildWalls();
+		//CreateGround();
+		//CreatePlayer ();
+		//CreateGameObjects();
+		//CreateGround();
 
 		Debug.Log ("Labyrinth.Awake()");
 	}
 
 	void Start ()
 	{
-		SetCamerasAtStart ();
+		//SetCamerasAtStart ();
 		Debug.Log ("Labyrinth.Start()");
 	}
 
@@ -78,14 +76,27 @@ public class Labyrinth : MonoBehaviour
 		PlayerCamera.Instance.SetPosition(x,x*4,z);
 		MapCamera.Instance.SetPosition (x, 5, z);
 		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
+		Debug.Log ("SetCamerasAtStart: " + maze.Width + maze.Height);
 	}
 
 	public void CreateMaze()
 	{
+		maze = GetComponent<MazeGenerator>();
+		maze.Generate ();
+		cells = maze.GetCells();
+		
+		debugObjectCount = 0;
+		CreateContainers();
+		Debug.Log ("Labyrinth.CreateMaze()");
+	}
+
+	public void CreateMaze(string labName)
+	{
 		// For deployment builds additional files should be loaded from Application.persistentDataPath + filename
 		// LoadFromFile or Generate
 		maze = GetComponent<MazeGenerator>();
-		maze.LoadFromFile (Application.dataPath + "/Levels/level_88_01.maze");
+		maze.LoadFromFile( Application.dataPath + "/Levels/" + labName);
+		//maze.LoadFromFile (Application.dataPath + "/Levels/level_88_01.maze");
 		//maze.Generate ();
 
 		cells = maze.GetCells();
@@ -152,29 +163,9 @@ public class Labyrinth : MonoBehaviour
 	public void CreateGameObjects()
 	{
 		int triggersCounter = 0;
+
 		foreach(MazeCell cell in cells) 
 		{
-			/*if(cell.IsStartCell) 
-			{
-				// create player and set rotation
-				GameObject newObject = (GameObject)GameObject.Instantiate(
-					playerPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0f),Quaternion.identity);
-				newObject.transform.parent = objectsContainer.transform;
-
-
-				if(cell.ExitEast)
-				{
-					newObject.transform.Rotate(new Vector3(0,90f,0));
-				}
-				else if(cell.ExitWest)
-				{
-					newObject.transform.Rotate(new Vector3(0,-90f,0));
-				}
-				else if(cell.ExitNorth)
-				{
-					newObject.transform.Rotate(new Vector3(0,180f,0));
-				}
-			}*/
 			if(cell.IsFinishCell) 
 			{
 				GameObject newObject = (GameObject)GameObject.Instantiate(

@@ -156,6 +156,11 @@ public class UIGameHUD : MonoBehaviour
 		player.SetJumpAnim ();
 	}
 
+	public void OnClickRollButton()
+	{
+		player.SetRollAnim();
+	}
+
     public void PointerDownSpeedButton()
     {
         SpeedUpIsPushed = true;

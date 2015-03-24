@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
 	public GameState state;
 	// Singleton with GameObject instance
-	static GameManager instance;
+	static GameManager instance = null;
 	public static GameManager Instance { 
 		get; 
 		private set;
@@ -47,8 +47,6 @@ public class GameManager : MonoBehaviour
     int maxLevel = 5;
     public int score;
 
-	public int MazeWidth;
-	public int MazeHeight;
 	public MazeGenerator Maze;
 	public Labyrinth lab;
 
@@ -61,21 +59,18 @@ public class GameManager : MonoBehaviour
 	{
 		if(Instance != null && Instance != this) // && Instance != this
 		{
-			Destroy(gameObject);
 			Debug.Log ("Destroy duplicate!");
+			Destroy(gameObject);
+
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
-		gameObject.name = gameObject.name + "Instance";
-
 		Debug.Log ("GameManager.Awake()");
-		SetReferences ();
 	}
 
 	void Start () 
 	{
-		//player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-		//if(cloudsAnimator == null) GameObject.Find ("Clouds").GetComponent<Animator>();
+		SetReferences ();
 
 		ChangeGameState(GameState.Menu);
         score = 0;
@@ -105,33 +100,24 @@ public class GameManager : MonoBehaviour
 
 	public void SetReferences()
 	{
-		// ui reference
 		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
-		
-		// clouds animator reference
 		cloudsAnimator =  GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
-		
-		// camera's references
 		playerCamera = Camera.main.camera;
 		mapCamera = GameObject.FindGameObjectWithTag ("MapCamera").camera;
-
-		// player
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
-
 		Debug.Log ("Set References");
 	}
 
-	void RebuildLabyrinth(int width, int height)
+	void RebuildLabyrinth(string name)
 	{
 		Debug.Log ("RebuildLabyrinth");
 		// change dimensions and positions of cameras
-		MazeWidth = Maze.Width = width;
-		MazeHeight = Maze.Height = height;
 		lab.SetCamerasAtStart();
 		// clear
 		lab.ClearMaze();
 		// build
-		lab.CreateMaze();
+		lab.CreateMaze(name);
+		//lab.CreatePlayer();
 		lab.BuildWalls();
 		lab.CreateGameObjects();
 		lab.CreateGround();
@@ -209,16 +195,16 @@ public class GameManager : MonoBehaviour
             switch (level)
             {
                 case 1:		// LVL 2 7x7
-                    RebuildLabyrinth(7, 7);
+                    RebuildLabyrinth("level_88_01.maze");
                     break;
                 case 2:		// LVL 3 8x8
-                    RebuildLabyrinth(8, 8);
+                    //RebuildLabyrinth(8, 8);
                     break;
                 case 3:		// LVL 4 9x9
-                    RebuildLabyrinth(9, 9);
+                    //RebuildLabyrinth(9, 9);
                     break;
                 case 4:		// LVL 5 10x10
-                    RebuildLabyrinth(10, 10);
+                    //RebuildLabyrinth(10, 10);
                     break;
             }
         }
@@ -262,7 +248,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
-			RebuildLabyrinth(6,6);
+			//RebuildLabyrinth("level_88_01.maze");
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();

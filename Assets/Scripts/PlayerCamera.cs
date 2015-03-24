@@ -33,7 +33,7 @@ public class PlayerCamera : MonoBehaviour
 
 	public void Start()
 	{
-		//startupPosition = transform.position;
+		startupPosition = transform.position;
 		startupRotation = transform.rotation;
 		
 		dampTime = 0.3f;
@@ -99,6 +99,7 @@ public class PlayerCamera : MonoBehaviour
 	{
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
+		Debug.Log ("ResetCamera()");
 	}
 
 	public void RestartCamera() 		// on player ded
@@ -113,6 +114,7 @@ public class PlayerCamera : MonoBehaviour
 			             playerTransform.eulerAngles.z);
 		transform.position = runGamePosition;
 		transform.eulerAngles = runGameRotation;
+		Debug.Log ("RestartCamera()");
 	}
 
 	public void StartCamera()

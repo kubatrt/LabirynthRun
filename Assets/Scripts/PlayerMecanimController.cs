@@ -266,6 +266,11 @@ public class PlayerMecanimController : MonoBehaviour
 		animator.SetTrigger ("Jump");
 	}
 
+	public void SetRollAnim()
+	{
+		animator.SetTrigger("Roll");
+	}
+
 	public void SetMovingAnim() 
 	{ 
 		ResetAnimations();

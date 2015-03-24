@@ -20,6 +20,12 @@ public class MazeEditorWindow : EditorWindow
 		Debug.Log ("Load editor");
 	}
 
+	[MenuItem ("Tools/Load kuba's maze")]
+	static void LoadMazeSceneKuba()
+	{
+		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Test (Kuba).unity");
+	}
+
 	[MenuItem ("Tools/Maze Editor Window")]
 	static void Initialize() 
 	{
