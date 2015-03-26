@@ -13,14 +13,20 @@ public class MazeEditorWindow : EditorWindow
 	static MazeEditorWindow staticWindow;
 
 
-	[MenuItem ("Tools/Maze Editor Scene")]
+	[MenuItem ("Tools/Scene/Maze Editor")]
 	static void LoadEditor()
 	{
 		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Editor.unity");
 		Debug.Log ("Load editor");
 	}
 
-	[MenuItem ("Tools/Load kuba's maze")]
+	[MenuItem ("Tools/Scene/Krystian")]
+	static void LoadMazeSceneKrystian()
+	{
+		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Random Maze (Krystian).unity");
+	}
+
+	[MenuItem ("Tools/Scene/Kuba")]
 	static void LoadMazeSceneKuba()
 	{
 		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Test (Kuba).unity");

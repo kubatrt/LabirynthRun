@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 	public float gameTimer;
     float MapViewTime = 3;
 
+	public bool debug;
 	public int level;
 	public int previousLevel;
     int maxLevel = 5;
@@ -107,14 +108,14 @@ public class GameManager : MonoBehaviour
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 		Debug.Log ("Set References");
 	}
-
+	
 	void RebuildLabyrinth(string name)
 	{
 		Debug.Log ("GameManager.RebuildLabyrinth");
 		// change dimensions and positions of cameras
 
 		// clear
-		lab.ClearMaze();
+		lab.ClearMaze();	
 		// build
 		lab.CreateMaze(name);
 		//lab.CreatePlayer();

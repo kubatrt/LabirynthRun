@@ -14,8 +14,11 @@ public class LabyrinthInspector : Editor
 
 		if(GUILayout.Button("Create maze"))
 			CreateMaze();
-		if(GUILayout.Button("Clear maze"))
-			ClearMaze();
+		if(GUILayout.Button("Clear maze")) {
+			Labyrinth labyrinth = (Labyrinth)target;
+			labyrinth.ClearEditorMaze();
+			Debug.Log ("ClearEditorMaze");
+		}
 
 		EditorGUILayout.HelpBox("Custom Labyrinth script editor", MessageType.Info);
 	}
@@ -25,17 +28,12 @@ public class LabyrinthInspector : Editor
 		Labyrinth labyrinth = (Labyrinth)target;
 		if(labyrinth.transform.GetComponentsInChildren<Transform>().Length != 1)
 			return;
-		
+
+		labyrinth.CreateContainers(); // only in editor
 		labyrinth.CreateMaze();	// generate new data
 		labyrinth.BuildWalls();
 		labyrinth.CreateGameObjects();
 		labyrinth.CreateGround();
 	}
 
-	private void ClearMaze()
-	{
-		Labyrinth labyrinth = (Labyrinth)target;
-		labyrinth.ClearEditorMaze();
-		Debug.Log ("ClearEditorMaze");
-	}
 }
