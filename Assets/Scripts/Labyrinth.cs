@@ -31,11 +31,8 @@ public class Labyrinth : MonoBehaviour
 	List<MazeCell> cells = new List<MazeCell>();
 	HashSet<Vector3> wallsWorldPositions = new HashSet<Vector3>();
 
-	GameObject wallContainer;
-	GameObject objectsContainer;
-	GameObject triggersContainer;
-	GameObject groundContainer;
-
+	// Containers
+	GameObject wallContainer, objectsContainer, triggersContainer, groundContainer;
 
 	// local method, or use MazeGenerator.GridToRorld
 	Vector3 MazeToWorld(GridPosition cellPos)
@@ -46,24 +43,14 @@ public class Labyrinth : MonoBehaviour
 	void Awake () 
 	{
 		maze = GetComponent<MazeGenerator>();
-
-		// return if maze already exists
-		if(transform.GetComponentsInChildren<Transform>().Length != 1)
-			return;
-		
-		//CreateMaze();
-		//BuildWalls();
-		//CreateGround();
-		//CreatePlayer ();
-		//CreateGameObjects();
-		//CreateGround();
-
 		Debug.Log ("Labyrinth.Awake()");
 	}
 
 	void Start ()
 	{
-		//SetCamerasAtStart ();
+		// Create once or find existing!
+		FindContainers();
+		CreateContainers();
 		Debug.Log ("Labyrinth.Start()");
 	}
 
@@ -84,31 +71,27 @@ public class Labyrinth : MonoBehaviour
 		maze = GetComponent<MazeGenerator>();
 		maze.Generate ();
 		cells = maze.GetCells();
-		
-		//debugObjectCount = 0;
-		CreateContainers();
+
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
 
 	public void CreateMaze(string labName)
 	{
-		// For deployment builds additional files should be loaded from Application.persistentDataPath + filename
-		// LoadFromFile or Generate
 		maze = GetComponent<MazeGenerator>();
 		maze.LoadFromFile( Application.dataPath + "/Levels/" + labName);
 		cells = maze.GetCells();
-		
-		//debugObjectCount = 0;
-		CreateContainers();
+		//CreateContainers();
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
 
-	void CreateContainers()
+
+
+	public void CreateContainers()
 	{
 		if(GameObject.Find("_Walls") == null) {
 			wallContainer = new GameObject("_Walls");
 			wallContainer.transform.parent = transform;
-		} 
+		}
 
 		if(GameObject.Find ("_Objects") == null) {
 			objectsContainer = new GameObject("_Objects");
@@ -119,23 +102,53 @@ public class Labyrinth : MonoBehaviour
 			triggersContainer = new GameObject("_Triggers");
 			triggersContainer.transform.parent = transform;
 		}
+
 		if(GameObject.Find ("_Ground") == null) {
 			groundContainer = new GameObject("_Ground");
 			groundContainer.transform.parent = transform;
 		}
+		Debug.Log ("CreateContainers()");
+	}
+
+	private void FindContainers()
+	{
+		wallContainer = GameObject.Find ("_Walls");
+		objectsContainer = GameObject.Find ("_Objects");
+		triggersContainer = GameObject.Find ("_Triggers");
+		groundContainer = GameObject.Find ("_Ground");
 	}
 
 	public void ClearMaze()
 	{
-			if(wallContainer != null) Destroy(wallContainer.gameObject);
-			if(objectsContainer != null) Destroy(objectsContainer.gameObject);
-			if(triggersContainer != null) Destroy(triggersContainer.gameObject);
-			if(groundContainer != null) Destroy(groundContainer.gameObject);
-			Debug.Log ("ClearMaze()2");
+		if(wallContainer != null)
+		{
+			foreach(Transform t in wallContainer.GetComponentsInChildren<Transform>())
+			{
+				if(t != wallContainer.transform)
+					Destroy(t.gameObject);
+			}
+			foreach(Transform t in objectsContainer.GetComponentsInChildren<Transform>())
+			{
+				if(t != objectsContainer.transform)
+				Destroy(t.gameObject);
+			}
+			foreach(Transform t in triggersContainer.GetComponentsInChildren<Transform>())
+			{
+				if(t != triggersContainer.transform)
+				Destroy(t.gameObject);
+			}
+			foreach(Transform t in groundContainer.GetComponentsInChildren<Transform>())
+			{
+				if(t != groundContainer.transform)
+				Destroy(t.gameObject);
+			}
+		}
+		Debug.Log("ClearMaze");
 	}
 
 	public void ClearEditorMaze()
 	{
+		FindContainers();
 		if(wallContainer != null) DestroyImmediate(wallContainer);
 		if(objectsContainer != null) DestroyImmediate(objectsContainer);
 		if(triggersContainer != null) DestroyImmediate(triggersContainer);
@@ -241,8 +254,9 @@ public class Labyrinth : MonoBehaviour
 		List<Vector3> horizontalLine; 
 		for(float z = -scale; z <= horizontalMax; z +=scale) 
 		{
-			horizontalLine = GetHorizontalPositionsAt((int)z);
-			horizontalLine.Sort(new SortVector3ByX());
+			horizontalLine = GetHorizontalWallPositionsAt((int)z);
+			horizontalLine.Sort( (Vector3 a, Vector3 b) => { if(a.x > b.x) return 1; else if(a.x < b.x) return -1; else return 0; } );
+
 			List<Vector3> newHorizontalLine = GenerateWallsBetweenHorizontally(horizontalLine);
 			BuildWallsFromList(newHorizontalLine, wall2Prefab);
 		}
@@ -251,8 +265,9 @@ public class Labyrinth : MonoBehaviour
 		List<Vector3> verticalLine;
 		for(float x = -scale; x <= verticalMax; x +=scale)
 		{
-			verticalLine = GetVerticalPositions((int)x);
-			verticalLine.Sort(new SortVector3ByZ());
+			verticalLine = GetVerticalWallPositionsAt((int)x);
+			verticalLine.Sort( (Vector3 a, Vector3 b) => { if(a.z > b.z) return 1; else if(a.z < b.z) return -1; else return 0; } );
+
 			List<Vector3> newVerticalLine = GenerateWallsBetweenVertically(verticalLine);
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
@@ -323,7 +338,7 @@ public class Labyrinth : MonoBehaviour
 		return newPositions;
 	}
 
-	private List<Vector3> GetVerticalPositions(int x)
+	private List<Vector3> GetVerticalWallPositionsAt(int x)
 	{
 		List<Vector3> list = new List<Vector3>();
 		foreach(Vector3 pos in wallsWorldPositions)
@@ -332,7 +347,7 @@ public class Labyrinth : MonoBehaviour
 		return list;
 	}
 
-	private List<Vector3> GetHorizontalPositionsAt(int z)
+	private List<Vector3> GetHorizontalWallPositionsAt(int z)
 	{
 		List<Vector3> list = new List<Vector3>();
 		foreach(Vector3 pos in wallsWorldPositions)
