@@ -147,9 +147,10 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickLvlButton(int level)
 	{
-		GameManager.Instance.level = level - 2;
-		OnClickPlayNextButton ();
+		GameManager.Instance.level = level;
+		//OnClickPlayNextButton ();
         GameManager.Instance.previousLevel = GameManager.Instance.level;
+		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
 	public void OnClickJumpButton()
@@ -210,7 +211,7 @@ public class UIGameHUD : MonoBehaviour
     {
         ShowMenu(WonMenu);
         ShowEndTime(GameManager.Instance.gameTimer);
-        SetTextNumber(gameLevelTextEnd, GameManager.Instance.level + 1);
+        SetTextNumber(gameLevelTextEnd, GameManager.Instance.level);
         SetTextNumber(gameScoreTextEnd, GameManager.Instance.score);
     }
 

@@ -193,33 +193,37 @@ public class GameManager : MonoBehaviour
 
 	void CheckLvlAndRebuild()
 	{
-        if (previousLevel != level)
-        {
-            switch (level)
-            {
-                case 1:		// LVL 2 7x7
-                    RebuildLabyrinth("level_test.maze");
-                    break;
-                case 2:		// LVL 3 8x8
-                    //RebuildLabyrinth(8, 8);
-                    break;
-                case 3:		// LVL 4 9x9
-                    //RebuildLabyrinth(9, 9);
-                    break;
-                case 4:		// LVL 5 10x10
-                    //RebuildLabyrinth(10, 10);
-                    break;
-				case 5:		// LVL 5 10x10
-					//RebuildLabyrinth(10, 10);
-					break;
-				case 6:		// LVL 5 10x10
-					//RebuildLabyrinth(10, 10);
-					break;
-				case 7:		// LVL 5 10x10
-					//RebuildLabyrinth(10, 10);
-					break;
-            }
-        }
+        //if (previousLevel != level)
+        //{
+	    switch (level)
+	    {
+	        case 1:		// LVL 2 7x7
+	            RebuildLabyrinth("level_test_04.maze");
+	            break;
+	        case 2:		// LVL 3 8x8
+				RebuildLabyrinth("level_test_02.maze");
+	            break;
+	        case 3:		// LVL 4 9x9
+				RebuildLabyrinth("level_test_03.maze");
+				break;
+			case 4:		// LVL 5 10x10
+				RebuildLabyrinth("level_test_04.maze");
+				break;
+			case 5:		// LVL 5 10x10
+				RebuildLabyrinth("level_test.maze");
+				break;
+			case 6:		// LVL 5 10x10
+				RebuildLabyrinth("level_test.maze");
+				break;
+			case 7:		// LVL 5 10x10
+				RebuildLabyrinth("level_test.maze");
+				break;
+			default:
+				RebuildLabyrinth("level_test.maze");
+				break;
+	    }
+        //}
+		Debug.Log ("CheckLvlAndRebuild" + level);
 	}
 	#endregion
 
