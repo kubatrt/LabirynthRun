@@ -17,18 +17,19 @@ public enum MazeCellExits
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+// When changes old levels won't load!
 [Serializable]
 public class MazeCell : IGridCell
 {
 	[HideInInspector] public bool IsVisitted = false;	
-	public bool HasGround = true;
 	public bool IsStartCell = false;
 	public bool IsFinishCell = false;
 	public bool IsDeadEnd = false;
 
+	public bool HasGround = true;
 	public bool HasDecorator = false;
-	public bool IsTrap = false;
-	// when changing old levels won't load
+	public TrapType Trap = TrapType.None;
+
 
 	// An arbitrary weighting value that indicates the cell's distance from the origin cell.
 	[HideInInspector] public int CrawlDistance = 0;
@@ -129,8 +130,8 @@ public class MazeCell : IGridCell
 	
 	public override string ToString ()
 	{
-		return String.Format ( "Cell({0} Location [{1},{2}] Exits[{8}] [ N: {3} S: {4} E: {5} W: {6}][{7}]",
-		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest, Exits, TotalExits);
+		return String.Format ( "Cell({0} Location [{1},{2}] Exits[{8}] [ N: {3} S: {4} E: {5} W: {6}][{7}] Decor: {8} Trap: {9}, Ground: {10}",
+		                      Index, location.x, location.y, ExitNorth, ExitSouth, ExitEast, ExitWest, Exits, TotalExits, HasDecorator, Trap, HasGround);
 	}
 	
 }

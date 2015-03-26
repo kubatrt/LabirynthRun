@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 
 	void RebuildLabyrinth(string name)
 	{
-		Debug.Log ("RebuildLabyrinth");
+		Debug.Log ("GameManager.RebuildLabyrinth");
 		// change dimensions and positions of cameras
 
 		// clear
@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
             switch (level)
             {
                 case 1:		// LVL 2 7x7
-                    RebuildLabyrinth("level_88_01.maze");
+                    RebuildLabyrinth("level_test.maze");
                     break;
                 case 2:		// LVL 3 8x8
                     //RebuildLabyrinth(8, 8);
@@ -208,6 +208,15 @@ public class GameManager : MonoBehaviour
                 case 4:		// LVL 5 10x10
                     //RebuildLabyrinth(10, 10);
                     break;
+				case 5:		// LVL 5 10x10
+					//RebuildLabyrinth(10, 10);
+					break;
+				case 6:		// LVL 5 10x10
+					//RebuildLabyrinth(10, 10);
+					break;
+				case 7:		// LVL 5 10x10
+					//RebuildLabyrinth(10, 10);
+					break;
             }
         }
 	}

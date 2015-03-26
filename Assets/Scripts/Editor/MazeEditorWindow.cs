@@ -32,7 +32,7 @@ public class MazeEditorWindow : EditorWindow
 		MazeEditorWindow staticWindow  = (MazeEditorWindow)EditorWindow.GetWindow (typeof (MazeEditorWindow));
 		staticWindow.title = "Maze Editor";
 		staticWindow.Focus();
-		staticWindow.RefreshFilesList();
+		staticWindow.RefreshFiles();
 	}
 
 	public MazeGenerator maze = null;
@@ -102,16 +102,28 @@ public class MazeEditorWindow : EditorWindow
 				return;
 			}	
 			mazeGen.SaveToFile(LevelsDirectory + mazeName + ".maze");
-			RefreshFilesList();
+			RefreshFiles();
 		}
 
 		// file list
+		bool refresh = false;
 		scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 		foreach(string file in levelFiles )
 		{
 			EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(10);
+
+			if(GUILayout.Button("X", GUILayout.Width(16)))
+			{
+				if(EditorUtility.DisplayDialog("Skasuj plik", "Na pewno chcesz usunąć plik?", "Tak", "Anuluj")) 
+				{
+					System.IO.File.Delete( System.IO.Path.GetFullPath(file) );
+					refresh = true;
+				}
+			}
 
 			GUILayout.Label(System.IO.Path.GetFileName(file), EditorStyles.boldLabel);
+
 			if(GUILayout.Button("Load",  GUILayout.Width(48)))
 			{
 				maze.LoadFromFile(file);
@@ -127,10 +139,13 @@ public class MazeEditorWindow : EditorWindow
 		} 
 		EditorGUILayout.EndScrollView();
 
+		if(refresh) {
+			RefreshFiles();
+		}
 
 		if(GUILayout.Button("Refresh")) 
 		{
-			RefreshFilesList();
+			RefreshFiles();
 		}
 
 		GUILayout.Space (5);
@@ -138,7 +153,7 @@ public class MazeEditorWindow : EditorWindow
 		GUILayout.Space (5);
 	}
 
-	private void RefreshFilesList()
+	private void RefreshFiles()
 	{
 		levelFiles.Clear();
 		string projectPath = Application.dataPath + "/Levels/";

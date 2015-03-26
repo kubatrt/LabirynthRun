@@ -36,5 +36,6 @@ public class LabyrinthInspector : Editor
 	{
 		Labyrinth labyrinth = (Labyrinth)target;
 		labyrinth.ClearEditorMaze();
+		Debug.Log ("ClearEditorMaze");
 	}
 }

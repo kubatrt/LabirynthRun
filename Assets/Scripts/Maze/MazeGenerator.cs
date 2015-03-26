@@ -15,7 +15,6 @@ public class MazeGenerator : MonoBehaviour
 	public int Seed = 3141592;
 	public bool Wrap = false;
 	public Vector2 startPosition;
-
 	public Grid<MazeCell> mazeGrid;
 
 	void Awake()
@@ -91,7 +90,6 @@ public class MazeGenerator : MonoBehaviour
 			{
 				if(maxDistance < distance)
 					maxDistance = distance;
-
 				distance--;
 
 				// set dead end
@@ -243,11 +241,11 @@ public class MazeGenerator : MonoBehaviour
 		Debug.Log ("LoadFromFile: " + path);
 	}
 
+	// Validation with respect specific propertie
+	// start: max 1 exit 
+	// finish: min 1 exit
 	public bool Validate()
 	{
-		// start - max 1 exit 
-		// finish - min 1 exit
-
 		bool startCell = false;
 		bool finishCell = false;
 		foreach(MazeCell cell in mazeGrid.CellsGrid) 
