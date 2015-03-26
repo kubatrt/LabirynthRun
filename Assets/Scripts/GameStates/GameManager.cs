@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 	{
 		Debug.Log ("RebuildLabyrinth");
 		// change dimensions and positions of cameras
-		lab.SetCamerasAtStart();
+
 		// clear
 		lab.ClearMaze();
 		// build
@@ -121,6 +121,8 @@ public class GameManager : MonoBehaviour
 		lab.BuildWalls();
 		lab.CreateGameObjects();
 		lab.CreateGround();
+
+		lab.SetCamerasAtStart();
 	}
 
 	#region GamePlay Functions
@@ -248,7 +250,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
-			//RebuildLabyrinth("level_88_01.maze");
+			//RebuildLabyrinth("level_88_01.maze"); nie działa
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();

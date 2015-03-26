@@ -25,7 +25,7 @@ public class Labyrinth : MonoBehaviour
 	public float offset = 4f;		// distance between centers of cells * offset = distance between cells
 	public float wallHeight = 1.5f;
 
-	int debugObjectCount;
+	//int debugObjectCount;
 
 	MazeGenerator maze;
 	List<MazeCell> cells = new List<MazeCell>();
@@ -85,7 +85,7 @@ public class Labyrinth : MonoBehaviour
 		maze.Generate ();
 		cells = maze.GetCells();
 		
-		debugObjectCount = 0;
+		//debugObjectCount = 0;
 		CreateContainers();
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
@@ -96,12 +96,9 @@ public class Labyrinth : MonoBehaviour
 		// LoadFromFile or Generate
 		maze = GetComponent<MazeGenerator>();
 		maze.LoadFromFile( Application.dataPath + "/Levels/" + labName);
-		//maze.LoadFromFile (Application.dataPath + "/Levels/level_88_01.maze");
-		//maze.Generate ();
-
 		cells = maze.GetCells();
-
-		debugObjectCount = 0;
+		
+		//debugObjectCount = 0;
 		CreateContainers();
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
@@ -130,20 +127,19 @@ public class Labyrinth : MonoBehaviour
 
 	public void ClearMaze()
 	{
-		if(Application.isEditor) {
-			if(wallContainer != null) DestroyImmediate(wallContainer);
-			if(objectsContainer != null) DestroyImmediate(objectsContainer);
-			if(triggersContainer != null) DestroyImmediate(triggersContainer);
-			if(groundContainer != null) DestroyImmediate(groundContainer);
-		}
-		else
-		{
-			if(wallContainer != null) Destroy(wallContainer);
-			if(objectsContainer != null) Destroy(objectsContainer);
-			if(triggersContainer != null) Destroy(triggersContainer);
-			if(groundContainer != null) Destroy(groundContainer);
-		}
+			if(wallContainer != null) Destroy(wallContainer.gameObject);
+			if(objectsContainer != null) Destroy(objectsContainer.gameObject);
+			if(triggersContainer != null) Destroy(triggersContainer.gameObject);
+			if(groundContainer != null) Destroy(groundContainer.gameObject);
+			Debug.Log ("ClearMaze()2");
+	}
 
+	public void ClearEditorMaze()
+	{
+		if(wallContainer != null) DestroyImmediate(wallContainer);
+		if(objectsContainer != null) DestroyImmediate(objectsContainer);
+		if(triggersContainer != null) DestroyImmediate(triggersContainer);
+		if(groundContainer != null) DestroyImmediate(groundContainer);
 	}
 
 	public void CreatePlayer()
@@ -284,7 +280,7 @@ public class Labyrinth : MonoBehaviour
 		{
 			GameObject wallObject = (GameObject)GameObject.Instantiate(wall, pos, Quaternion.identity);
 			wallObject.transform.parent = wallContainer.transform;
-			debugObjectCount++;
+			//debugObjectCount++;
 			//Debug.Log (string.Format ( "### Wall pos: {0}", pos));
 		}
 	}

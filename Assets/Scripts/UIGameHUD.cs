@@ -91,6 +91,7 @@ public class UIGameHUD : MonoBehaviour
 	#region UI controls
 	public void OnClickPlayButton()
 	{
+		GameManager.Instance.level = 1;
 		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
