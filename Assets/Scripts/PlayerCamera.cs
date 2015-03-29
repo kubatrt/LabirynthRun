@@ -37,6 +37,7 @@ public class PlayerCamera : MonoBehaviour
 		startupRotation = transform.rotation;
 		
 		dampTime = 0.3f;
+
 	}
 
 	public void SmoothFollow()
@@ -171,8 +172,11 @@ public class PlayerCamera : MonoBehaviour
 		}
 		Debug.Log ("In corutine: to = " + to + " position = " + transform.position);
 		transform.position = to;
-        GameManager.Instance.RunGame();
-	}
+        if (GameManager.Instance.state == GameState.Start)
+        {
+            GameManager.Instance.RunGame();
+        }
+    }
 	
 	IEnumerator LerpRotation(Vector3 from, Vector3 to, float exTime)
 	{

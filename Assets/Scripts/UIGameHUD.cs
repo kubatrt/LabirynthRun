@@ -91,8 +91,8 @@ public class UIGameHUD : MonoBehaviour
 	#region UI controls
 	public void OnClickPlayButton()
 	{
-		GameManager.Instance.level = 1;
-		GameManager.Instance.ChangeGameState (GameState.Start);
+        GameManager.Instance.AddLevel();
+		//GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
 	public void OnClickMapButton()
@@ -149,7 +149,6 @@ public class UIGameHUD : MonoBehaviour
 	{
 		GameManager.Instance.level = level;
 		//OnClickPlayNextButton ();
-        GameManager.Instance.previousLevel = GameManager.Instance.level;
 		GameManager.Instance.ChangeGameState (GameState.Start);
 	}
 
@@ -183,7 +182,7 @@ public class UIGameHUD : MonoBehaviour
     public void UIStartState()
     {
         ShowMenu(EmptyMenu);
-        SetTextNumber(gameLevelText, GameManager.Instance.level + 1);   
+        SetTextNumber(gameLevelText, GameManager.Instance.level);   
     }
 
     public void UIRunState()

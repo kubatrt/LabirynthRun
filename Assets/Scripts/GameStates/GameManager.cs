@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
 
 	public bool debug;
 	public int level;
-	public int previousLevel;
     int maxLevel = 5;
     public int score;
 
@@ -75,7 +74,7 @@ public class GameManager : MonoBehaviour
 
 		ChangeGameState(GameState.Menu);
         score = 0;
-        level = previousLevel = 0;
+        level = 0;
 
 		Debug.Log ("GameManager.Start()");
 	}
@@ -97,6 +96,11 @@ public class GameManager : MonoBehaviour
 			AddLevel();
 			RestartGame();
 		}
+
+        if(Input.GetKey(KeyCode.Space))
+        {
+            lab.ClearMaze();
+        }
 	}
 
 	public void SetReferences()
@@ -125,7 +129,6 @@ public class GameManager : MonoBehaviour
 
 		lab.SetCamerasAtStart();
 	}
-
 	#region GamePlay Functions
 
 	private void NewGame() 
@@ -179,7 +182,6 @@ public class GameManager : MonoBehaviour
 
 	public void AddLevel()
 	{
-        previousLevel = level;
 		level++;
         if(level < maxLevel)
         {
@@ -193,27 +195,25 @@ public class GameManager : MonoBehaviour
 
 	void CheckLvlAndRebuild()
 	{
-        //if (previousLevel != level)
-        //{
 	    switch (level)
 	    {
 	        case 1:		// LVL 2 7x7
-	            RebuildLabyrinth("level_test_04.maze");
+	            RebuildLabyrinth("level_tut_01-1.maze");
 	            break;
 	        case 2:		// LVL 3 8x8
-				RebuildLabyrinth("level_test_02.maze");
+                RebuildLabyrinth("level_tut_01-2.maze");
 	            break;
 	        case 3:		// LVL 4 9x9
-				RebuildLabyrinth("level_test_03.maze");
+                RebuildLabyrinth("level_tut_02-1.maze");
 				break;
 			case 4:		// LVL 5 10x10
-				RebuildLabyrinth("level_test_04.maze");
+                RebuildLabyrinth("level_tut_02-2.maze");
 				break;
 			case 5:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+                RebuildLabyrinth("level_tut_03-1.maze");
 				break;
 			case 6:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+                RebuildLabyrinth("level_tut_03-1.maze");
 				break;
 			case 7:		// LVL 5 10x10
 				RebuildLabyrinth("level_test.maze");
@@ -222,7 +222,6 @@ public class GameManager : MonoBehaviour
 				RebuildLabyrinth("level_test.maze");
 				break;
 	    }
-        //}
 		Debug.Log ("CheckLvlAndRebuild" + level);
 	}
 	#endregion
@@ -264,7 +263,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
-			//RebuildLabyrinth("level_88_01.maze"); nie działa
+			//RebuildLabyrinth("level_test.maze"); nie działa
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();
