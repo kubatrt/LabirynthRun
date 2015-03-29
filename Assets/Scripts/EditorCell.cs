@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using System.Collections;
 
 
-[ExecuteInEditMode(), CanEditMultipleObjects]
+[ExecuteInEditMode()]
 public class EditorCell : MonoBehaviour 
 {
 	public MazeCell cell;

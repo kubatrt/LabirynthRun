@@ -42,7 +42,6 @@ public class GameManager : MonoBehaviour
 	public float gameTimer;
     float MapViewTime = 3;
 
-	public bool debug;
 	public int level;
 	public int previousLevel;
     int maxLevel = 5;
@@ -118,11 +117,10 @@ public class GameManager : MonoBehaviour
 		lab.ClearMaze();	
 		// build
 		lab.CreateMaze(name);
-		//lab.CreatePlayer();
+		//lab.CreatePlayer(); 	
 		lab.BuildWalls();
 		lab.CreateGameObjects();
 		lab.CreateGround();
-
 		lab.SetCamerasAtStart();
 	}
 
@@ -197,33 +195,33 @@ public class GameManager : MonoBehaviour
         //{
 	    switch (level)
 	    {
-	        case 1:		// LVL 2 7x7
-	            RebuildLabyrinth("level_test_04.maze");
+	        case 1:		// LVL 2 6x6
+	            RebuildLabyrinth("level_test_01.maze");
 	            break;
-	        case 2:		// LVL 3 8x8
+	        case 2:		// LVL 3 7x7
 				RebuildLabyrinth("level_test_02.maze");
 	            break;
-	        case 3:		// LVL 4 9x9
+	        case 3:		// LVL 4 8x8
 				RebuildLabyrinth("level_test_03.maze");
 				break;
-			case 4:		// LVL 5 10x10
+			case 4:		// LVL 5 9x9
 				RebuildLabyrinth("level_test_04.maze");
 				break;
 			case 5:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+				RebuildLabyrinth("level_test_05.maze");
 				break;
 			case 6:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+				RebuildLabyrinth("level_test_06.maze");
 				break;
 			case 7:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+				RebuildLabyrinth("level_test_07.maze");
 				break;
 			default:
-				RebuildLabyrinth("level_test.maze");
+				Debug.Log ("Invalid level: " + level);
 				break;
 	    }
         //}
-		Debug.Log ("CheckLvlAndRebuild" + level);
+		Debug.Log ("CheckLvlAndRebuild: " + level);
 	}
 	#endregion
 
@@ -237,7 +235,7 @@ public class GameManager : MonoBehaviour
 		case GameState.Start:
 			CheckLvlAndRebuild();
 
-            UI.UIStartState();
+			UI.UIStartState();
 			cloudsAnimator.SetTrigger("Start");
 			if(player != null)
 			{
