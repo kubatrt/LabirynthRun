@@ -30,10 +30,12 @@ public class UIGameHUD : MonoBehaviour
     float timer;
 
 	PlayerMecanimController player;
+	PlayerCamera playerCamera;
 
 	void Start () 
 	{
 		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+		playerCamera = GameObject.FindObjectOfType<PlayerCamera>();
 
         SpeedUpIsPushed = false;
 	}
@@ -167,7 +169,7 @@ public class UIGameHUD : MonoBehaviour
     {
         SpeedUpIsPushed = true;
         StartCoroutine(DelaySpeedUp(0.25f));
-        PlayerCamera.Instance.SpeedUpFov();
+		playerCamera.SpeedUpFov();
     }
 
     public void PointerUpSpeedButton()
@@ -175,7 +177,7 @@ public class UIGameHUD : MonoBehaviour
         SpeedUpIsPushed = false;
         timer = 0;
         player.SpeedUpOff();
-        PlayerCamera.Instance.NormalizeFov();
+		playerCamera.NormalizeFov();
     }
 	#endregion
     
@@ -189,7 +191,7 @@ public class UIGameHUD : MonoBehaviour
     public void UIRunState()
     {
         ShowMenu(HUD);
-        SetPlayerName(GameManager.Instance.PlayerName);
+        SetPlayerName(GameManager.Instance.player.name);
     }
 
     public void UIPauseState()

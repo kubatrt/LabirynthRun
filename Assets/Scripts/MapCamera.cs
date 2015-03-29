@@ -3,17 +3,6 @@ using System.Collections;
 
 public class MapCamera : MonoBehaviour 
 {
-	static MapCamera instance;
-	public static MapCamera Instance { 
-		get; 
-		private set;
-	}
-
-	void Awake()
-	{
-		Instance = this;
-	}
-
 	void Start ()
 	{
 		camera.enabled = false;
