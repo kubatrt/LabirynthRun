@@ -39,12 +39,8 @@ public class GameManager : MonoBehaviour
 
 	public float gameTimer;
 	public int level;
-<<<<<<< HEAD
-    int maxLevel = 5;
-=======
 	public int previousLevel;
     public int maxLevel = 5;
->>>>>>> origin/master
     public int score;
 
 	float gameStartupTimer;
@@ -156,12 +152,13 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Run);
         player.StartPlayer();
     }
-	
-	public void ToggleCameras()
-	{
-		playerCamera.enabled = !playerCamera.enabled;
-		mapCamera.enabled = !mapCamera.enabled;
-	}
+
+    public void ToggleCameras()
+    {
+        playerCamera.camera.enabled = !playerCamera.camera.enabled;
+        mapCamera.camera.enabled = !mapCamera.camera.enabled;
+        Debug.Log("ToogleCameras()");
+    }
 
     public void AddScore(int number)
     {
@@ -190,25 +187,6 @@ public class GameManager : MonoBehaviour
 	{
 	    switch (level)
 	    {
-<<<<<<< HEAD
-	        case 1:		// LVL 2 7x7
-	            RebuildLabyrinth("level_tut_01-1.maze");
-	            break;
-	        case 2:		// LVL 3 8x8
-                RebuildLabyrinth("level_tut_01-2.maze");
-	            break;
-	        case 3:		// LVL 4 9x9
-                RebuildLabyrinth("level_tut_02-1.maze");
-				break;
-			case 4:		// LVL 5 10x10
-                RebuildLabyrinth("level_tut_02-2.maze");
-				break;
-			case 5:		// LVL 5 10x10
-                RebuildLabyrinth("level_tut_03-1.maze");
-				break;
-			case 6:		// LVL 5 10x10
-                RebuildLabyrinth("level_tut_03-1.maze");
-=======
 	        case 1:		// LVL 2 6x6
 	            RebuildLabyrinth("level_test_01.maze");
 	            break;
@@ -226,7 +204,6 @@ public class GameManager : MonoBehaviour
 				break;
 			case 6:		// LVL 5 10x10
 				RebuildLabyrinth("level_test_06.maze");
->>>>>>> origin/master
 				break;
 			case 7:		// LVL 5 10x10
 				RebuildLabyrinth("level_test_07.maze");
@@ -235,13 +212,7 @@ public class GameManager : MonoBehaviour
 				Debug.Log ("Invalid level: " + level);
 				break;
 	    }
-<<<<<<< HEAD
-		Debug.Log ("CheckLvlAndRebuild" + level);
-=======
-        //}
-
 		Debug.Log ("CheckLvlAndRebuild: " + level);
->>>>>>> origin/master
 	}
 	#endregion
 
@@ -301,11 +272,6 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
-<<<<<<< HEAD
-			//RebuildLabyrinth("level_test.maze"); nie działa
-=======
-
->>>>>>> origin/master
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();
@@ -331,6 +297,7 @@ public class GameManager : MonoBehaviour
                 UI.UIMapState();
 				player.decreaseMaps();
 				ToggleCameras ();
+                Debug.Log("tooglecamera");
 				player.PauseAnimations ();
 				Invoke ("PlayerUnpause",3f);
 				Invoke ("ToggleCameras", 3f);
