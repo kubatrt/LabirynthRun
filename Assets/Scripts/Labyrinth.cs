@@ -25,11 +25,13 @@ public class Labyrinth : MonoBehaviour
 	public float offset = 4f;		// distance between centers of cells * offset = distance between cells
 	public float wallHeight = 1.5f;
 
-	//int debugObjectCount;
+	public int Width { get { return maze.Width; } }
+	public int Height { get { return maze.Height; } }
+
 
 	MazeGenerator maze;
-	List<MazeCell> cells = new List<MazeCell>();
-	HashSet<Vector3> wallsWorldPositions = new HashSet<Vector3>();
+	List<MazeCell> cells;
+	HashSet<Vector3> wallsWorldPositions;
 
 	// Containers
 	GameObject wallContainer, objectsContainer, triggersContainer, groundContainer;
@@ -43,6 +45,7 @@ public class Labyrinth : MonoBehaviour
 	void Awake () 
 	{
 		maze = GetComponent<MazeGenerator>();
+
 		Debug.Log ("Labyrinth.Awake()");
 	}
 
@@ -51,19 +54,23 @@ public class Labyrinth : MonoBehaviour
 		// Create once or find existing!
 		FindContainers();
 		CreateContainers();
+
 		Debug.Log ("Labyrinth.Start()");
 	}
 
-	public void SetCamerasAtStart()
+
+	public Vector3 GetStartCellRotation()
 	{
-		// set cameras at start position
-		float x = (((float)(maze.Width)/2-1)*4)+2;
-		float z = (((float)(maze.Height)/2-1)*4)-2;
-		PlayerCamera.Instance.SetStartUpPosition(x,x*4,z);
-		PlayerCamera.Instance.SetPosition(x,x*4,z);
-		MapCamera.Instance.SetPosition (x, 5, z);
-		MapCamera.Instance.SetCameraSize (((maze.Width + maze.Height)/2)*4);
-		Debug.Log ("SetCamerasAtStart: " + maze.Width + maze.Height);
+		Vector3 startRotation = Vector3.zero;
+		foreach(MazeCell cell in cells) {
+			if(cell.IsStartCell) {
+				if(cell.ExitEast) startRotation = new Vector3(0, 90f, 0);
+				if(cell.ExitWest) startRotation = new Vector3(0, 270f, 0); 
+				if(cell.ExitNorth) startRotation = new Vector3(0, 180f, 0);
+				break;
+			}
+		}
+		return startRotation;
 	}
 
 	public void CreateMaze()
@@ -80,11 +87,9 @@ public class Labyrinth : MonoBehaviour
 		maze = GetComponent<MazeGenerator>();
 		maze.LoadFromFile( Application.dataPath + "/Levels/" + labName);
 		cells = maze.GetCells();
-		//CreateContainers();
+
 		Debug.Log ("Labyrinth.CreateMaze()");
 	}
-
-
 
 	public void CreateContainers()
 	{
@@ -155,7 +160,7 @@ public class Labyrinth : MonoBehaviour
 		if(groundContainer != null) DestroyImmediate(groundContainer);
 	}
 
-	public void CreatePlayer()
+	/*public void CreatePlayer()
 	{
 		foreach(MazeCell cell in cells) 
 		{
@@ -167,7 +172,7 @@ public class Labyrinth : MonoBehaviour
 				newObject.transform.parent = transform;
 			}
 		}
-	}
+	}*/
 
 	public void CreateGameObjects()
 	{
@@ -211,7 +216,8 @@ public class Labyrinth : MonoBehaviour
 
 	public void BuildWalls()
 	{
-		wallsWorldPositions.Clear();
+		//wallsWorldPositions.Clear();
+		wallsWorldPositions = new HashSet<Vector3>();
 
 		// Step I. Generate basic data, all corners and middles in cells
 		foreach(MazeCell cell in cells) 
@@ -240,13 +246,9 @@ public class Labyrinth : MonoBehaviour
 			if(!cell.ExitWest || cell.Position.x == 0 ) wallsWorldPositions.Add(middleLeft);
 		}
 		//Debug.Log ("## Generation walls positions completed:" + wallsWorldPositions.Count);
-		
-		List<Vector3> wallsList = new List<Vector3>();
-		foreach(Vector3 pos in wallsWorldPositions) {
-			wallsList.Add(pos);
-		}
-		
+
 		// Step II. Build walls
+		List<Vector3> wallsList = new List<Vector3>(wallsWorldPositions);
 		BuildWallsFromList(wallsList, wallPrefab);
 		
 		// Step III. Build missing walls between world positions
@@ -256,7 +258,6 @@ public class Labyrinth : MonoBehaviour
 		{
 			horizontalLine = GetHorizontalWallPositionsAt((int)z);
 			horizontalLine.Sort( (Vector3 a, Vector3 b) => { if(a.x > b.x) return 1; else if(a.x < b.x) return -1; else return 0; } );
-
 			List<Vector3> newHorizontalLine = GenerateWallsBetweenHorizontally(horizontalLine);
 			BuildWallsFromList(newHorizontalLine, wall2Prefab);
 		}
@@ -267,7 +268,6 @@ public class Labyrinth : MonoBehaviour
 		{
 			verticalLine = GetVerticalWallPositionsAt((int)x);
 			verticalLine.Sort( (Vector3 a, Vector3 b) => { if(a.z > b.z) return 1; else if(a.z < b.z) return -1; else return 0; } );
-
 			List<Vector3> newVerticalLine = GenerateWallsBetweenVertically(verticalLine);
 			BuildWallsFromList(newVerticalLine, wall2Prefab);
 		}
@@ -294,9 +294,8 @@ public class Labyrinth : MonoBehaviour
 		foreach(Vector3 pos in list) 
 		{
 			GameObject wallObject = (GameObject)GameObject.Instantiate(wall, pos, Quaternion.identity);
-			wallObject.transform.parent = wallContainer.transform;
-			//debugObjectCount++;
-			//Debug.Log (string.Format ( "### Wall pos: {0}", pos));
+			wallObject.transform.SetParent(wallContainer.transform);
+			//debugObjectCount++; //Debug.Log (string.Format ( "### Wall pos: {0}", pos));
 		}
 	}
 

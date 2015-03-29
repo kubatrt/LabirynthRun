@@ -2,9 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 
-
 public class PlayerMecanimController : MonoBehaviour 
 {
+	public PlayerCamera playerCamera;
+
 	// player states
 	public bool isMoving = false;
 	public bool isAlive = false;
@@ -25,9 +26,6 @@ public class PlayerMecanimController : MonoBehaviour
 	[SerializeField] float rotationTime;
 	float coroutineTimer;
 
-	static readonly float rotationLeft = -90f;
-	static readonly float rotationRight = 90f;
-
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
 	Animator 	animator;
@@ -46,7 +44,6 @@ public class PlayerMecanimController : MonoBehaviour
 
 	void Start () 
 	{
-		PlayerCamera.Instance.player = this;
 		minSpeed = 0.5f;
 		normalSpeed = 5;
         runSpeed = 9f;
@@ -69,7 +66,7 @@ public class PlayerMecanimController : MonoBehaviour
 			//if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
            	Move();
             
-			PlayerCamera.Instance.SmoothFollow();
+			playerCamera.SmoothFollow();
             AlignPlayer();
         }
     }
@@ -92,6 +89,7 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void StartPlayer()
 	{
+		Debug.Log("StartPlayer()");
 		speed = normalSpeed;
 		ToggleMoving ();
 		SetMovingAnim ();
@@ -102,29 +100,36 @@ public class PlayerMecanimController : MonoBehaviour
 		RunPlayer ();
 	}
 
-	public void SetRotation()
+	Vector3 startupPlayerRotation = Vector3.zero;
+	public void SetStartupRotation(Vector3 rotation)
 	{
-		//Debug.Log (" Player Rot set0");
-		while(IsGoodRotated == false)
+		startupPlayerRotation = rotation;
+		transform.Rotate(startupPlayerRotation);
+	}
+
+	/*public void SetStartupRotation()
+	{
+
+		Debug.Log (" Player Rot set0");
+		while(IsGoodRotated == false) // INFINITE LOOP KURWAAAAAAAAAAAAAAAAAAAAAAA!!!!!!!!!!!!!!
 		{
-			//Debug.Log (" Player Rot set1");
-			Ray ray;
-			ray = new Ray(transform.position, transform.forward);
+			Debug.Log (" Player Rot set1");
+			Ray ray = new Ray(transform.position, transform.forward);
 			if(Physics.Raycast(ray,2f))
 			{
-				//Debug.Log (" Player Rot set2");
+				Debug.Log (" Player Rot set2");
 				transform.Rotate(new Vector3(0,90f,0));
 				IsGoodRotated = false;
 			}
 			else
 			{
-				//Debug.Log (" Player Rot set3");
+				Debug.Log (" Player Rot set3");
 				IsGoodRotated = true;
 			}
 		}
 		IsGoodRotated = false;
-		//Debug.Log (" Player Rot set4");
-	}
+		Debug.Log (" Player Rot set4");
+	}*/
 
 	public void AlignPlayer()
 	{
@@ -143,8 +148,8 @@ public class PlayerMecanimController : MonoBehaviour
 		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
-		SetRotation ();
-		PlayerCamera.Instance.RestartCamera ();
+
+		// RestartCamera() REMOVED
 		ResetAnimations();
 		lives = 3;
 		mapsUses = 3;
@@ -160,8 +165,8 @@ public class PlayerMecanimController : MonoBehaviour
 		isMoving = false;
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
-		SetRotation ();
-		PlayerCamera.Instance.RestartCamera ();
+		transform.Rotate(startupPlayerRotation);
+		playerCamera.RestartCamera();
 		ResetAnimations();
 		mapsUses = 3;
 		Invoke("StartPlayer", 1f);
@@ -192,9 +197,9 @@ public class PlayerMecanimController : MonoBehaviour
 			case TriggerCrossing.OneWay:
 				Debug.Log ("# EnterCrossroad:OneWay");
 				if(directions.Right)
-					angle = rotationRight;
+					angle = 90f;
 				else if(directions.Left)
-					angle = rotationLeft;
+					angle = -90f;
 				break;
 				
 			case TriggerCrossing.MoreWays:
@@ -249,13 +254,13 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void GoLeft()
 	{
-		angle = rotationLeft;
+		angle = -90f;
 		BreakSlowAndGo();
 	}
 
 	public void GoRight()
 	{
-		angle = rotationRight;
+		angle = 90f;
 		BreakSlowAndGo();
 	}
 	#endregion
@@ -338,14 +343,14 @@ public class PlayerMecanimController : MonoBehaviour
         SpeedUpOff();
 		StartCoroutine( LerpSpeed(speed, minSpeed, 0.3f));
 		SetSlowDownAnim(true);
-		PlayerCamera.Instance.SlowDownFov ();
+		playerCamera.SlowDownFov ();
 	}
 	
 	public void AccelerateMovement()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
 		SetSlowDownAnim(false);
-		PlayerCamera.Instance.NormalizeFov ();
+		playerCamera.NormalizeFov ();
 	}
 	
 	public void BreakSlowAndGo()
@@ -353,14 +358,14 @@ public class PlayerMecanimController : MonoBehaviour
 		StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
 		SetSlowDownAnim(false);
-		PlayerCamera.Instance.NormalizeFov ();
+		playerCamera.NormalizeFov ();
 	}
 
 	public void BackToNormalSpeed()
 	{
         StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
-		PlayerCamera.Instance.NormalizeFov ();
+		playerCamera.NormalizeFov ();
 	}
 
     public void SpeedUpOn()
@@ -409,7 +414,7 @@ public class PlayerMecanimController : MonoBehaviour
 		{
 			Debug.Log ("im accelerating....!!!!");
 			StartCoroutine(LerpSpeed(speed, runSpeed, 0.3f));
-			PlayerCamera.Instance.SpeedUpFov();
+			playerCamera.SpeedUpFov();
 			Invoke ("BackToNormalSpeed", road/runSpeed);
 			Debug.Log ("Time:" + road/runSpeed);
 		}*/

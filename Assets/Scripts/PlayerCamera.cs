@@ -29,6 +29,7 @@ public class PlayerCamera : MonoBehaviour
 	void Awake()
 	{
 		Instance = this;
+
 	}
 
 	public void Start()
@@ -96,11 +97,11 @@ public class PlayerCamera : MonoBehaviour
 		transform.eulerAngles = new Vector3 (x, y, z);
 	}
 
-	public void ResetCamera()
+	public void ResetCameraTransform()
 	{
 		transform.position = startupPosition;
 		transform.rotation = startupRotation;
-		Debug.Log ("ResetCamera()");
+		Debug.Log ("ResetCameraTransform()");
 	}
 
 	public void RestartCamera() 		// on player ded

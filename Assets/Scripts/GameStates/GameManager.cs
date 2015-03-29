@@ -19,41 +19,38 @@ public enum GameState
 
 public class GameManager : MonoBehaviour 
 {
-
-	public GameState state;
 	// Singleton with GameObject instance
-	static GameManager instance = null;
 	public static GameManager Instance { 
 		get; 
 		private set;
 	}
 
-	PlayerMecanimController player;
-	string playerName = "";
-	public string PlayerName {
-		get { return playerName.Equals("") ? "Player" : playerName; }
-		set { playerName = value; }
-	}
+	public GameState state;
 
 	public UIGameHUD UI;
+	public PlayerMecanimController player;
+	public PlayerCamera playerCamera;
+	public MapCamera mapCamera;
+	public Labyrinth lab;
+	public Animator cloudsAnimator;
+
+
+	public string PlayerName = "defaultPlayer";
+
+	public float gameTimer;
+	public int level;
+<<<<<<< HEAD
+    int maxLevel = 5;
+=======
+	public int previousLevel;
+    public int maxLevel = 5;
+>>>>>>> origin/master
+    public int score;
 
 	float gameStartupTimer;
 	float gameTimeElapsed;
-	public float gameTimer;
-    float MapViewTime = 3;
+	float MapViewTime = 3;
 
-	public bool debug;
-	public int level;
-    int maxLevel = 5;
-    public int score;
-
-	public MazeGenerator Maze;
-	public Labyrinth lab;
-
-	public Camera playerCamera;
-	public Camera mapCamera;
-
-	public Animator cloudsAnimator;
 
 	void Awake() 
 	{
@@ -70,7 +67,7 @@ public class GameManager : MonoBehaviour
 
 	void Start () 
 	{
-		SetReferences ();
+		//SetReferences ();
 
 		ChangeGameState(GameState.Menu);
         score = 0;
@@ -81,6 +78,7 @@ public class GameManager : MonoBehaviour
 
 	void OnLevelWasLoaded(int lvl) 
 	{
+		SetReferences();
 		Debug.Log ("OnSceneWasLoaded:" + lvl);
 	}
 
@@ -106,13 +104,25 @@ public class GameManager : MonoBehaviour
 	public void SetReferences()
 	{
 		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
-		cloudsAnimator =  GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
-		playerCamera = Camera.main.camera;
-		mapCamera = GameObject.FindGameObjectWithTag ("MapCamera").camera;
-		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+		if(cloudsAnimator == null) cloudsAnimator =  GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
+		if(playerCamera == null) playerCamera = GameObject.FindObjectOfType<PlayerCamera>();
+		if(mapCamera == null) mapCamera = GameObject.FindObjectOfType<MapCamera>();
+		if(player == null) player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 		Debug.Log ("Set References");
 	}
-	
+
+	void AdjustCamerasAtStart()
+	{
+		// set cameras at start position
+		float x = (((float)(lab.Width)/2-1)*4)+2;
+		float z = (((float)(lab.Height)/2-1)*4)-2;
+		playerCamera.SetStartUpPosition(x,x*4,z);
+		playerCamera.SetPosition(x,x*4,z);
+		mapCamera.SetPosition (x, 5, z);
+		mapCamera.SetCameraSize (((lab.Width + lab.Height)/2)*4);
+		Debug.Log ("SetCamerasAtStart: " + lab.Width + lab.Height);
+	}
+
 	void RebuildLabyrinth(string name)
 	{
 		Debug.Log ("GameManager.RebuildLabyrinth");
@@ -122,16 +132,14 @@ public class GameManager : MonoBehaviour
 		lab.ClearMaze();	
 		// build
 		lab.CreateMaze(name);
-		//lab.CreatePlayer();
+		//lab.CreatePlayer(); 	
 		lab.BuildWalls();
 		lab.CreateGameObjects();
 		lab.CreateGround();
-
-		lab.SetCamerasAtStart();
 	}
 	#region GamePlay Functions
 
-	private void NewGame() 
+	private void NewGame()
 	{
 
 	}
@@ -140,7 +148,7 @@ public class GameManager : MonoBehaviour
 	{
 		Debug.Log ("##### RESTART GAME #####");
 		ChangeGameState(GameState.Start);
-		Application.LoadLevel(Application.loadedLevelName);
+		Application.LoadLevel(Application.loadedLevelName); // <-- realoding scene?
 	}
 
     public void RunGame()
@@ -148,21 +156,6 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Run);
         player.StartPlayer();
     }
-
-    private void GameStateRun()
-    {
-        ChangeGameState(GameState.Run);
-    }
-
-	private void PlayerCameraStart() 
-	{ 
-		PlayerCamera.Instance.StartCamera (); 
-	}
-
-	private void PlayerUnpause()
-	{ 
-		player.UnpauseAnimations (); 
-	}
 	
 	public void ToggleCameras()
 	{
@@ -197,6 +190,7 @@ public class GameManager : MonoBehaviour
 	{
 	    switch (level)
 	    {
+<<<<<<< HEAD
 	        case 1:		// LVL 2 7x7
 	            RebuildLabyrinth("level_tut_01-1.maze");
 	            break;
@@ -214,18 +208,58 @@ public class GameManager : MonoBehaviour
 				break;
 			case 6:		// LVL 5 10x10
                 RebuildLabyrinth("level_tut_03-1.maze");
+=======
+	        case 1:		// LVL 2 6x6
+	            RebuildLabyrinth("level_test_01.maze");
+	            break;
+	        case 2:		// LVL 3 7x7
+				RebuildLabyrinth("level_test_02.maze");
+	            break;
+	        case 3:		// LVL 4 8x8
+				RebuildLabyrinth("level_test_03.maze");
+				break;
+			case 4:		// LVL 5 9x9
+				RebuildLabyrinth("level_test_04.maze");
+				break;
+			case 5:		// LVL 5 10x10
+				RebuildLabyrinth("level_test_05.maze");
+				break;
+			case 6:		// LVL 5 10x10
+				RebuildLabyrinth("level_test_06.maze");
+>>>>>>> origin/master
 				break;
 			case 7:		// LVL 5 10x10
-				RebuildLabyrinth("level_test.maze");
+				RebuildLabyrinth("level_test_07.maze");
 				break;
 			default:
-				RebuildLabyrinth("level_test.maze");
+				Debug.Log ("Invalid level: " + level);
 				break;
 	    }
+<<<<<<< HEAD
 		Debug.Log ("CheckLvlAndRebuild" + level);
+=======
+        //}
+
+		Debug.Log ("CheckLvlAndRebuild: " + level);
+>>>>>>> origin/master
 	}
 	#endregion
 
+	private void GameStateRun()	// same as RunGame
+	{
+		ChangeGameState(GameState.Run);
+	}
+	
+	private void PlayerCameraStart() 
+	{ 
+		playerCamera.StartCamera (); 
+	}
+	
+	private void PlayerUnpause()
+	{ 
+		player.UnpauseAnimations (); 
+	}
+	
 	// game state manager
 	public void ChangeGameState(GameState gameState)
 	{
@@ -235,17 +269,21 @@ public class GameManager : MonoBehaviour
 		{
 		case GameState.Start:
 			CheckLvlAndRebuild();
+			AdjustCamerasAtStart();
 
-            UI.UIStartState();
+			UI.UIStartState();
 			cloudsAnimator.SetTrigger("Start");
-			if(player != null)
-			{
-				player.ResetPlayer ();
-				player.ResetAnimations();
-				player.SetRotation();
-				Debug.Log("Player has been reseted");
-			}
-			PlayerCamera.Instance.ResetCamera();
+
+			player.ResetPlayer (); 
+			player.SetStartupRotation(lab.GetStartCellRotation());
+			player.ResetAnimations();
+
+			playerCamera.RestartCamera ();
+			playerCamera.ResetCameraTransform();
+
+			Debug.Log("Player has been reseted");
+
+
 			gameTimer = 0;
             score = 0;
 			Invoke ("PlayerCameraStart", MapViewTime);
@@ -263,11 +301,17 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
+<<<<<<< HEAD
 			//RebuildLabyrinth("level_test.maze"); nie działa
+=======
+
+>>>>>>> origin/master
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();
-			PlayerCamera.Instance.ResetCamera();
+
+			playerCamera.RestartCamera ();
+			playerCamera.ResetCameraTransform();
 			break;
 
 		case GameState.EndLost:
@@ -277,7 +321,7 @@ public class GameManager : MonoBehaviour
 		case GameState.EndWon:
             SetScoreAtEnd();
             UI.UIEndWonState();
-            PlayerCamera.Instance.LevelEndCameraAnimation();
+			playerCamera.LevelEndCameraAnimation();
 
 			break;
 
