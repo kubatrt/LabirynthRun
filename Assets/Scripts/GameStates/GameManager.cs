@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
 
 	public float gameTimer;
 	public int level;
-	public int previousLevel;
     public int maxLevel = 5;
     public int score;
 
@@ -129,6 +128,7 @@ public class GameManager : MonoBehaviour
 		// build
 		lab.CreateMaze(name);
 		//lab.CreatePlayer(); 	
+        AdjustCamerasAtStart();
 		lab.BuildWalls();
 		lab.CreateGameObjects();
 		lab.CreateGround();
@@ -185,27 +185,41 @@ public class GameManager : MonoBehaviour
 
 	void CheckLvlAndRebuild()
 	{
+        int var;
+
 	    switch (level)
 	    {
-	        case 1:		// LVL 2 6x6
-	            RebuildLabyrinth("level_test_01.maze");
+	        case 1:		// LVL 1
+                var = Random.Range(0, 2);
+                if(var == 0)
+	                RebuildLabyrinth("level_tut_01-1.maze");
+                if(var == 1)
+                    RebuildLabyrinth("level_tut_01-2.maze");
 	            break;
-	        case 2:		// LVL 3 7x7
-				RebuildLabyrinth("level_test_02.maze");
+	        case 2:		// LVL 2
+                var = Random.Range(0, 2);
+                if(var == 0)
+				    RebuildLabyrinth("level_tut_02-1.maze");
+                if (var == 1)
+                    RebuildLabyrinth("level_tut_02-2.maze");
 	            break;
-	        case 3:		// LVL 4 8x8
-				RebuildLabyrinth("level_test_03.maze");
+	        case 3:		// LVL 3
+                var = Random.Range(0, 2);
+                if(var == 0)
+				    RebuildLabyrinth("level_tut_03-1.maze");
+                if (var == 1)
+                    RebuildLabyrinth("level_tut_03-2.maze");
 				break;
-			case 4:		// LVL 5 9x9
+			case 4:		// LVL 4
 				RebuildLabyrinth("level_test_04.maze");
 				break;
-			case 5:		// LVL 5 10x10
+			case 5:		// LVL 5
 				RebuildLabyrinth("level_test_05.maze");
 				break;
-			case 6:		// LVL 5 10x10
+			case 6:		// LVL 6
 				RebuildLabyrinth("level_test_06.maze");
 				break;
-			case 7:		// LVL 5 10x10
+			case 7:		// LVL 7
 				RebuildLabyrinth("level_test_07.maze");
 				break;
 			default:
@@ -272,6 +286,7 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Menu:
             UI.UIMenuState();
+            RebuildLabyrinth("level_tut_01-1.maze");
 			level = 0;
 			player.ResetPlayer ();
 			player.ResetAnimations();
