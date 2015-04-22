@@ -26,6 +26,7 @@ public class QTECrossroad : QTE
 		buttonLeft.onClick.AddListener(OnClickButtonLeft);
 		buttonRight.onClick.AddListener(OnClickButtonRight);
 		buttonUp.onClick.AddListener(OnClickButtonUp);
+
 	}
 
 	public override void OnEnable()

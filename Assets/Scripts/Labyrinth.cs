@@ -13,6 +13,9 @@ public class Labyrinth : MonoBehaviour
 	public GameObject wall2Prefab;
 	public GameObject deadEndPrefab;
 	public GameObject triggerPrefab;
+    public GameObject trapHolePrefab;
+    public GameObject trapSpikesPrefab;
+    public GameObject trapSawPrefab;
 	public GameObject finishPrefab;
 	public GameObject playerPrefab;
 	public GameObject debugPrefab;
@@ -211,6 +214,25 @@ public class Labyrinth : MonoBehaviour
 					debugPrefab, MazeGenerator.GridToWorld(cell.Position, offset, debugPrefab.transform.localScale.y/2f), Quaternion.identity);
 				newObject.transform.parent = objectsContainer.transform;	
 			}*/
+
+            else if(cell.Trap == TrapType.Hole)
+            {
+                GameObject newObject = (GameObject)GameObject.Instantiate(
+                    trapHolePrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0), 
+                    Quaternion.identity);
+                newObject.transform.parent = triggersContainer.transform;
+                newObject.name = "Hole Trap ";
+            }
+
+            else if (cell.Trap == TrapType.Spikes)
+            {
+                GameObject newObject = (GameObject)GameObject.Instantiate(
+                    trapSpikesPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0),
+                    Quaternion.identity);
+                newObject.transform.parent = triggersContainer.transform;
+                newObject.name = "Spikes Trap ";
+            }
+
 		}
 	}
 

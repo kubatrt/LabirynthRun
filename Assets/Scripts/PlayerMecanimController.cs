@@ -9,6 +9,9 @@ public class PlayerMecanimController : MonoBehaviour
 	// player states
 	public bool isMoving = false;
 	public bool isAlive = false;
+
+    private bool readyToJump;
+    private bool readyToRoll;
 	
 	public float minSpeed = 0.5f;
 	public float normalSpeed = 5f;
@@ -33,11 +36,13 @@ public class PlayerMecanimController : MonoBehaviour
 	float AnimNormSpeed;
 	
 	private QTECrossroad qte;
+    private QTEJump qteJump;
 
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
 		qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
+        qteJump = GameObject.FindWithTag("QTEJump").GetComponent<QTEJump>();
 
 		Debug.Log ("Player.Awake()");
 	}
@@ -185,6 +190,18 @@ public class PlayerMecanimController : MonoBehaviour
 		qte.gameObject.SetActive(false);
 	}
 
+    void StartQTEJump()
+    {
+        qteJump.gameObject.SetActive(true);   
+    }
+
+    void EndQTEJump()
+    {
+        if (qteJump.NoChoice)
+            failures++;
+        qteJump.gameObject.SetActive(false);
+    }
+
 	#region Crossroads
 
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
@@ -232,8 +249,42 @@ public class PlayerMecanimController : MonoBehaviour
 	}
 	#endregion
 
-	#region Player Movements
-	void Move()
+    #region Traps
+    public void EnterTheTrapArea()
+    {
+        // START TRAP QTE
+        SlowDownMovement();
+        StartQTEJump();
+
+        // reset player readiness
+        SetReadyToJump(false);
+        SetReadyToRoll(false);
+    }
+
+    public void MoveOverTrapArea()
+    {
+        /* if clicked button - > jump
+         * if not - > die */
+
+        if(readyToJump)
+        {
+            Jump();
+        }
+        else
+        {
+            ToggleMoving(); // -> only for test
+            SetDedAnim();  // -> only for test
+        }
+
+
+        // END TRAP QTE
+        EndQTEJump();
+    }
+
+    #endregion
+
+    #region Player Movements
+    void Move()
 	{
 		if(isMoving == true) 
 		{
@@ -263,6 +314,28 @@ public class PlayerMecanimController : MonoBehaviour
 		angle = 90f;
 		BreakSlowAndGo();
 	}
+
+    public void SetReadyToJump(bool choice)
+    {
+        readyToJump = choice;
+    }
+
+    private void Jump()
+    {
+        // jump (spikes, hole)
+        BreakSlowAndGo();
+    }
+
+    public void SetReadyToRoll(bool choice)
+    {
+        readyToRoll = choice;
+    }
+
+    private void Roll()
+    {
+        // roll under saw
+        BreakSlowAndGo();
+    }
 	#endregion
 
 	#region Animations
