@@ -61,6 +61,7 @@ public class PlayerMecanimController : MonoBehaviour
 		ResetAnimations ();
 
 		qte.gameObject.SetActive(false);
+        qteJump.gameObject.SetActive(false);
 		Debug.Log ("Player.Start()");
 	}
 
@@ -252,8 +253,7 @@ public class PlayerMecanimController : MonoBehaviour
     #region Traps
     public void EnterTheTrapArea()
     {
-        // START TRAP QTE
-        SlowDownMovement();
+
         StartQTEJump();
 
         // reset player readiness
@@ -276,8 +276,6 @@ public class PlayerMecanimController : MonoBehaviour
             SetDedAnim();  // -> only for test
         }
 
-
-        // END TRAP QTE
         EndQTEJump();
     }
 
@@ -323,6 +321,7 @@ public class PlayerMecanimController : MonoBehaviour
     private void Jump()
     {
         // jump (spikes, hole)
+        SetJumpAnim();
         BreakSlowAndGo();
     }
 
@@ -334,6 +333,7 @@ public class PlayerMecanimController : MonoBehaviour
     private void Roll()
     {
         // roll under saw
+        SetRollAnim();
         BreakSlowAndGo();
     }
 	#endregion

@@ -24,12 +24,19 @@ public class QTE : MonoBehaviour
 		startTime = Time.time;
 		responseTime = 0;
 		PanelUI.SetActive(true);
+
+        Debug.Log("Enabled PanelUI Name" + PanelUI.name);
 	}
 	
 	public virtual void OnDisable()
 	{
-		if(PanelUI != null)
-			PanelUI.SetActive(false);
+        if (PanelUI != null)
+        {
+            PanelUI.SetActive(false);
+
+            Debug.Log("Disabled PanelUI Name" + PanelUI.name);
+        }
+
 	}
 	
 }

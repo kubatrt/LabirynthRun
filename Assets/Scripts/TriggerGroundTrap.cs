@@ -25,8 +25,8 @@ public class TriggerGroundTrap : MonoBehaviour
 
     void Update()
     {
-        SetStartPos();
-        SetTriggerSize(); // only for tests
+        //SetStartPos();
+        //SetTriggerSize(); // only for tests
     }
 
 	void OnTriggerEnter(Collider other)
@@ -50,8 +50,21 @@ public class TriggerGroundTrap : MonoBehaviour
 
         float distance = Vector3.Distance(triggerPos, playerPos);
         distance = Mathf.Abs(distance);
+        float trapRange = 0f;
 
-        if( distance < 1.5f && !isInside)
+        switch (trapLocation)
+        {
+            case TrapLocation.North_South:
+                trapRange = transform.localScale.z / 2f;        //   <- distance to the 
+                break;                                          //   <-                      
+            case TrapLocation.East_West:                        //   <- edge of trap
+                trapRange = transform.localScale.x / 2f;
+                break;
+        }
+
+        trapRange += 0.25f;            // <- extra distance between player and edge of trap
+
+        if( distance < trapRange && !isInside)
         {
             isInside = true;
             player.MoveOverTrapArea();
@@ -72,7 +85,6 @@ public class TriggerGroundTrap : MonoBehaviour
     private void SetStartPos()
     {
         float dist = 2f;
-        RaycastHit hit;
         Ray ray = new Ray(transform.position, transform.forward);
         if(!Physics.Raycast(ray, dist))
         {
@@ -91,10 +103,12 @@ public class TriggerGroundTrap : MonoBehaviour
         switch(trapLocation)
         {
             case TrapLocation.North_South:
-                coll.size = new Vector3(1f, coll.size.y, 2.0f);
+                transform.localScale = new Vector3(3f, transform.localScale.y, 1.5f);
+                coll.size = new Vector3(1f, coll.size.y, 5f);
                 break;
             case TrapLocation.East_West:
-                coll.size = new Vector3(2.0f, coll.size.y, 1f);
+                transform.localScale = new Vector3(1.5f, transform.localScale.y, 3f);
+                coll.size = new Vector3(5f, coll.size.y, 1f);
                 break;
         }
     }

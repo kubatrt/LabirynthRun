@@ -11,7 +11,7 @@ public class QTEJump : QTE
 	
 	void Awake()
 	{
-		TimeLimit = 1.5f;
+		TimeLimit = 0.65f;
 		buttonJump = PanelUI.transform.FindChild("ButtonJump").GetComponent<Button>();
         circleFillTimeLeft = PanelUI.transform.FindChild("FillCircle").GetComponent<Image>();
 
