@@ -27,8 +27,15 @@ public class TriggerGroundTrap : MonoBehaviour
     {
         //SetStartPos();
         //SetTriggerSize(); // only for tests
-    }
 
+
+        if (GameManager.Instance.state != GameState.Run )
+        {
+            gameObject.renderer.enabled = false;
+        }
+        else
+            gameObject.renderer.enabled = true;
+    }
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.tag != "Player")
@@ -86,11 +93,12 @@ public class TriggerGroundTrap : MonoBehaviour
     {
         float dist = 2f;
         Ray ray = new Ray(transform.position, transform.forward);
+        Ray rayRight = new Ray(transform.position, transform.right);
         if(!Physics.Raycast(ray, dist))
         {
             trapLocation = TrapLocation.North_South;
         }
-        else
+        else if(!Physics.Raycast(rayRight, dist))
         {
             trapLocation = TrapLocation.East_West;
         }

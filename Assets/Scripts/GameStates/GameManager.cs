@@ -211,7 +211,11 @@ public class GameManager : MonoBehaviour
                     RebuildLabyrinth("level_tut_03-2.maze");
 				break;
 			case 4:		// LVL 4
-				RebuildLabyrinth("level_test_04.maze");
+                var = Random.Range(0, 2);
+                if(var == 0)
+				    RebuildLabyrinth("level_tut_04-1.maze");
+                if (var == 1)
+                    RebuildLabyrinth("level_tut_04-2.maze");
 				break;
 			case 5:		// LVL 5
 				RebuildLabyrinth("level_test_05.maze");

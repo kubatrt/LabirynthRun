@@ -3,12 +3,15 @@ using System.Collections;
 
 public class TriggerLevelEnd : MonoBehaviour 
 {
+    [SerializeField]
 	PlayerMecanimController player;
 
 	void Awake()
 	{
-		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerMecanimController> ();
+		player = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerMecanimController>();
+        Debug.Log("Gdzie jest player?");
 	}
+
 
 	void Update()
 	{
