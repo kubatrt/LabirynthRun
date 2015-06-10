@@ -270,6 +270,10 @@ public class PlayerMecanimController : MonoBehaviour
         {
             Jump();
         }
+        if(readyToRoll)
+        {
+            Roll();
+        }
         else
         {
             ToggleMoving(); // -> only for test
