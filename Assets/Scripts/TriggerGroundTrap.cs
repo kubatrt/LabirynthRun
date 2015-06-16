@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum TrapLocation
+public enum TrapLoc
 {
     North_South,
     East_West
@@ -11,7 +11,7 @@ public class TriggerGroundTrap : MonoBehaviour
 {
 	PlayerMecanimController player;
 
-    public TrapLocation trapLocation;
+    public TrapLoc trapLocation;
 
     private bool isInside;
 	
@@ -62,10 +62,10 @@ public class TriggerGroundTrap : MonoBehaviour
 
         switch (trapLocation)
         {
-            case TrapLocation.North_South:
+            case TrapLoc.North_South:
                 trapRange = transform.localScale.z / 2f;        //   <- distance to the 
                 break;                                          //   <-                      
-            case TrapLocation.East_West:                        //   <- edge of trap
+            case TrapLoc.East_West:                        //   <- edge of trap
                 trapRange = transform.localScale.x / 2f;
                 break;
         }
@@ -97,11 +97,11 @@ public class TriggerGroundTrap : MonoBehaviour
         Ray rayRight = new Ray(transform.position, transform.right);
         if(!Physics.Raycast(ray, dist))
         {
-            trapLocation = TrapLocation.North_South;
+            trapLocation = TrapLoc.North_South;
         }
         else if(!Physics.Raycast(rayRight, dist))
         {
-            trapLocation = TrapLocation.East_West;
+            trapLocation = TrapLoc.East_West;
         }
     }
 
@@ -111,11 +111,11 @@ public class TriggerGroundTrap : MonoBehaviour
 
         switch(trapLocation)
         {
-            case TrapLocation.North_South:
+            case TrapLoc.North_South:
                 transform.localScale = new Vector3(3f, transform.localScale.y, 1.5f);
                 coll.size = new Vector3(1f, coll.size.y, 5f);
                 break;
-            case TrapLocation.East_West:
+            case TrapLoc.East_West:
                 transform.localScale = new Vector3(1.5f, transform.localScale.y, 3f);
                 coll.size = new Vector3(5f, coll.size.y, 1f);
                 break;
