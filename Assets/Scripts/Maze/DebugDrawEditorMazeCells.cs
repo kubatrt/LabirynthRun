@@ -47,11 +47,17 @@ public class DebugDrawEditorMazeCells : MonoBehaviour
 				Gizmos.color = new Color(1f,0f,0f, 0.25f);
 				Gizmos.DrawCube(centroid, scale);
 			}
+			else if (cell.Trap != TrapType.None)
+			{
+				Gizmos.color = Gizmos.color = new Color(0, 0f,0f, 0.5f);
+				Gizmos.DrawCube (centroid, scale);
+			}
 			else if (cell.TotalExits > 2)
 			{
 				Gizmos.color = Gizmos.color = new Color(1f,1f,0f, 0.15f * cell.TotalExits);
 				Gizmos.DrawCube (centroid, scale);
 			}
+
 
 			// Normalized distance
 			Gizmos.color = new Color(cell.NormalizedDistance, cell.NormalizedDistance, cell.NormalizedDistance, opacity);
