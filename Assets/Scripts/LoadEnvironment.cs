@@ -3,10 +3,11 @@ using System.Collections;
 
 public class LoadEnvironment : MonoBehaviour 
 {
-	public string envname;
+	public string environment;
 
 	void Awake()
 	{
-		Application.LoadLevelAdditive (envname);
+		if(environment != "")
+			Application.LoadLevelAdditive (environment);
 	}
 }

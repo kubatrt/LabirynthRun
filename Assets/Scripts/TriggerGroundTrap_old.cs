@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum TrapOrientation
-{
-    NorthSouth,
-    EastWest
-}
 
 public class TriggerGroundTrap : MonoBehaviour 
 {

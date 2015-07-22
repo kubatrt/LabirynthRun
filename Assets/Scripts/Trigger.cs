@@ -11,8 +11,8 @@ public sealed class MoveDirections
 {
 	public bool Left 	{get; set; }
 	public bool Right 	{get; set; }
-	public bool Forward { get; set; }
-	public bool Back 	{ get; set; }
+	public bool Forward {get; set; }
+	public bool Back 	{get; set; }
 	
 	public MoveDirections()
 	{
@@ -22,8 +22,3 @@ public sealed class MoveDirections
 		Back = false;
 	}
 };
-
-public class Trigger : MonoBehaviour 
-{
-
-}

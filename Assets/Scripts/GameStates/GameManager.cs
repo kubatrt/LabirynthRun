@@ -96,8 +96,8 @@ public class GameManager : MonoBehaviour
 
 	public void SetReferences()
 	{
-		UI =  GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
-		if(cloudsAnimator == null) cloudsAnimator =  GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
+		UI = GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
+		if(cloudsAnimator == null) cloudsAnimator = GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
 		if(playerCamera == null) playerCamera = GameObject.FindObjectOfType<PlayerCamera>();
 		if(mapCamera == null) mapCamera = GameObject.FindObjectOfType<MapCamera>();
 		if(player == null) player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
 			AdjustCamerasAtStart();
 
 			UI.UIStartState();
-			cloudsAnimator.SetTrigger("Start");
+			if(cloudsAnimator != null) cloudsAnimator.SetTrigger("Start");
 
 			player.ResetPlayer (); 
 			player.SetStartupRotation(lab.GetStartCellRotation());

@@ -218,18 +218,18 @@ public class Labyrinth : MonoBehaviour
             else if(cell.Trap == TrapType.Hole)
             {
                 GameObject newObject = (GameObject)GameObject.Instantiate(
-                    trapHolePrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0), 
+                    trapHolePrefab, MazeGenerator.GridToWorld(cell.Position, offset, 1), 
                     Quaternion.identity);
-                newObject.transform.parent = triggersContainer.transform;
+                newObject.transform.parent = objectsContainer.transform;
                 newObject.name = "Hole Trap ";
             }
 
             else if (cell.Trap == TrapType.Spikes)
             {
                 GameObject newObject = (GameObject)GameObject.Instantiate(
-                    trapSpikesPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 0),
+                    trapSpikesPrefab, MazeGenerator.GridToWorld(cell.Position, offset, 1),
                     Quaternion.identity);
-                newObject.transform.parent = triggersContainer.transform;
+				newObject.transform.parent = objectsContainer.transform;
                 newObject.name = "Spikes Trap ";
             }
 

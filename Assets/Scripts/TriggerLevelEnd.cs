@@ -25,8 +25,7 @@ public class TriggerLevelEnd : MonoBehaviour
 	}
 
 	void OnTriggerEnter(Collider targetColl)
-	{
-		
+	{	
 		if (targetColl.gameObject.tag == "Player") 
 		{
 			gameObject.renderer.enabled = false;
