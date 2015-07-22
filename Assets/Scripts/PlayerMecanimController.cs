@@ -6,17 +6,16 @@ public class PlayerMecanimController : MonoBehaviour
 {
 	public PlayerCamera playerCamera;
 
-	// startup settings
-	public readonly float minSpeed = 0.5f;
-	public readonly float normalSpeed = 5f;
-	public readonly float runSpeed = 9f;
-	public readonly float rotationTime = 0.25f;
-
 	// player states
 	public bool isMoving = false;
 	public bool isAlive = false;
 
-	// actual 
+    private bool readyToJump;
+    private bool readyToRoll;
+	
+	public float minSpeed = 0.5f;
+	public float normalSpeed = 5f;
+	public float runSpeed = 9f;
 	public float speed;
 	public float angle;
 
@@ -24,28 +23,24 @@ public class PlayerMecanimController : MonoBehaviour
 	public int failures;
 	public int lives;
 	public int mapsUses;
-	//public int score;
-
-	private bool readyToJump;
-	private bool readyToRoll;
+	public int score;
 
 	//  timers
+	[SerializeField] float rotationTime;
 	float coroutineTimer;
 
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
 	Animator 	animator;
-	bool 		IsGoodRotated;
+	bool IsGoodRotated;
 	float AnimNormSpeed;
-
-	// TODO: change
+	
 	private QTECrossroad qte;
     private QTEJump qteJump;
 
 	void Awake()
 	{
 		animator = GetComponent<Animator> ();
-		// TODO: remove from here
 		qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
         qteJump = GameObject.FindWithTag("QTEJump").GetComponent<QTEJump>();
 
@@ -54,6 +49,10 @@ public class PlayerMecanimController : MonoBehaviour
 
 	void Start () 
 	{
+		minSpeed = 0.5f;
+		normalSpeed = 5;
+        runSpeed = 9f;
+		rotationTime  = 0.25f;
 		lives = 3;
 		mapsUses = 3;
 		
@@ -82,27 +81,16 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		if (col.transform.tag == "Wall")
 		{
-			//ToggleMoving();
-			//isAlive = false;
+			ToggleMoving();
+			isAlive = false;
 			transform.Translate(new Vector3(0,0,-0.25f));
-			//SetDedAnim();
-            //StopAllCoroutines();
-			Kill ();
-
+			SetDedAnim();
+            StopAllCoroutines();
 			if(lives>1)
 				lives--;
 			else 
 				GameManager.Instance.ChangeGameState(GameState.EndLost);
 		}
-	}
-
-	public void Kill()
-	{
-		Debug.Log("Kill()");
-		ToggleMoving();
-		isAlive = false;
-		SetDedAnim();
-		StopAllCoroutines();
 	}
 
 	public void StartPlayer()
@@ -125,6 +113,29 @@ public class PlayerMecanimController : MonoBehaviour
 		transform.Rotate(startupPlayerRotation);
 	}
 
+	/*public void SetStartupRotation()
+	{
+
+		Debug.Log (" Player Rot set0");
+		while(IsGoodRotated == false) // INFINITE LOOP KURWAAAAAAAAAAAAAAAAAAAAAAA!!!!!!!!!!!!!!
+		{
+			Debug.Log (" Player Rot set1");
+			Ray ray = new Ray(transform.position, transform.forward);
+			if(Physics.Raycast(ray,2f))
+			{
+				Debug.Log (" Player Rot set2");
+				transform.Rotate(new Vector3(0,90f,0));
+				IsGoodRotated = false;
+			}
+			else
+			{
+				Debug.Log (" Player Rot set3");
+				IsGoodRotated = true;
+			}
+		}
+		IsGoodRotated = false;
+		Debug.Log (" Player Rot set4");
+	}*/
 
 	public void AlignPlayer()
 	{
@@ -155,7 +166,7 @@ public class PlayerMecanimController : MonoBehaviour
 		mapsUses--;
 	}
 
-	public void RestartPlayer() // every single ded INVOKE
+	public void RestartPlayer() // every single ded
 	{
 		isMoving = false;
 		transform.position = startupPosition;
@@ -193,14 +204,6 @@ public class PlayerMecanimController : MonoBehaviour
     }
 
 	#region Crossroads
-
-	public void EnterTrap(TrapType type, TrapOrientation orientation)
-	{
-		if(type == TrapType.Spikes)
-		{
-			StartQTEJump();
-		}
-	}
 
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
 	{
@@ -250,7 +253,7 @@ public class PlayerMecanimController : MonoBehaviour
     #region Traps
     public void EnterTheTrapArea()
     {
-        //StartQTEJump();
+        StartQTEJump();
 
         // reset player readiness
         SetReadyToJump(false);
