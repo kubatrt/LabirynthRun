@@ -27,11 +27,11 @@ public class MazeGeneratorInspector : Editor
 			if (editorContrainer != null) 
 			{
 				EditorCell edCellObject = (EditorCell)Instantiate (
-					Resources.Load<EditorCell> ("Editor/EditorCell"), 
+					Resources.Load<EditorCell> ("Editor/EditorCell"), 	// load from Resources
 					MazeGenerator.GridToWorld(cell.Position, 1f, 0f),
 					Quaternion.identity);
 
-				edCellObject.name = "EdCell_" + cell.Index;
+				edCellObject.name = "editorcell_" + cell.Index;
 				edCellObject.transform.parent = editorContrainer.transform;
 				edCellObject.cell = cell;
 
@@ -76,10 +76,6 @@ public class MazeGeneratorInspector : Editor
 				for (int i = container.transform.childCount - 1; i >= 0; i--) {
 					DestroyImmediate (container.transform.GetChild (i).gameObject);
 				}
-			}
-
-			if (maze.gameObject.GetComponent<DebugDrawEditorMazeCells>() != null) {
-				DestroyImmediate(maze.gameObject.GetComponent<DebugDrawEditorMazeCells>());
 			}
 
 			generated = false;

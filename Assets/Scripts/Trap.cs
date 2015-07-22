@@ -14,15 +14,3 @@ public enum TrapOrientation
 	NorthSouth,
 	EastWest
 }
-
-public class Trap : MonoBehaviour 
-{
-	
-	void OnTriggerEnter(Collider other)
-	{
-		if(other.gameObject.tag == "Player")
-		{
-			other.GetComponent<PlayerMecanimController>().Kill();
-		}
-	}
-}

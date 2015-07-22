@@ -12,27 +12,28 @@ public class MazeEditorWindow : EditorWindow
 
 	static MazeEditorWindow staticWindow;
 
+	#region Toolbar
 
-	[MenuItem ("Tools/Scene/Maze Editor")]
+	[MenuItem ("Labyrinth/Scene/Maze Editor")]
 	static void LoadEditor()
 	{
 		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Editor.unity");
 		Debug.Log ("Load editor");
 	}
 
-	[MenuItem ("Tools/Scene/Krystian")]
+	[MenuItem ("Labyrinth/Scene/Krystian")]
 	static void LoadMazeSceneKrystian()
 	{
 		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Random Maze (Krystian).unity");
 	}
 
-	[MenuItem ("Tools/Scene/Kuba")]
+	[MenuItem ("Labyrinth/Scene/Main Game")]
 	static void LoadMazeSceneKuba()
 	{
-		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Maze Test (Kuba).unity");
+		EditorApplication.OpenScene( Application.dataPath + "/Scenes/Game.unity");
 	}
 
-	[MenuItem ("Tools/Maze Editor Window")]
+	[MenuItem ("Labyrinth/Maze Editor")]
 	static void Initialize() 
 	{
 		MazeEditorWindow staticWindow  = (MazeEditorWindow)EditorWindow.GetWindow (typeof (MazeEditorWindow));
@@ -41,7 +42,10 @@ public class MazeEditorWindow : EditorWindow
 		staticWindow.RefreshFiles();
 	}
 
-	public MazeGenerator maze = null;
+	#endregion
+
+
+
 	public string mazeName;
 	public int mazeWidth, mazeHeight = 0;
 
@@ -77,7 +81,8 @@ public class MazeEditorWindow : EditorWindow
 		GUILayout.Label ("Maze settings", EditorStyles.boldLabel);
 
 		// check if MazeGenerator is assigned
-		maze = GameObject.FindObjectOfType<MazeGenerator>();
+		MazeGenerator maze = GameObject.FindObjectOfType<MazeGenerator>();
+		//maze = GameObject.FindObjectOfType<MazeGenerator>();
 		//maze = EditorGUILayout.ObjectField("MazeGenerator: ", maze, typeof(MazeGenerator)) as MazeGenerator;
 
 		if(maze == null) {
@@ -94,7 +99,7 @@ public class MazeEditorWindow : EditorWindow
 		MazeGeneratorInspector[] editors = (MazeGeneratorInspector[]) Resources.FindObjectsOfTypeAll(typeof(MazeGeneratorInspector));
 		if (editors.Length > 0)
 		{
-			mazeGeneratorInspector =  editors[0];
+			mazeGeneratorInspector = editors[0];
 		}
 		if(mazeGeneratorInspector == null) {
 			return;
@@ -112,7 +117,6 @@ public class MazeEditorWindow : EditorWindow
 		}
 
 		// file list
-		bool refresh = false;
 		scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 		foreach(string file in levelFiles )
 		{
@@ -124,7 +128,7 @@ public class MazeEditorWindow : EditorWindow
 				if(EditorUtility.DisplayDialog("Skasuj plik", "Na pewno chcesz usunąć plik?", "Tak", "Anuluj")) 
 				{
 					System.IO.File.Delete( System.IO.Path.GetFullPath(file) );
-					refresh = true;
+					RefreshFiles();
 				}
 			}
 
@@ -144,10 +148,6 @@ public class MazeEditorWindow : EditorWindow
 			EditorGUILayout.EndHorizontal();
 		} 
 		EditorGUILayout.EndScrollView();
-
-		if(refresh) {
-			RefreshFiles();
-		}
 
 		if(GUILayout.Button("Refresh")) 
 		{
