@@ -19,6 +19,7 @@ public class QTECrossroad : QTE
 		buttonLeft = PanelUI.transform.FindChild("ButtonLeft").GetComponent<Button>();
 		buttonRight = PanelUI.transform.FindChild("ButtonRight").GetComponent<Button>();
 		buttonUp = PanelUI.transform.FindChild("ButtonUp").GetComponent<Button>();
+
 		//sliderTimeLeft = PanelUI.transform.FindChild("SliderTimeLeft").GetComponent<Slider>();
 		//responseText = panel.transform.FindChild("TextResponse").GetComponent<Text>();
 		circleFillTimeLeft = PanelUI.transform.FindChild("FillCircle").GetComponent<Image>();
@@ -43,7 +44,8 @@ public class QTECrossroad : QTE
 	
 	void Update () 
 	{
-		if(NoChoice && GameManager.Instance.state == GameState.Run)
+		// TODO: checking GameState shouldnt be here
+		if(WasNoChoice && GameManager.Instance.state == GameState.Run)
 			responseTime += Time.deltaTime;
 
 		//responseText.text = string.Format ("{0:F2}", responseTime);
@@ -81,23 +83,20 @@ public class QTECrossroad : QTE
 
 	void OnClickButtonLeft()
 	{
-		responseTime = Time.time - startTime;
+		PlayerResponse();
 		player.GoLeft();
-		NoChoice = false;
 	}
 	
 	void OnClickButtonRight()
 	{
-		responseTime = Time.time - startTime;
+		PlayerResponse();
 		player.GoRight();
-		NoChoice = false;
 	}
 	
 	void OnClickButtonUp()
 	{
-		responseTime = Time.time - startTime;
+		PlayerResponse();
 		player.GoForward();
-		NoChoice = false;
 	}
 
 	#endregion

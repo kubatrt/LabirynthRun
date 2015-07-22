@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -31,11 +31,10 @@ public class QTEJump : QTE
 	
 	void Update()
 	{
-		if(NoChoice && GameManager.Instance.state == GameState.Run)
+		if(WasNoChoice && GameManager.Instance.state == GameState.Run)
 			responseTime += Time.deltaTime;
 		
 		//timeLeft = TimeLimit - responseTime;
-
 
         float value = (TimeLimit - responseTime) * (1f / TimeLimit);
         circleFillTimeLeft.fillAmount = value;
@@ -45,6 +44,6 @@ public class QTEJump : QTE
 	{
 		responseTime = Time.time - startTime;
         player.SetReadyToJump(true);
-		NoChoice = false;
+		WasNoChoice = false;
 	}
 }

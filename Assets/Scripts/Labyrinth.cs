@@ -128,28 +128,28 @@ public class Labyrinth : MonoBehaviour
 
 	public void ClearMaze()
 	{
-		if(wallContainer != null)
+		if(wallContainer == null)
+			return;
+
+		foreach(Transform t in wallContainer.GetComponentsInChildren<Transform>())
 		{
-			foreach(Transform t in wallContainer.GetComponentsInChildren<Transform>())
-			{
-				if(t != wallContainer.transform)
-					Destroy(t.gameObject);
-			}
-			foreach(Transform t in objectsContainer.GetComponentsInChildren<Transform>())
-			{
-				if(t != objectsContainer.transform)
+			if(t != wallContainer.transform)
 				Destroy(t.gameObject);
-			}
-			foreach(Transform t in triggersContainer.GetComponentsInChildren<Transform>())
-			{
-				if(t != triggersContainer.transform)
-				Destroy(t.gameObject);
-			}
-			foreach(Transform t in groundContainer.GetComponentsInChildren<Transform>())
-			{
-				if(t != groundContainer.transform)
-				Destroy(t.gameObject);
-			}
+		}
+		foreach(Transform t in objectsContainer.GetComponentsInChildren<Transform>())
+		{
+			if(t != objectsContainer.transform)
+			Destroy(t.gameObject);
+		}
+		foreach(Transform t in triggersContainer.GetComponentsInChildren<Transform>())
+		{
+			if(t != triggersContainer.transform)
+			Destroy(t.gameObject);
+		}
+		foreach(Transform t in groundContainer.GetComponentsInChildren<Transform>())
+		{
+			if(t != groundContainer.transform)
+			Destroy(t.gameObject);
 		}
 		Debug.Log("ClearMaze");
 	}

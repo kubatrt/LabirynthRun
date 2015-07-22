@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum TrapLoc
+public enum TrapOrientation
 {
-    North_South,
-    East_West
+    NorthSouth,
+    EastWest
 }
 
 public class TriggerGroundTrap : MonoBehaviour 
 {
-	PlayerMecanimController player;
+	private PlayerMecanimController player;
 
-    public TrapLoc trapLocation;
+    public TrapOrientation trapLocation;
 
     private bool isInside;
 	
@@ -19,8 +19,8 @@ public class TriggerGroundTrap : MonoBehaviour
 	{
 		player = GameObject.FindObjectOfType<PlayerMecanimController>();
 
-        SetStartPos();
-        SetTriggerSize();
+		//SetStartPos();
+       	//SetTriggerSize();
 	}
 
     void Update()
@@ -28,13 +28,14 @@ public class TriggerGroundTrap : MonoBehaviour
         //SetStartPos();
         //SetTriggerSize(); // only for tests
 
+		/*if(gameObject.renderer == null) return;
 
         if (GameManager.Instance.state != GameState.Run )
         {
             gameObject.renderer.enabled = false;
         }
         else
-            gameObject.renderer.enabled = true;
+            gameObject.renderer.enabled = true;*/
     }
 
 	void OnTriggerEnter(Collider other)
@@ -62,10 +63,10 @@ public class TriggerGroundTrap : MonoBehaviour
 
         switch (trapLocation)
         {
-            case TrapLoc.North_South:
+            case TrapOrientation.NorthSouth:
                 trapRange = transform.localScale.z / 2f;        //   <- distance to the 
                 break;                                          //   <-                      
-            case TrapLoc.East_West:                        //   <- edge of trap
+            case TrapOrientation.EastWest:                        //   <- edge of trap
                 trapRange = transform.localScale.x / 2f;
                 break;
         }
@@ -97,11 +98,11 @@ public class TriggerGroundTrap : MonoBehaviour
         Ray rayRight = new Ray(transform.position, transform.right);
         if(!Physics.Raycast(ray, dist))
         {
-            trapLocation = TrapLoc.North_South;
+            trapLocation = TrapOrientation.NorthSouth;
         }
         else if(!Physics.Raycast(rayRight, dist))
         {
-            trapLocation = TrapLoc.East_West;
+            trapLocation = TrapOrientation.EastWest;
         }
     }
 
@@ -111,11 +112,11 @@ public class TriggerGroundTrap : MonoBehaviour
 
         switch(trapLocation)
         {
-            case TrapLoc.North_South:
+            case TrapOrientation.NorthSouth:
                 transform.localScale = new Vector3(3f, transform.localScale.y, 1.5f);
                 coll.size = new Vector3(1f, coll.size.y, 5f);
                 break;
-            case TrapLoc.East_West:
+            case TrapOrientation.EastWest:
                 transform.localScale = new Vector3(1.5f, transform.localScale.y, 3f);
                 coll.size = new Vector3(5f, coll.size.y, 1f);
                 break;

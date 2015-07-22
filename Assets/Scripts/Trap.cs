@@ -8,17 +8,3 @@ public enum TrapType : int
 	Saw,
 	Hole
 }
-
-public class Trap : MonoBehaviour 
-{
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-}

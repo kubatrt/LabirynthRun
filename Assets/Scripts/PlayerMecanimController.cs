@@ -186,7 +186,7 @@ public class PlayerMecanimController : MonoBehaviour
 	
 	void EndQTE()
 	{
-		if(qte.NoChoice)
+		if(qte.WasNoChoice)
 			failures++;
 		qte.gameObject.SetActive(false);
 	}
@@ -198,7 +198,7 @@ public class PlayerMecanimController : MonoBehaviour
 
     void EndQTEJump()
     {
-        if (qteJump.NoChoice)
+        if (qteJump.WasNoChoice)
             failures++;
         qteJump.gameObject.SetActive(false);
     }
@@ -253,7 +253,6 @@ public class PlayerMecanimController : MonoBehaviour
     #region Traps
     public void EnterTheTrapArea()
     {
-
         StartQTEJump();
 
         // reset player readiness

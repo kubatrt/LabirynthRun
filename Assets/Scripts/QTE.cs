@@ -5,8 +5,9 @@ using System.Collections;
 
 public class QTE : MonoBehaviour
 {
-	public GameObject	PanelUI;	// assign in editor
-	public bool 		NoChoice;
+	public GameObject	PanelUI;	// assign in editor UI representation
+
+	public bool 		WasNoChoice;
 	public float 		TimeLimit;
 	
 	protected PlayerMecanimController player;
@@ -18,11 +19,18 @@ public class QTE : MonoBehaviour
 		player = GameObject.FindObjectOfType<PlayerMecanimController>();
 	}
 
+	public virtual void PlayerResponse()
+	{
+		WasNoChoice = false;
+		responseTime = Time.time - startTime;
+	}
+
 	public virtual void OnEnable()
 	{
-		NoChoice = true;
+		WasNoChoice = true;
 		startTime = Time.time;
 		responseTime = 0;
+
 		PanelUI.SetActive(true);
 
         Debug.Log("Enabled PanelUI Name" + PanelUI.name);
@@ -30,8 +38,7 @@ public class QTE : MonoBehaviour
 	
 	public virtual void OnDisable()
 	{
-        if (PanelUI != null)
-        {
+        if (PanelUI != null) {
             PanelUI.SetActive(false);
 
             Debug.Log("Disabled PanelUI Name" + PanelUI.name);

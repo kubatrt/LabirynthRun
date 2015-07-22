@@ -46,14 +46,12 @@ public class GameManager : MonoBehaviour
 	float gameTimeElapsed;
 	float MapViewTime = 3;
 
-
 	void Awake() 
 	{
 		if(Instance != null && Instance != this) // && Instance != this
 		{
 			Debug.Log ("Destroy duplicate!");
 			Destroy(gameObject);
-
 		}
 		Instance = this;
 		DontDestroyOnLoad(gameObject);
@@ -74,7 +72,7 @@ public class GameManager : MonoBehaviour
 	void OnLevelWasLoaded(int lvl) 
 	{
 		SetReferences();
-		Debug.Log ("OnSceneWasLoaded:" + lvl);
+		Debug.Log ("OnLevelWasLoaded:" + lvl);
 	}
 
 	void Update()
@@ -182,6 +180,11 @@ public class GameManager : MonoBehaviour
             ChangeGameState(GameState.Menu);
         }
 	}
+
+	/*public string[] levels = new string[] {
+		"level_tut_01-1.maze",
+		"level_tut_01-2.maze"
+	};*/
 
 	void CheckLvlAndRebuild()
 	{
