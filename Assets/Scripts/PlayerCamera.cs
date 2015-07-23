@@ -21,6 +21,7 @@ public class PlayerCamera : MonoBehaviour
 	Transform playerTransform;
 
 	public float cameraCoroutineTime = 3f;
+	public float cameraEndAnimTime = 1.0f;
 
 	public float dampTime;
 	private Vector3 velocity = Vector3.zero;
@@ -141,13 +142,13 @@ public class PlayerCamera : MonoBehaviour
         Vector3 runGamePosition = playerTransform.position
             + (playerTransform.forward * +2.5f)
             + (playerTransform.up * 2.5f);
-        StartCoroutine(LerpPosition(transform.position, runGamePosition, 2f));
+        StartCoroutine(LerpPosition(transform.position, runGamePosition, cameraEndAnimTime));
 
         Vector3 runGameRotation =
             new Vector3(playerTransform.eulerAngles.x + 40,
                          playerTransform.eulerAngles.y + 180,
                          playerTransform.eulerAngles.z);
-        StartCoroutine(LerpRotation(transform.eulerAngles, runGameRotation, 2f));
+        StartCoroutine(LerpRotation(transform.eulerAngles, runGameRotation, cameraEndAnimTime));
     }
 
 	#region Coroutines

@@ -251,6 +251,11 @@ public class GameManager : MonoBehaviour
 	{ 
 		player.UnpauseAnimations (); 
 	}
+
+	private void UIEndWonState()
+	{
+		UI.UIEndWonState ();
+	}
 	
 	// game state manager
 	public void ChangeGameState(GameState gameState)
@@ -308,8 +313,10 @@ public class GameManager : MonoBehaviour
 
 		case GameState.EndWon:
             SetScoreAtEnd();
-            UI.UIEndWonState();
 			playerCamera.LevelEndCameraAnimation();
+            //UI.UIEndWonState();
+			UI.UIStartState();
+			Invoke("UIEndWonState", playerCamera.cameraEndAnimTime);
 
 			break;
 
