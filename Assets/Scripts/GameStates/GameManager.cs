@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
 	public MapCamera mapCamera;
 	public Labyrinth lab;
 	public Animator cloudsAnimator;
+	public PlayerAnimator playerAnimator;
 
 
 	public string PlayerName = "defaultPlayer";
@@ -96,11 +97,12 @@ public class GameManager : MonoBehaviour
 
 	public void SetReferences()
 	{
+		playerAnimator = player.GetComponent<PlayerAnimator>();
 		UI = GameObject.FindGameObjectWithTag ("UI").GetComponent<UIGameHUD> ();
-		if(cloudsAnimator == null) cloudsAnimator = GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
-		if(playerCamera == null) playerCamera = GameObject.FindObjectOfType<PlayerCamera>();
-		if(mapCamera == null) mapCamera = GameObject.FindObjectOfType<MapCamera>();
-		if(player == null) player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
+		cloudsAnimator = GameObject.FindGameObjectWithTag ("Clouds").GetComponent<Animator> ();
+		playerCamera = GameObject.FindObjectOfType<PlayerCamera>();
+		mapCamera = GameObject.FindObjectOfType<MapCamera>();
+		player = GameObject.FindWithTag("Player").GetComponent<PlayerMecanimController>();
 		Debug.Log ("Set References");
 	}
 
@@ -140,7 +142,7 @@ public class GameManager : MonoBehaviour
 
 	private void RestartGame() 
 	{
-		Debug.Log ("##### RESTART GAME #####");
+		Debug.Log ("RestartGame, LoadLevel");
 		ChangeGameState(GameState.Start);
 		Application.LoadLevel(Application.loadedLevelName); // <-- realoding scene?
 	}
@@ -249,7 +251,7 @@ public class GameManager : MonoBehaviour
 	
 	private void PlayerUnpause()
 	{ 
-		player.UnpauseAnimations (); 
+		playerAnimator.UnpauseAnimations (); 
 	}
 	
 	// game state manager
@@ -268,7 +270,7 @@ public class GameManager : MonoBehaviour
 
 			player.ResetPlayer (); 
 			player.SetStartupRotation(lab.GetStartCellRotation());
-			player.ResetAnimations();
+			playerAnimator.ResetAnimations();
 
 			playerCamera.RestartCamera ();
 			playerCamera.ResetCameraTransform();
@@ -283,12 +285,12 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Run:
             UI.UIRunState();
-			player.UnpauseAnimations ();
+			playerAnimator.UnpauseAnimations ();
 			break;
 
 		case GameState.Pause:
             UI.UIPauseState();
-			player.PauseAnimations ();
+			playerAnimator.PauseAnimations ();
 			break;
 
 		case GameState.Menu:
@@ -296,7 +298,7 @@ public class GameManager : MonoBehaviour
             RebuildLabyrinth("level_tut_01-1.maze");
 			level = 0;
 			player.ResetPlayer ();
-			player.ResetAnimations();
+			playerAnimator.ResetAnimations();
 
 			playerCamera.RestartCamera ();
 			playerCamera.ResetCameraTransform();
@@ -320,7 +322,7 @@ public class GameManager : MonoBehaviour
 				player.decreaseMaps();
 				ToggleCameras ();
                 Debug.Log("tooglecamera");
-				player.PauseAnimations ();
+				playerAnimator.PauseAnimations ();
 				Invoke ("PlayerUnpause",3f);
 				Invoke ("ToggleCameras", 3f);
 				Invoke ("GameStateRun", 3f);

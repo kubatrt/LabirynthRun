@@ -5,6 +5,7 @@ using System.Collections;
 public class PlayerMecanimController : MonoBehaviour 
 {
 	public PlayerCamera playerCamera;
+	private PlayerAnimator playerAnim;
 
 	// startup settings
 	public readonly float minSpeed = 0.5f;
@@ -44,10 +45,10 @@ public class PlayerMecanimController : MonoBehaviour
 
 	void Awake()
 	{
-		animator = GetComponent<Animator> ();
+		playerAnim = GetComponent<PlayerAnimator>();
 		// TODO: remove from here
-		qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
-        qteJump = GameObject.FindWithTag("QTEJump").GetComponent<QTEJump>();
+		//qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
+        //qteJump = GameObject.FindWithTag("QTEJump").GetComponent<QTEJump>();
 
 		Debug.Log ("Player.Awake()");
 	}
@@ -59,7 +60,7 @@ public class PlayerMecanimController : MonoBehaviour
 		
 		startupPosition = transform.position;
 		startupRotation = transform.rotation;
-		ResetAnimations ();
+		playerAnim.ResetAnimations ();
 
 		qte.gameObject.SetActive(false);
         qteJump.gameObject.SetActive(false);
@@ -101,7 +102,7 @@ public class PlayerMecanimController : MonoBehaviour
 		Debug.Log("Kill()");
 		ToggleMoving();
 		isAlive = false;
-		SetDedAnim();
+		playerAnim.SetDedAnim();
 		StopAllCoroutines();
 	}
 
@@ -110,7 +111,7 @@ public class PlayerMecanimController : MonoBehaviour
 		Debug.Log("StartPlayer()");
 		speed = normalSpeed;
 		ToggleMoving ();
-		SetMovingAnim ();
+		playerAnim.SetMovingAnim ();
 
 		failures = 0;
 		isAlive = true;
@@ -145,7 +146,7 @@ public class PlayerMecanimController : MonoBehaviour
 		transform.rotation = startupRotation;
 
 		// RestartCamera() REMOVED
-		ResetAnimations();
+		playerAnim.ResetAnimations();
 		lives = 3;
 		mapsUses = 3;
 	}
@@ -162,7 +163,7 @@ public class PlayerMecanimController : MonoBehaviour
 		transform.rotation = startupRotation;
 		transform.Rotate(startupPlayerRotation);
 		playerCamera.RestartCamera();
-		ResetAnimations();
+		playerAnim.ResetAnimations();
 		mapsUses = 3;
 		Invoke("StartPlayer", 1f);
 	}
@@ -223,7 +224,6 @@ public class PlayerMecanimController : MonoBehaviour
 				//float timeForDecision = 2f;
 				SlowDownMovement();
 				StartQTE(directions);
-
 				break;
 		}
 	}
@@ -273,7 +273,7 @@ public class PlayerMecanimController : MonoBehaviour
         else
         {
             ToggleMoving(); // -> only for test
-            SetDedAnim();  // -> only for test
+			playerAnim.SetDedAnim();  // -> only for test
         }
 
         EndQTEJump();
@@ -321,7 +321,7 @@ public class PlayerMecanimController : MonoBehaviour
     private void Jump()
     {
         // jump (spikes, hole)
-        SetJumpAnim();
+		playerAnim.SetJumpAnim();
         BreakSlowAndGo();
     }
 
@@ -333,76 +333,11 @@ public class PlayerMecanimController : MonoBehaviour
     private void Roll()
     {
         // roll under saw
-        SetRollAnim();
+		playerAnim.SetRollAnim();
         BreakSlowAndGo();
     }
 	#endregion
 
-	#region Animations
-	public void SetJumpAnim()
-	{
-		animator.SetTrigger ("Jump");
-	}
-
-	public void SetRollAnim()
-	{
-		animator.SetTrigger("Roll");
-	}
-
-	public void SetMovingAnim() 
-	{ 
-		ResetAnimations();
-		animator.SetBool("Run", true);
-	}
-	
-	void SetSlowDownAnim(bool choice)
-	{
-		animator.SetBool ("SlowDown", choice);
-	}
-	
-	float SetDedAnim()
-	{
-		ResetAnimations();
-		animator.SetBool ("Ded", true);
-		return animator.GetCurrentAnimatorStateInfo(0).normalizedTime;	// just cheking
-	}
-	
-	public void SetCelebrateAnim()
-	{
-		ResetAnimations();
-		animator.SetBool ("Celebrate", true);
-	}
-
-	public void ResetAnimations()
-	{
-		animator.SetBool("Run", false);
-		animator.SetBool("Ded", false);
-		animator.SetBool("SlowDown", false);
-		animator.SetBool ("Celebrate", false);
-        animator.SetBool("SpeedUp", false);
-	}
-
-	public void AnimEvent_DeadEnd()
-	{
-		if(GameManager.Instance.state == GameState.Run)
-			Invoke("RestartPlayer", 2f);
-	}
-
-	public void PauseAnimations()
-	{
-		animator.enabled = false;
-	}
-
-	public void UnpauseAnimations()
-	{
-		animator.enabled = true;
-	}
-
-    void SetSpeedUpAnimation(bool choice)
-    {
-        animator.SetBool("SpeedUp", choice);
-    }
-	#endregion
 
 	#region Player Actions
 	public void Rotate(float exTime)
@@ -415,14 +350,14 @@ public class PlayerMecanimController : MonoBehaviour
 	{
         SpeedUpOff();
 		StartCoroutine( LerpSpeed(speed, minSpeed, 0.3f));
-		SetSlowDownAnim(true);
+		playerAnim.SetSlowDownAnim(true);
 		playerCamera.SlowDownFov ();
 	}
 	
 	public void AccelerateMovement()
 	{
 		StartCoroutine( LerpSpeed(speed, normalSpeed, 0.3f));
-		SetSlowDownAnim(false);
+		playerAnim.SetSlowDownAnim(false);
 		playerCamera.NormalizeFov ();
 	}
 	
@@ -430,7 +365,7 @@ public class PlayerMecanimController : MonoBehaviour
 	{
 		StopCoroutine("LerpSpeed");
 		StartCoroutine( LerpSpeed(speed, normalSpeed, coroutineTimer));
-		SetSlowDownAnim(false);
+		playerAnim.SetSlowDownAnim(false);
 		playerCamera.NormalizeFov ();
 	}
 
@@ -444,13 +379,13 @@ public class PlayerMecanimController : MonoBehaviour
     public void SpeedUpOn()
     {
         speed = runSpeed;
-        SetSpeedUpAnimation(true);
+		playerAnim.SetSpeedUpAnimation(true);
     }
 
     public void SpeedUpOff()
     {
         speed = normalSpeed;
-        SetSpeedUpAnimation(false);
+		playerAnim.SetSpeedUpAnimation(false);
     }
 
 	public void RunPlayer()
