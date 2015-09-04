@@ -4,7 +4,7 @@ using System.Collections;
 
 public class PlayerMecanimController : MonoBehaviour 
 {
-	public PlayerCamera playerCamera;
+	private PlayerCamera playerCamera;
 	private PlayerAnimator playerAnim;
 
 	// startup settings
@@ -35,9 +35,9 @@ public class PlayerMecanimController : MonoBehaviour
 
 	Vector3 	startupPosition;
 	Quaternion 	startupRotation;
-	Animator 	animator;
-	bool 		IsGoodRotated;
-	float AnimNormSpeed;
+	//Animator 	animator;
+	//bool 		IsGoodRotated;
+	//float animNormSpeed;
 
 	// TODO: change
 	private QTECrossroad qte;
@@ -46,6 +46,7 @@ public class PlayerMecanimController : MonoBehaviour
 	void Awake()
 	{
 		playerAnim = GetComponent<PlayerAnimator>();
+		playerCamera = GetComponent<PlayerCamera>();
 		// TODO: remove from here
 		//qte = GameObject.FindWithTag("QTE").GetComponent<QTECrossroad>();
         //qteJump = GameObject.FindWithTag("QTEJump").GetComponent<QTEJump>();
@@ -75,7 +76,7 @@ public class PlayerMecanimController : MonoBehaviour
            	Move();
             
 			playerCamera.SmoothFollow();
-            AlignPlayer();
+            AlignPlayerTransform();
         }
     }
 
@@ -97,9 +98,12 @@ public class PlayerMecanimController : MonoBehaviour
 		}
 	}
 
+	//------------------------------------------------------------------------------------------------------------------
+
 	public void Kill()
 	{
 		Debug.Log("Kill()");
+
 		ToggleMoving();
 		isAlive = false;
 		playerAnim.SetDedAnim();
@@ -109,6 +113,7 @@ public class PlayerMecanimController : MonoBehaviour
 	public void StartPlayer()
 	{
 		Debug.Log("StartPlayer()");
+
 		speed = normalSpeed;
 		ToggleMoving ();
 		playerAnim.SetMovingAnim ();
@@ -119,6 +124,18 @@ public class PlayerMecanimController : MonoBehaviour
 		RunPlayer ();
 	}
 
+	public void ResetPlayer() // on game over
+	{
+		isMoving = false;
+		transform.position = startupPosition;
+		transform.rotation = startupRotation;
+		
+		// RestartCamera() REMOVED
+		playerAnim.ResetAnimations();
+		lives = 3;
+		mapsUses = 3;
+	}
+
 	Vector3 startupPlayerRotation = Vector3.zero;
 	public void SetStartupRotation(Vector3 rotation)
 	{
@@ -127,7 +144,7 @@ public class PlayerMecanimController : MonoBehaviour
 	}
 
 
-	public void AlignPlayer()
+	public void AlignPlayerTransform()
 	{
 		if(transform.eulerAngles.y > -0.5f && transform.eulerAngles.y < 0.5f)
 			transform.eulerAngles = new Vector3(0,0,0);
@@ -137,18 +154,6 @@ public class PlayerMecanimController : MonoBehaviour
 			transform.eulerAngles = new Vector3(0,180,0);
 		if(transform.eulerAngles.y > 269.5f && transform.eulerAngles.y < 270.5f)
 			transform.eulerAngles = new Vector3(0,270,0);
-	}
-
-	public void ResetPlayer() // on game over
-	{
-		isMoving = false;
-		transform.position = startupPosition;
-		transform.rotation = startupRotation;
-
-		// RestartCamera() REMOVED
-		playerAnim.ResetAnimations();
-		lives = 3;
-		mapsUses = 3;
 	}
 
 	public void decreaseMaps()
@@ -205,7 +210,7 @@ public class PlayerMecanimController : MonoBehaviour
 
 	public void EnterCrossroad(MoveDirections directions, TriggerCrossing crossingType)
 	{
-		AlignPlayer ();
+		AlignPlayerTransform ();
 		angle = 0f;
 
 		switch (crossingType) 

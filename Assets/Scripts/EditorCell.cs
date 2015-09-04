@@ -24,11 +24,12 @@ public class EditorCell : MonoBehaviour
 	{
 		if(cell.Position.x+1 < mazeGenerator.Width)
 		{
-			if(cell.ExitEast == true) {
-				
-				mazeGenerator.GetCellAt(cell.Position.x+1, cell.Position.y).ExitWest = true; Debug.Log ("AdjustEastExit: true" );
+			if(cell.ExitEast == true) {		
+				mazeGenerator.GetCellAt(cell.Position.x+1, cell.Position.y).ExitWest = true; 
+				Debug.Log ("AdjustEastExit: true" );
 			} else if(cell.ExitEast == false) {
-				mazeGenerator.GetCellAt(cell.Position.x+1, cell.Position.y).ExitWest = false; Debug.Log ("AdjustEastExit: false");
+				mazeGenerator.GetCellAt(cell.Position.x+1, cell.Position.y).ExitWest = false; 
+				Debug.Log ("AdjustEastExit: false");
 			}
 			
 		}
@@ -39,9 +40,11 @@ public class EditorCell : MonoBehaviour
 		if(cell.Position.x-1 >= 0)
 		{
 			if(cell.ExitWest) {		
-				mazeGenerator.GetCellAt(cell.Position.x-1, cell.Position.y).ExitEast = true; Debug.Log ("AdjustWestExit: true" );
+				mazeGenerator.GetCellAt(cell.Position.x-1, cell.Position.y).ExitEast = true; 
+				Debug.Log ("AdjustWestExit: true" );
 			} else {
-				mazeGenerator.GetCellAt(cell.Position.x-1, cell.Position.y).ExitEast = false; Debug.Log ("AdjustWestExit: false");
+				mazeGenerator.GetCellAt(cell.Position.x-1, cell.Position.y).ExitEast = false; 
+				Debug.Log ("AdjustWestExit: false");
 			}
 		}
 	}
@@ -51,9 +54,11 @@ public class EditorCell : MonoBehaviour
 		if(cell.Position.y-1 >= 0 )
 		{
 			if(cell.ExitNorth) {			
-				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y-1).ExitSouth = true; Debug.Log ("AdjustNorthExit: true" );
+				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y-1).ExitSouth = true; 
+				Debug.Log ("AdjustNorthExit: true" );
 			} else {
-				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y-1).ExitSouth = false; Debug.Log ("AdjustNorthExit: true" );
+				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y-1).ExitSouth = false;
+				Debug.Log ("AdjustNorthExit: true" );
 			}
 		}
 	}
@@ -63,9 +68,11 @@ public class EditorCell : MonoBehaviour
 		if(cell.Position.y+1 < mazeGenerator.Height)
 		{
 			if(cell.ExitSouth) {
-				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y+1).ExitNorth = true; Debug.Log ("AdjustSouthExit: true" );
+				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y+1).ExitNorth = true; 
+				Debug.Log ("AdjustSouthExit: true" );
 			} else {
-				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y+1).ExitNorth = false; Debug.Log ("AdjustSouthExit: true" );
+				mazeGenerator.GetCellAt(cell.Position.x, cell.Position.y+1).ExitNorth = false; 
+				Debug.Log ("AdjustSouthExit: true" );
 			}
 		}
 		

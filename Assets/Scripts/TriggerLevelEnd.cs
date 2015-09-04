@@ -11,7 +11,7 @@ public class TriggerLevelEnd : MonoBehaviour
 			PlayerMecanimController player = other.GetComponent<PlayerMecanimController>();
 			gameObject.renderer.enabled = false;
 			player.ToggleMoving();
-			player.SetCelebrateAnim();
+			player.GetComponent<PlayerAnimator>().SetCelebrateAnim();
 			GameManager.Instance.ChangeGameState(GameState.EndWon);
 		}
 

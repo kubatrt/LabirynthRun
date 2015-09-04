@@ -156,12 +156,12 @@ public class UIGameHUD : MonoBehaviour
 
 	public void OnClickJumpButton()
 	{
-		player.SetJumpAnim ();
+		player.GetComponent<PlayerAnimator>().SetJumpAnim ();
 	}
 
 	public void OnClickRollButton()
 	{
-		player.SetRollAnim();
+		player.GetComponent<PlayerAnimator>().SetRollAnim();
 	}
 
     public void PointerDownSpeedButton()

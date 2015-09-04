@@ -10,6 +10,7 @@ public class PlayerAnimator : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 	}
 
+
 	public void SetJumpAnim()
 	{
 		animator.SetTrigger ("Jump");
@@ -59,12 +60,12 @@ public class PlayerAnimator : MonoBehaviour {
 			Invoke("RestartPlayer", 2f);
 	}
 	
-	public void PauseAnimations()
+	public void PauseAllAnimations()
 	{
 		animator.enabled = false;
 	}
 	
-	public void UnpauseAnimations()
+	public void UnpauseAllAnimations()
 	{
 		animator.enabled = true;
 	}

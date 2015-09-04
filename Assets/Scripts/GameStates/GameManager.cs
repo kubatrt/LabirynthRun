@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
 	
 	private void PlayerUnpause()
 	{ 
-		playerAnimator.UnpauseAnimations (); 
+		playerAnimator.UnpauseAllAnimations (); 
 	}
 	
 	// game state manager
@@ -285,12 +285,12 @@ public class GameManager : MonoBehaviour
 
 		case GameState.Run:
             UI.UIRunState();
-			playerAnimator.UnpauseAnimations ();
+			playerAnimator.UnpauseAllAnimations ();
 			break;
 
 		case GameState.Pause:
             UI.UIPauseState();
-			playerAnimator.PauseAnimations ();
+			playerAnimator.PauseAllAnimations ();
 			break;
 
 		case GameState.Menu:
@@ -318,11 +318,12 @@ public class GameManager : MonoBehaviour
 		case GameState.Map:
 			if(player.mapsUses > 0)
 			{
+				Debug.Log("tooglecamera");
                 UI.UIMapState();
 				player.decreaseMaps();
 				ToggleCameras ();
-                Debug.Log("tooglecamera");
-				playerAnimator.PauseAnimations ();
+                
+				playerAnimator.PauseAllAnimations ();
 				Invoke ("PlayerUnpause",3f);
 				Invoke ("ToggleCameras", 3f);
 				Invoke ("GameStateRun", 3f);
